@@ -7,7 +7,7 @@ class Api::V1::TechniquesController < Api::ApplicationController
 
 
     def index
-        techniques = Technique.all.order(belt_id: :desc) # This should order the pages by the creation order for techniques
+        techniques = Technique.all.order(belt_id: :desc) # This should order the techniques by belt
         render(json: techniques, each_serializer: TechniquesSerializer) # Find out what should be in this serializer
     end
 
