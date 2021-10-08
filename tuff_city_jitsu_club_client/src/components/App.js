@@ -18,6 +18,7 @@ import TechniqueShowPage from "./TechniqueShowPage";
 import { WhatIsJiuJitsu } from "./WhatIsJiuJitsu";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { WhoAreWe } from "./WhoAreWe";
+import UpdateTechnique from './UpdateTechnique';
 // import { AdminPage } from "./AdminPage";
 
 
@@ -36,7 +37,7 @@ class App extends React.Component {
         });
       };
 
-    getUser= () =>  {
+    getUser = () =>  {
         User.current()
         .then(data => {
           if (typeof data.id !== "number") {
@@ -45,7 +46,8 @@ class App extends React.Component {
             this.setState({ loading: false, currentUser: data });
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err);
           this.setState({ loading: false });
         });
     };
@@ -72,6 +74,11 @@ class App extends React.Component {
 <Route path="/whatisjitsu" exact component={WhatIsJiuJitsu} />
 
 <Route path="/profiles" exact component={WhoAreWe} />
+<Route exact 
+                            isAuthenticated={currentUser}
+                            path="/techniques/:id/edit"
+                            component={UpdateTechnique}
+                            />
 
                             {/* <AuthRoute
                             isAuthenticated={currentUser}
@@ -99,17 +106,17 @@ class App extends React.Component {
                             render={routeProps => (
                             <SyllabusShowPage {...routeProps} currentUser={currentUser} />
                             )} */}
-                            />
+                            {/* /> */}
 {/* Ensure that only admin, and no other users, can see and do actions on this page  */}
                             <AuthRoute
                             isAuthenticated={currentUser}
                             path="/technique/new"
                             component={TechniqueNewPage}
                             />
-                            <Link to 
+                            <Route exact 
                             isAuthenticated={currentUser}
-                            path={`/techniques/${Technique.id}/edit`}
-                            component={TechniqueNewPage}
+                            path="/techniques/:id/edit"
+                            component={UpdateTechnique}
                             />
                             {/*
                             <Route

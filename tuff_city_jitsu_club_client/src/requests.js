@@ -138,6 +138,12 @@ export const Technique = {
             credentials: "include"
         }).then(res => res.json());
     },
+    details(id) {
+      return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
+          method: 'GET',
+          credentials: "include"
+      }).then(res => res.json());
+  },
   }
 
 export const Session = {
@@ -173,6 +179,7 @@ export const User = {
           method: "POST",
           credentials: "include",
           headers: {
+            "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json"
           },
           body: JSON.stringify({ user: params })

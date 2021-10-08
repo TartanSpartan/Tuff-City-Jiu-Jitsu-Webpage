@@ -1,44 +1,96 @@
 import React from 'react';
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button"
+import { Technique, Syllabus, Belt  } from "../requests";
 
 export default class UpdateTechnnique extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      syllabus: "",
-      belt: "",
-      summary: "",
-      category: "",
-      sub_category: "",
-      videos: "",
-      is_different: "",
-      difference_content: ""
+      technique: {
+        summary:""
+      },
+      technique_type: [],
+      belt : [],
+      isLoading: true,
+      error: false
     }
   }
 
   componentDidMount() {
     const { match: { params: { id } } } = this.props;
-    fetch(`/api/v1/techniques/${id}`).
-      then((response) => response.json()).
-      then((technique) => this.setState({ ...technique }));
+
+    Technique.details(this.props.match.params.id).then((technique)=> {
+      this.setState({
+          technique: technique,
+          isLoading: false,
+          error: false
+      });
+  });
+
   }
 
-  handleInputChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
-  }
+    handleInputChange = (event) => {
+      this.setState({ [event.target.name]: event.target.value });
+    }
 
-  updatePostRequest = (event) => {
-    fetch(`/api/v1/techniques/${this.state.id}`, {
-      method: 'put',
-      body: JSON.stringify(this.state),
-      headers: { 'Content-Type': 'application/json' },
-    }).then((response) => {
-      alert('Post updated successfully');
-      location.href = '/';
-    });
-  }
+    updatePostRequest = (event) => {
+      fetch(`/api/v1/techniques/${this.state.technique.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(this.state.technique),
+        headers: { 'Content-Type': 'application/json' },
+      }).then((response) => {
+        alert('Post updated successfully');
+        if (typeof window !== 'undefined') {
+          window.location.href = `/techniques/${this.state.technique.id}`;
+     }
+      });
+    }
 
-  render() {
-    const {syllabus, belt, summary, category, sub_category, videos, is_different, difference_content} = this.state;
+    render() {
+      // const [] = useState([{canadianUrl: "", britishUrl: ""}]);
+      const {setVideos, syllabus, belt, summary, category, sub_category, videos, is_different, difference_content} = this.state;
+      
+    const handleInputChange = (e, index) => {
+      const { name, value } = e.target;
+      const list = [...videos];
+      list[index][name] = value;
+      setVideos(list);
+    };
+
+    // handle click event of the Remove button
+    const handleRemoveClick = index => {
+      const list = [...videos];
+      list.splice(index, 1);
+      setVideos(list);
+    };
+
+    // handle click event of the Add button
+    const handleAddClick = () => {
+      setVideos([...videos, { canadianUrl: "", britishURL: "" }]);
+    };
+    function handleSubmit(event) {
+      event.preventDefault();
+      const { currentTarget } = event;
+      const formData = new FormData(currentTarget);
+
+
+      // props.onSubmit({
+      //     syllabus: formData.get("country").toLowerCase(),
+      //     belt: formData.get("belt"),
+      //     summary: formData.get("summary"),
+      //     category: formData.get("category"),
+      //     sub_category: formData.get("sub_category"),
+      //     videos: formData.get("videos"), // This is an ID so need a different way to share e.g. YouTube URLs?
+      //     is_different: formData.get("is_different") ==="No"?false:true,
+      //     difference_content: formData.get("difference_content")
+      // });
+
+      // console.log("########", props);
+
+      currentTarget.reset();
+        
+    }
     return (
             <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formBasicSyllabus">
@@ -48,8 +100,8 @@ export default class UpdateTechnnique extends React.Component {
             </Form.Group>
             <Form.Label id="top-label">Input new technique</Form.Label>
             <Form.Group controlId="formBasicSummary">
-              <Form.Label>Name of the technique</Form.Label>
-              <Form.Control name="summary" type="summary" placeholder="E.g. O-goshi"  required={true}/>
+              <Form.Label>Name of the technique </Form.Label>
+              <Form.Control defaultValue={this.state.technique.summary} placeHolder={this.state.technique.summary} name="summary" type="text" required={true}/>
             </Form.Group>
             {/* Note: italicise options */}
             <Form.Group controlId="formBasicGrade">
@@ -88,7 +140,7 @@ export default class UpdateTechnnique extends React.Component {
               <Form.Control name = "sub_category" type="sub_category" placeholder="Can be blank if none comes to mind." />
             </Form.Group>
             <Form.Group controlId="formBasicVideos">
-            {videos.map((x, i) => {
+            {/* {videos.map((x, i) => {
               return (
                 <>
                   <Form.Label>Canadian video URL</Form.Label>
@@ -117,7 +169,7 @@ export default class UpdateTechnnique extends React.Component {
                 </div>
               </>
               );
-            })}
+            })} */}
             <div style={{ marginTop: 20 }}>{JSON.stringify(videos)}</div>
     
             
@@ -144,4 +196,5 @@ export default class UpdateTechnnique extends React.Component {
       </Form>
     );
   }
+  
 }
