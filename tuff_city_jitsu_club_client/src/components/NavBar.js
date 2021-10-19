@@ -8,10 +8,8 @@ import { Navbar, Nav, Container } from 'react-bootstrap';
 
 function NavBar(props) {
     const { currentUser, adminUser, onSignOut } = props;
-
     const handleSignOutClick = event => {
         event.preventDefault();
-    
     if (typeof onSignOut === "function") {
         onSignOut();
     }
@@ -30,14 +28,14 @@ return (
       <Nav.Link href="/profiles">Who Are We?</Nav.Link>
       {currentUser ? (
         <>
-      <Nav.Link href="/syllabus">Syllabus</Nav.Link>
-      <Nav.Link href="/technique/new">Add Techniques To Syllabus</Nav.Link>
-      {/* <Nav.Link href="/syllabus/mindmap">Mindmap For Syllabus</Nav.Link> */}
-      {/* <Nav.Link href="/events">Events</Nav.Link> */}
-      <Nav.Link href="/" onClick={onSignOut}>Sign Out</Nav.Link>
-      <Nav.Link className="item" style={{ color: "green" }}>
-                        Welcome {currentUser.full_name}
-                    </Nav.Link>
+        <Nav.Link href="/syllabus">Syllabus</Nav.Link>
+        <Nav.Link href="/technique/new">Add Techniques To Syllabus</Nav.Link>
+        {/* <Nav.Link href="/syllabus/mindmap">Mindmap For Syllabus</Nav.Link> */}
+        {/* <Nav.Link href="/events">Events</Nav.Link> */}
+        <Nav.Link href="/" onClick={onSignOut}>Sign Out</Nav.Link>
+        <Nav.Link className="item" style={{ color: "green" }}>
+          Welcome {currentUser.full_name}
+        </Nav.Link>
       </>
       ) : (
         <React.Fragment>

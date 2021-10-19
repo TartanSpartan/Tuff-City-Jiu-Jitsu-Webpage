@@ -1,7 +1,6 @@
 import React from 'react';
 import NavBar from "./NavBar";
 
-// Next step: incorporate navbar at top of the page
 import Footer from "./Footer";
 import AuthRoute from "./AuthRoute";
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
@@ -10,7 +9,7 @@ import SignInPage from "./SignInPage";
 import { SignUpPage } from "./SignUpPage";
 import { User, Session, Technique } from "../requests";
 import { Welcome } from "./Welcome";
-import { SyllabusIndexPage } from "./SyllabusIndexPage";
+// import { SyllabusIndexPage } from "./SyllabusIndexPage";
 import { SyllabusShowPage } from "./SyllabusShowPage";
 // import SyllabusMindmapPage from "./SyllabusMindmapPage";
 import TechniqueNewPage from "./TechniqueNewPage";
@@ -18,6 +17,7 @@ import TechniqueShowPage from "./TechniqueShowPage";
 import { WhatIsJiuJitsu } from "./WhatIsJiuJitsu";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { WhoAreWe } from "./WhoAreWe";
+import UpdateTechnique from "./UpdateTechnique";
 // import { AdminPage } from "./AdminPage";
 
 
@@ -36,7 +36,7 @@ class App extends React.Component {
         });
       };
 
-    getUser= () =>  {
+    getUser = () =>  {
         User.current()
         .then(data => {
           if (typeof data.id !== "number") {
@@ -45,7 +45,8 @@ class App extends React.Component {
             this.setState({ loading: false, currentUser: data });
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err);
           this.setState({ loading: false });
         });
     };
@@ -67,12 +68,14 @@ class App extends React.Component {
                     <NavBar currentUser={currentUser} onSignOut={this.signOut}/>
                         <Switch>
                             <Route path="/" exact component={Welcome} />
-                           {/* <Route path="/posts" exact component={Blog} /> */}
-
-<Route path="/whatisjitsu" exact component={WhatIsJiuJitsu} />
-
-<Route path="/profiles" exact component={WhoAreWe} />
-
+                            {/* <Route path="/posts" exact component={Blog} /> */}
+                            <Route path="/whatisjitsu" exact component={WhatIsJiuJitsu} />
+                            <Route path="/profiles" exact component={WhoAreWe} />
+                            <Route exact 
+                            isAuthenticated={currentUser}
+                            path="/techniques/:id/edit"
+                            component={UpdateTechnique}
+                            />
                             {/* <AuthRoute
                             isAuthenticated={currentUser}
                             path="/syllabus"
@@ -99,17 +102,19 @@ class App extends React.Component {
                             render={routeProps => (
                             <SyllabusShowPage {...routeProps} currentUser={currentUser} />
                             )} */}
-                            />
-{/* Ensure that only admin, and no other users, can see and do actions on this page  */}
+                            {/* /> */}
+                            
+                            
+                            {/* Ensure that only admin, and no other users, can see and do actions on this page  */}
                             <AuthRoute
                             isAuthenticated={currentUser}
                             path="/technique/new"
                             component={TechniqueNewPage}
                             />
-                            <Link to 
+                            <Route exact 
                             isAuthenticated={currentUser}
-                            path={`/techniques/${Technique.id}/edit`}
-                            component={TechniqueNewPage}
+                            path="/techniques/:id/edit"
+                            component={UpdateTechnique}
                             />
                             {/*
                             <Route

@@ -1,0 +1,5 @@
+class AlterTechniquesColumn < ActiveRecord::Migration[6.1]
+  def change
+    change_column_null :techniques, :videos, true
+  end
+end

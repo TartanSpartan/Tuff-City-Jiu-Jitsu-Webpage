@@ -95,9 +95,16 @@ class Api::V1::TechniquesController < Api::ApplicationController
 
         
         # end
-        technique = Technique.new summary: params["technique"]["summary"], videos_id:1, is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i
+        # videos: params["technique"]["videos"]
+        technique = Technique.new summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i
         puts "This is the belt", technique.belt_id
+        # byebug
         technique.save!
+        # byebug
+        puts "This is the params to be committed", params
+        video = Video.create! canadian_version: params["videos"][0]["canadianUrl"], technique_id: technique.id
+        puts "This is the technique", technique
+        puts "This is the video", video
         render json: { id: new_syllabus.id }
     end
 

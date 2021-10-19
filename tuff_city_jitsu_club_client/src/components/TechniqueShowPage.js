@@ -1,11 +1,19 @@
 // Show an individual technique here, including it's video, and allow for an edit function
 // Work in progress
 
+import { Nav } from 'react-bootstrap';
 import React, { Component, Link } from "react";
-import { Technique, Syllabus, Belt  } from "../requests";
+import { Technique, Syllabus, Belt, Video  } from "../requests";
 import moment from "moment";
 import Button from "react-bootstrap/Button";
 
+function asyncHandler(Object) {
+  if(!Object.keys(Object)){
+     return null;
+  } else {
+    return Object;
+  }
+}
 
 class TechniqueShowPage extends Component {
     constructor(props) {
@@ -15,6 +23,7 @@ class TechniqueShowPage extends Component {
         technique: {},
         technique_type: [],
         belt : [],
+        video : [],
         isLoading: true,
         error: false
       };
@@ -22,7 +31,6 @@ class TechniqueShowPage extends Component {
 
 
     componentDidMount() {
-        console.log(this.props)
         Technique.one(this.props.match.params.id).then(technique=> {
             this.setState({
                 technique: technique,
@@ -44,6 +52,12 @@ class TechniqueShowPage extends Component {
             isLoading: false
             });
         });
+
+        Video.find(this.props.match.params.id).then(video => {
+            this.setState({
+              video: video,
+            });
+        });
     }
 
     deleteTechnique(id) {
@@ -55,16 +69,20 @@ class TechniqueShowPage extends Component {
           this.setState((state)=>{
             return{
             error: true
-        }})}
+            }
+          })}
       })
         
     }
 
+    
+
     // Edit the following codeblock for updating a technique; never really did this in CodeCore
 
     updateTechnique(id, params) {
-        console.log("These are the params", params)
-        console.log("These is the id", id)
+        console.log(id);
+        // console.log("These are the params", params)
+        // console.log("These is the id", id)
 
         return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
             method: 'PATCH',
@@ -73,7 +91,9 @@ class TechniqueShowPage extends Component {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(params)
-        }).then(res => res.json());
+          }).then(res => {
+            // console.log(res.json());
+          });
     }
 
   
@@ -89,13 +109,19 @@ class TechniqueShowPage extends Component {
     // });
     // }
     // const technique = this.state.technique;
+    
     render() {
 
+        if (!this.state.video || this.state.video.length === 0) {
+            return <div></div>;
+        }
 
         const currentUser = this.props.currentUser;
-        console.log("This is the user", currentUser)
+        const renderVideo = this.state.video[0]["canadian_version"];
+       
 
-        console.log("This is the state", this.state);
+        // asyncHandler(renderVideo);
+        // console.log("This is the video", renderVideo);
 
         return (
             <main className="TechniqueShowPage">
@@ -161,13 +187,17 @@ class TechniqueShowPage extends Component {
                         {this.state.technique.summary}
                         <br />
                         <br />
-                        {/* Hardcoded video URL for now */}
-                        <iframe src='https://www.youtube.com/embed/E7wJTI-1dvQ'
-                        frameborder='0'
+                        <iframe src={renderVideo}
+                        height="300px"
+                        width="40%"
+                        frameBorder='0'
                         allow='autoplay; encrypted-media'
-                        allowfullscreen
+                        allowFullScreen
                         title='video'
                          />
+
+
+
                         <br />
 
 
@@ -186,6 +216,7 @@ class TechniqueShowPage extends Component {
 
                         }
                         <>
+                        
                         { this.state.technique?.created_at? 
                         <>
                              <p>Posted on {moment(this.state.technique.created_at ).format("MMM Do, YYYY")}</p>
@@ -202,15 +233,18 @@ class TechniqueShowPage extends Component {
                          : ""
                          }
                          </>
-                        
-                         <Button variant="info" type="info" onClick={id =>
-                          
-                          {console.log("This is the technique object", this.state.technique); this.updateTechnique(this.state.technique.id, this.state.technique)}}>
+                         <Nav.Link key = {this.state.technique.id} style={{ paddingLeft: 0, paddingTop: 0 }} href={`/techniques/${this.state.technique.id}/edit`}>Edit</Nav.Link>
+
+                         {/* <Link to={`/techniques/edit/${this.state.technique.id}`}>
+                          Edit
+                          <Button variant="info" type="info" onClick={(id) =>
+                          // this.updateTechnique(this.props.technique.id, this.props.technique)
+                          {  }
+                          }>
                              Edit
                            </Button>
-                           <Link to={`/techniques/edit/${id}`}>
-                            Edit
-                          </Link>
+                        </Link> */}
+
 
                         </>
               </div>

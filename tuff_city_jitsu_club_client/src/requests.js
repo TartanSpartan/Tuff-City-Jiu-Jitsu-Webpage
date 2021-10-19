@@ -4,7 +4,7 @@
 
 export const Syllabus = {
 
-  // Fetch a syllabus from the server
+  // Fetch one syllabus from the server
   one(id) {
     return fetch(`${process.env.REACT_APP_REACT_APP_BASE_URL}/syllabi/${id}`, {
       credentials: "include"
@@ -28,6 +28,18 @@ export const Video = {
       credentials: "include"
     }).then(res => res.json());
   },
+
+  find(id) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/find_video/${id}`, {
+      credentials: "include"
+    }).then(res=>{
+      console.log(res);
+      return(res.json())
+      }
+    );
+  },
+
+  
 }
 
 export const Belt = {
@@ -138,6 +150,14 @@ export const Technique = {
             credentials: "include"
         }).then(res => res.json());
     },
+
+    // Get the details of a technique so that it may be updated
+    details(id) {
+      return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
+          method: 'GET',
+          credentials: "include"
+      }).then(res => res.json());
+  },
   }
 
 export const Session = {
@@ -147,6 +167,7 @@ export const Session = {
             method: "POST",
             credentials: "include",
             headers: {
+              "Access-Control-Allow-Origin": "*",
               "Content-Type": "application/json"
             },
             body: JSON.stringify(params)

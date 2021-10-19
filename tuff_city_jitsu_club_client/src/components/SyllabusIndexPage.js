@@ -2,12 +2,10 @@
 
 import React, {useState} from 'react';
 import { Technique, TechniqueType, Syllabus, Belt } from '../requests';
-// import { Link } from 'react-router-dom';
 import moment from "moment";
 import Belts from "./Belts";
 import Button from "react-bootstrap/Button";
 import { Nav } from 'react-bootstrap'
-// import {confirm} from 'react-bootstrap-confirmation';
 import "../App.css";
 
 
@@ -35,25 +33,9 @@ export class SyllabusIndexPage extends React.Component {
         });
       });
 
-      // Technique.all().then(techniques => {
-      //     // console.log(techniques)
-      //   this.setState({
-      //     techniques: techniques,
-      //     belts_group: this.group_techniques_belts[techniques]
-      //   });
-      //   console.log("techniques", this.state.techniques)
-      // });
 
-
-      //   Syllabus.one(2).then(syllabus => { // This is hardcoded for Canada in this version of the database, fine as it is the only syllabus we are showing
-      //       this.setState({
-      //       technique_types: syllabus.technique_types,
-      //       isLoading: false
-      //       });
-      //   });
 
         Technique.find().then(techniques => {
-          // console.log("Found anything yet?")
           this.setState({
             rendered_techniques: [...techniques],
           })
@@ -69,11 +51,8 @@ export class SyllabusIndexPage extends React.Component {
 
       console.log("This is the result", result);
       console.log("Final result", Object.values(result))
-        // technique_types.map(item)
-        // console.log("There!")
-        // console.log("These are the types", technique_types)
+
         this.setState({
-          // rendered_technique_types: [...technique_types],
           beltColors: result,
           result: Object.values(result),
           rendered_technique_types: 
@@ -85,45 +64,10 @@ export class SyllabusIndexPage extends React.Component {
             console.log("this is the element", element.belt_id)
           })
         })
-
-
-          // Following block doesn't work
-          // technique_types.forEach(type => {
-
-          // let output = {};
-          // this.state.rendered_techniques.forEach(tech => {
-          //   console.log("Here")
-          //   if(type.id === tech.technique_type.id) {
-          //     output.technique = tech;
-          //     output.technique_type = type;
-          //   }
-  
-          // })
-          // this.setState(previousState => ({
-          //   formatted_techniques: [...previousState.formatted_techniques, output]
-          // }))
     });
     console.log("anything")
   }
-  
-
-      // this.state.rendered_technique_types.forEach(type => {
-      //   let output = {};
-      //   this.state.rendered_techniques.forEach(tech => {
-      //     console.log("Here")
-      //     if( type.id === tech.technique_type.id) {
-      //       output.technique = tech;
-      //       output.technique_type = type;
-      //     }
-
-      //   })
-      //   this.setState({
-      //     formatted_techniques: [...output],
-      //   })
-      // }
-
-
-    
+      
     deleteTechnique(id) {
         Technique.destroy(id).then(() => {
             this.setState({
@@ -137,46 +81,15 @@ export class SyllabusIndexPage extends React.Component {
       return str.trim().split(" ");
  };
 
-    // group_techniques_belts = function (techniques) {
-    //   const output = [];
-    //   const belt_array = this.state.belts.map(belt => belt.id);
-    //   const j = 0;
-    //   // First belt id's technique id should be the first technique's belt id
-    //   // Then keep comparing the belt id with the next belt id, and keep reassigning it 
-    //   let belt = this.state.techniques[0].belt_id;
-    //   this.state.techniques.forEach(technique => {
-    //     let group = [];
-    //     if(belt === technique.belt_id){
-    //       group.push(technique)
-
-    //     }
-    //     belt = technique.belt_id;
-    //     output.push(group);
-    //     // Loop through each technique
-    //     // Push all the techniques that have the same belt id into the belt array
-    //     // When displaying at the bottom take everything from the belt array, hence grouping them by the belt id
-    //   })
-    //   return output;
-    // };
-
-
     render() {
         const currentUser = this.props.currentUser;
         const { showAll = false} = this.props;
         
-        // this.state.techniques.forEach(t => console.log(t))
-        // this.state.belts.forEach(b => console.log(b))
-        // console.log("These are the belts" + Belt.all())
-        // console.log(Array.isArray(this.state.belts))
-
         const filteredTechnique = showAll ? this.state.techniques : this.state.techniques.filter((t, i) => i < 400);
         let previousBeltId = 0;
         let previousTechniqueTypeId = 0;
         let technique_types_array = [];
-        // console.log("these are the rendered techniques", this.state.rendered_techniques)
         console.log("these are the rendered technique types", this.state.rendered_technique_types)
-        // console.log("these are the formatted techniques", this.state.formatted_techniques)
-
 
         return (
             <main className="SyllabusIndexPage">
@@ -263,8 +176,7 @@ export class SyllabusIndexPage extends React.Component {
                                         {<text style={{fontStyle:"italic"}}>{type?.length ? type[0].category : ""}</text> }
                                         <br />
                                         {type?.length ? type[0].sub_category : ""}
-                            {/* Need to wrap the following line over subsequent code, very carefully */}
-                              {/* {this.state.techniques.map(technique => { return})} */}
+
                               <br />
                               <Nav.Link style={{ paddingLeft: 0, paddingTop: 0 }} href={`/techniques/${technique.id}`}>{technique.summary}</Nav.Link>
                               <br />

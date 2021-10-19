@@ -13,9 +13,9 @@ import "../App.css";
 /* TO DO:
 Include working update/edit button
 Word-specific highlighting in sentences?
-Correct date stamps, hover-over instead of permanent
+Hover-over instead of permanent date stamps
 Try for cards/borders between the techniques
-Collapse all techniques under technique types
+Have all techniques be collapsible under technique types
 
 */
 
@@ -222,5 +222,3 @@ export class SyllabusShowPage extends React.Component {
         );
     }
 }
-
-//   First fix this page and then adapt it to React Bootstrap

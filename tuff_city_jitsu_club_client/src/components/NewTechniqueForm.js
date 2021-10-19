@@ -7,6 +7,8 @@ import "../App.css";
 
 function NewTechniqueForm(props) {
     const [videos, setVideos] = useState([{canadianUrl: "", britishUrl: ""}]);
+    let truncatedVideos = JSON.stringify(videos).split(":").join(" : ").split(",").join(" , ").slice(2, -2);
+    // Try to make these videos display on new lines for e.g. half width page, and correctly output for multiple entries
         
     // handle input change
     const handleInputChange = (e, index) => {
@@ -14,6 +16,7 @@ function NewTechniqueForm(props) {
       const list = [...videos];
       list[index][name] = value;
       setVideos(list);
+      console.log("This is the video list", list)
     };
 
     // handle click event of the Remove button
@@ -28,29 +31,32 @@ function NewTechniqueForm(props) {
       setVideos([...videos, { canadianUrl: "", britishURL: "" }]);
     };
 
-
+    // function to handle the submission for an event
     function handleSubmit(event) {
         event.preventDefault();
         const { currentTarget } = event;
         const formData = new FormData(currentTarget);
 
-
+      console.log("Here are the videos to be submitted", videos)
         props.onSubmit({
             syllabus: formData.get("country").toLowerCase(),
             belt: formData.get("belt"),
             summary: formData.get("summary"),
             category: formData.get("category"),
             sub_category: formData.get("sub_category"),
-            videos: formData.get("videos"), // This is an ID so need a different way to share e.g. YouTube URLs?
+            videos: videos, // This is an ID so need a different way to share e.g. YouTube URLs?
             is_different: formData.get("is_different") ==="No"?false:true,
             difference_content: formData.get("difference_content")
         });
 
-        console.log("########", props);
+        console.log("######## here's the props", props);
+
+        console.log("Here's the video we're passing in", formData.get("videos"))
 
         currentTarget.reset();
            
     }
+    
     return (
         <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formBasicSyllabus">
@@ -63,7 +69,7 @@ function NewTechniqueForm(props) {
           <Form.Label>Name of the technique</Form.Label>
           <Form.Control name="summary" type="summary" placeholder="E.g. O-goshi"  required={true}/>
         </Form.Group>
-        {/* Note: italicise options */}
+        {/* Note: try to italicise options */}
         <Form.Group controlId="formBasicGrade">
             <Form.Label>Grade</Form.Label>
             <Form.Control className="color-belt" name = "belt" type="belt" as="select" defaultValue={7}>
@@ -76,7 +82,7 @@ function NewTechniqueForm(props) {
                 <option className="gradecoloroption" style={{backgroundColor:"#b5651d"}} value={1}>Brown</option>
             </Form.Control>
         </Form.Group>
-        {/* Note: italicise options */}
+        {/* Note: try to italicise options */}
         <Form.Group controlId="formBasicCategory">
             <Form.Label>Category of technique</Form.Label>
             <Form.Control name = "category" type="category" as="select" defaultValue="Waza(techniques)">
@@ -123,14 +129,13 @@ function NewTechniqueForm(props) {
               <button className="mr10"
               onClick={() => handleRemoveClick(i)}>Remove</button>}
               <br/>
-              {videos.length - 1 === i &&         <Button onClick={handleAddClick} variant="secondary" type="add">
-          Add
-        </Button>}
+              {videos.length - 1 === i &&         
+              <Button onClick={handleAddClick} variant="success" type="add">Add Another Pair Of URLs</Button>}
             </div>
           </>
           );
         })}
-        <div style={{ marginTop: 20 }}>{JSON.stringify(videos)}</div>
+        <div style={{ marginTop: 20 }}>{truncatedVideos}</div>
 
         
           {/* This should be a form which permits multiple URL inputs with a plus button causing new input fields to appear, with an onChange handler, and groups the URLs into an array (print this on the console, and also on the TechniqueShowPage) */}

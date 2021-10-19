@@ -9,7 +9,6 @@ function NewTechniqueForm(props) {
         event.preventDefault();
         const { currentTarget } = event;
         const formData = new FormData(currentTarget);
-
         props.onSubmit({
             syllabus: formData.get("country").toLowerCase(),
             belt: formData.get("belt"),
@@ -22,12 +21,7 @@ function NewTechniqueForm(props) {
         });
 
         console.log(props);
-
-        
-
         currentTarget.reset();
-        
-        
     }
     return (
         <Form onSubmit={handleSubmit}>
@@ -41,7 +35,7 @@ function NewTechniqueForm(props) {
           <Form.Label>Name of the technique</Form.Label>
           <Form.Control name="summary" type="summary" placeholder="E.g. O-goshi"  required={true}/>
         </Form.Group>
-        {/* Note: italicise options */}
+        {/* Note: try to italicise options */}
         <Form.Group controlId="formBasicGrade">
             <Form.Label>Grade</Form.Label>
             <Form.Control className="color-belt" name = "belt" type="belt" as="select" defaultValue="Yellow">
@@ -54,7 +48,7 @@ function NewTechniqueForm(props) {
                 <option className="gradecoloroption" style={{backgroundColor:"#b5651d"}} value={1}>Brown</option>
             </Form.Control>
         </Form.Group>
-        {/* Note: italicise options */}
+        {/* Note: try to italicise options */}
         <Form.Group controlId="formBasicCategory">
             <Form.Label>Category of technique</Form.Label>
             <Form.Control name = "category" type="category" as="select" defaultValue="Waza(techniques)">

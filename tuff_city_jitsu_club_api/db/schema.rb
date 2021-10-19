@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_22_024200) do
+ActiveRecord::Schema.define(version: 2021_10_14_025313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,7 +75,7 @@ ActiveRecord::Schema.define(version: 2021_09_22_024200) do
 
   create_table "techniques", force: :cascade do |t|
     t.string "summary"
-    t.bigint "videos_id", null: false
+    t.bigint "videos_id"
     t.boolean "is_different"
     t.string "difference_content"
     t.datetime "created_at", precision: 6, null: false
@@ -125,6 +125,8 @@ ActiveRecord::Schema.define(version: 2021_09_22_024200) do
     t.string "uk_version"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "technique_id"
+    t.index ["technique_id"], name: "index_videos_on_technique_id"
   end
 
   add_foreign_key "belt_grades", "belts"
@@ -144,4 +146,5 @@ ActiveRecord::Schema.define(version: 2021_09_22_024200) do
   add_foreign_key "training_bubbles", "users"
   add_foreign_key "urls", "techniques"
   add_foreign_key "urls", "videos"
+  add_foreign_key "videos", "techniques"
 end

@@ -6,7 +6,6 @@ const FormErrors = props => {
   const { errors = [], forField } = props;
 
   let filteredErrors = errors;
-
   if (forField) {
     filteredErrors = errors.filter(
       err => err.field.toLowerCase() === forField.toLowerCase()

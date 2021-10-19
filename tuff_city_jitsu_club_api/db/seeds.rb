@@ -51,17 +51,26 @@ instructor_user = User.create(
     # training_bubble_id: "Seumas Finlayson" # The other instructor, a brown belt new to the region
 )
 
-
+s = Syllabus.create(country:"canada", user_id:1)
+s.save!
 
 kyu_grade_array = ["brown", "dark blue", "light blue", "purple", "green", "orange", "yellow", "white"] # These are the "kyu" grades, the coloured belts below black
 # This reverse order list means that brown will have a belt_id of 1 which matches how it is denoted as 1st Kyu, and so on going down the ladder.
 dan_grade_array = ["shodan", "nidan", "sandan"] # These latter three grades are not colours, but types of black belt or "dan" grade
 # As there are no dan/black belt grades in the club yet, we will just include that array for later when we do have them
 
-s = Syllabus.create(country:"canada", user_id:1)
-s.save!
+kyu_grade_array.size.times do |x|
+    Belt.create!({
+        colour:kyu_grade_array[x],
+        syllabus_id: 1 
+    })
+end
+
 v = Video.create(canadian_version: "canada", uk_version: "uk") # Videos are dummy functionality for now but will be implemented later
 v.save!
+
+
+
 
 # Now for "boilerplate" formatting technique types
 yw = TechniqueType.create!(category: "Waza (techniques)", sub_category: "", belt_id: 7, syllabus_id: 1) # Dummy Waza category which will have no techniques at yellow and read "All previous syllabus" for all subsequent grades
@@ -94,14 +103,6 @@ dbsqg.save!
 bsqg = TechniqueType.create!(category: "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~", sub_category: "", belt_id: 1, syllabus_id: 1)
 bsqg.save!
 
-
-
-kyu_grade_array.size.times do |x|
-    Belt.create!({
-        colour:kyu_grade_array[x],
-        syllabus_id: 1 
-    })
-end
 
 BeltGrade.create({user_id:1,belt_id:1}) # Seumas, user_id:1, is a 1st Kyu so this id codifies his brown belt
 BeltGrade.create({user_id:2,belt_id:4}) # Likewise for David the 4th Kyu aka purple belt
@@ -248,7 +249,7 @@ puts Cowsay.say("Generated #{Syllabus.count} syllabi", :sheep)
 puts Cowsay.say("Generated #{BeltGrade.count} belt grades for users", :cow) 
 puts Cowsay.say("Generated #{Qualification.count} instructor qualification types", :tux) 
 puts Cowsay.say("Generated #{InstructorQualification.count} instructor qualifications for users", :frogs)
-puts Cowsay.say("Generated #{TechniqueTypes.count} technique types", :frogs)
+puts Cowsay.say("Generated #{TechniqueType.count} technique types", :frogs)
 puts Cowsay.say("Generated #{Video.count} videos", :sheep) 
 
 

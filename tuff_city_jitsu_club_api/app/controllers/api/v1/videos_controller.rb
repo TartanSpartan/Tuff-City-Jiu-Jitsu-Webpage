@@ -7,7 +7,7 @@ class Api::V1::VideosController < Api::ApplicationController
 
 
     def index
-        videos = Video.all.order(belt_id: :desc) # This should order the videos by beltcode
+        videos = Video.all.order(technique_id: :desc) # This should order the videos by beltcode
         render(json: videos, each_serializer: VideosSerializer) # Find out what should be in this serializer
     end
 
@@ -70,15 +70,26 @@ class Api::V1::VideosController < Api::ApplicationController
         end
     end
 
+    def find
+        puts "These are the search parameters", params["id"]
+        # technique_id = Technique.where("video_ids = ?", Video.ids).first.id
+        video = Video.where("technique_id = ?", params["id"]) 
+
+        puts "################# here are the videos", video
+
+        render(
+            json: video.as_json
+        )
+    end
+
     private 
 
     def video_params
         params.require(:video)
         .permit( # Replace these as appropriate
-            :summary,
-            :is_different,
-            :difference_content,
-            :belt_id
+            :canadian_version,
+            :uk_version,
+            :technique_id
         )
     end
     

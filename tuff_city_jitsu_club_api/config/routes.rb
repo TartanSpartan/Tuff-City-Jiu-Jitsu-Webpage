@@ -20,6 +20,9 @@ Rails.application.routes.draw do
       resources :videos do
         resources :urls, only: [:create, :destroy]
       end
+      # Need to check if the following two lines should be "meshed" with the preceding three
+      resources :videos
+      get "/find_video/:id", {to: "videos#find"}
       resources :profiles
       resources :whatisjitsu
       resources :admin

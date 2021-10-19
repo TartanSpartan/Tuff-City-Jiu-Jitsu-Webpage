@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import { Technique } from "../requests";
 import NewTechniqueForm from "./NewTechniqueForm";
 
@@ -7,6 +6,7 @@ export default class TechniqueNewPage extends Component {
   state = {
     errors: []
   };
+
   createTechnique = params => {
     Technique.create(params).then(technique => {
       console.log("$$$$$$$$$", technique)
