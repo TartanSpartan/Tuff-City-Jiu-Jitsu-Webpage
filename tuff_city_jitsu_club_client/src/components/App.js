@@ -17,7 +17,7 @@ import TechniqueShowPage from "./TechniqueShowPage";
 import { WhatIsJiuJitsu } from "./WhatIsJiuJitsu";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { WhoAreWe } from "./WhoAreWe";
-import UpdateTechnique from "./UpdateTechnique";
+import TechniqueUpdatePage from "./TechniqueUpdatePage";
 // import { AdminPage } from "./AdminPage";
 
 
@@ -74,7 +74,7 @@ class App extends React.Component {
                             <Route exact 
                             isAuthenticated={currentUser}
                             path="/techniques/:id/edit"
-                            component={UpdateTechnique}
+                            component={TechniqueUpdatePage}
                             />
                             {/* <AuthRoute
                             isAuthenticated={currentUser}
@@ -111,11 +111,11 @@ class App extends React.Component {
                             path="/technique/new"
                             component={TechniqueNewPage}
                             />
-                            <Route exact 
+                            {/* <Route exact 
                             isAuthenticated={currentUser}
                             path="/techniques/:id/edit"
-                            component={UpdateTechnique}
-                            />
+                            component={TechniqueUpdatePage}
+                            /> */}
                             {/*
                             <Route
                             path="/events"
