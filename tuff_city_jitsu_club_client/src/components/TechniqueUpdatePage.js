@@ -118,9 +118,10 @@ export default class TechniqueUpdatePage extends React.Component {
         <h1>Edit A TECHNIQUE</h1>
       </div>
       <br />
-      <UpdateTechniqueForm
+       <UpdateTechniqueForm
+        technique={this.state.technique}
         key={this.state.id}
-        onSubmit={this.updateTechnique}
+        onSubmit={this.updatePostRequest}
         errors={this.state.errors}
       />
     </main>

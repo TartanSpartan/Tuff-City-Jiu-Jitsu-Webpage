@@ -132,7 +132,7 @@ class Api::V1::TechniquesController < Api::ApplicationController
 
     def update
         if @technique.update technique_params
-            puts "These are the technique params", technique_params
+            puts "These are the technique params to be updated", technique_params
             render json: { id: @technique.id }
         else
             render(
