@@ -47,16 +47,17 @@ function UpdateTechniqueForm(props){
             summary: formData.get("summary"),
             category: formData.get("category"),
             sub_category: formData.get("sub_category"),
-            videourls: [
-                {
-                    "type":"canadianUrl",
-                    "url":formData.get("canadianUrl")
-                },
-                {
-                    "type":"britishUrl",
-                    "url":formData.get("britishUrl")
-                },
-            ],
+            // videourls: [
+            //     {
+            //         "type":"canadianUrl",
+            //         "url":formData.get("canadianUrl")
+            //     },
+            //     {
+            //         "type":"britishUrl",
+            //         "url":formData.get("britishUrl")
+            //     },
+            // ],
+            videos: videos,
             is_different: formData.get("is_different") ==="No"?false:true,
             difference_content: formData.get("difference_content")
         });

@@ -98,15 +98,17 @@ class Api::V1::TechniquesController < Api::ApplicationController
         # videos: params["technique"]["videos"]
 
         technique = Technique.new summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i
+        technique_id = technique.id
+
         puts "This is the belt", technique.belt_id
         # byebug
         technique.save!
         # byebug
-        video = Video.create! canadian_version: params["videos"][0]["canadianUrl"]
+        video = Video.create! canadian_version: params["videos"][0]["canadianUrl"], technique_id: technique_id
         puts "This is the video", video
         technique.videourls = [video.id]
         technique.save!
-        puts "This is the params to be committed", params
+        puts "This are the params to be committed", params
         puts "This is the technique", technique
         render json: { id: new_syllabus.id }
     end
@@ -160,22 +162,34 @@ class Api::V1::TechniquesController < Api::ApplicationController
             technique_type_id = type_of_technique.id
         end
         puts "The technique type ID is ", technique_type_id
-        puts "This is the summary", params["technique"]["summary"]
-        puts "This "
         puts "*************************************************************************"
-        puts "these are the params:", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i, "videourls: ", params["videourls"][0]["url"].to_s
+        puts "these are the params:", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i
+        #  "videos_id: ", params["videos_id"].to_i
+        #, "videourls: ", params["videourls"][0]["url"].to_s
 
 
+        # New approach, does this work?
+        technique = Technique.update summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i
+        puts "This is the belt", technique.belt_id
+        technique.save!
+        video = Video.update canadian_version: params["videos"][0]["canadianUrl"]
+        puts "This is the video", video
+        video.save!
+        technique.videourls = [video.id]
+        technique.save!
+        puts "This are the params to be committed", params
+        puts "This is the technique", technique
+        render json: { id: modified_syllabus.id }
 
-        if @technique.update summary: params["summary"], is_different:params["is_different"], difference_content:params["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i, videourls: params["videourls"]
-            puts "These are the technique params to be updated", technique_params
-            render json: { id: @technique.id }
-        else
-            render(
-                json: { errors: technique.errors },
-                status: 422 # Unprocessable Entity
-            )
-        end
+        # if @technique.update summary: params["summary"], is_different:params["is_different"], difference_content:params["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i, videourls: params["videourls"]
+        #     puts "These are the technique params to be updated", technique_params
+        #     render json: { id: @technique.id }
+        # else
+        #     render(
+        #         json: { errors: technique.errors },
+        #         status: 422 # Unprocessable Entity
+        #     )
+        # end
     end
 
     def find
@@ -205,7 +219,9 @@ class Api::V1::TechniquesController < Api::ApplicationController
             :summary,
             :is_different,
             :difference_content,
-            :belt_id
+            :belt_id,
+            :technique_type_id,
+            :videourls
         )
     end
     
