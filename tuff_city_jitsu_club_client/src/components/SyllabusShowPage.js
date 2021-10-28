@@ -97,6 +97,7 @@ export class SyllabusShowPage extends React.Component {
             isLoading: false
             });
         });
+
   }
  
     deleteTechnique(id) {
@@ -123,21 +124,29 @@ export class SyllabusShowPage extends React.Component {
 
         return (
             <main className="SyllabusShowPage">
+                
                 <br />
                 <div className="central">
                 <h2 style={{display: "flex", justifyContent:'center'}}>SYLLABUS</h2>
                 <br />
+
                 
                     {this.state.belts.reverse().filter(belt => belt.id !== 8).map(belt =>
                         <>
-                        <h1 style={{fontWeight:"bold", textDecorationLine: 'underline', textDecorationSkipInk: 'none', display: "flex", justifyContent:'center', backgroundColor:belt.colour.replace(/ +/g, ""), color:textColour(belt.id), pointerEvents:"none"}}>{belt.id  + finishKyuNumber(belt.id) + " Kyu (" + capitaliseTheFirstLetterOfEachWord(belt.colour) + ")"}</h1>
+                        <h1 style={{fontWeight:"bold", textDecorationLine: 
+                        'underline', textDecorationSkipInk: 'none', display: 
+                        "flex", justifyContent:'center', 
+                        backgroundColor:belt.colour.replace(/ +/g, ""), 
+                        color:textColour(belt.id), pointerEvents:"none"}}>{belt.id  + 
+                        finishKyuNumber(belt.id) + " Kyu (" +
+                        capitaliseTheFirstLetterOfEachWord(belt.colour) + ")"}</h1>
                         
-                        {/* {this.state.technique_types.map(type => {<div>type.category</div>})} */}
-
 
                         
                         {groupedTechniqueTypes(belt.technique_types).map((key, index) => 
+                            
                             <div key = {index}>
+                               
                             {
                             (key[0].category === "Waza (techniques)") 
                             ? (
@@ -157,14 +166,15 @@ export class SyllabusShowPage extends React.Component {
                             ) : (    <div style={{fontWeight:"bold", fontStyle:"italic", borderTop: "1px solid"}}>{key[0].category + ":"}</div> 
                             )}
                             {key.map(technique_type => {
-
-
                             return(
                                 <div key = {technique_type.id}>
+                                   
                                 {belt.techniques.filter(technique => technique.technique_type_id === technique_type.id).map(element => {
                                     console.log("This is the technique we want", element)
                                     return(
+                                       
                                     <div key = {element.id}>
+                                        
                                     <Nav.Link key = {element.id} style={{ paddingLeft: 0, paddingTop: 0 }} href={`/techniques/${element.id}`}>{element.summary}</Nav.Link>
                                     <div>{technique_type.sub_category}</div>
                                     
@@ -177,32 +187,28 @@ export class SyllabusShowPage extends React.Component {
                                         <br />
                                         </>
                                         ) : (
-                                        // Adjust the next line so it's absent (don't need redundant p-tags)
                                         <></>
                                         )}
                                          <p>Posted on {moment(element.created_at ).format("MMM Do, YYYY")}</p>
-                                        {/* use onFocus handler, use state called setDisplay, setDisplay to true to render the date on hover over */}
                                         </div>
 
                                     )
                                 })}
                                 <br />
-                                {/* Test that the following date is for the correct thing, i.e. the technique creation date */}
                                 {
                                 (technique_type.category === "Waza (techniques)" ) 
                                 ? (
-                                <span></span> // Try to make this so it's not a new line
+                                <span></span> 
                                 ) : (technique_type.category === "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" )
                                 ? (
                                     <span></span>
                                 ) : (  <></>
                                  )}
-                                {/* <p>Posted on {moment(technique_type.created_at ).format("MMM Do, YYYY")}</p> */}
                                 <div>{technique_type.techniques_id}</div>
                                 <br />
                                 </div>
-                            )
-                        })}</div>)}
+                            )})}
+                        </div>)}
                         
                         </>
                                               

@@ -69,7 +69,11 @@ export default class TechniqueUpdatePage extends React.Component {
     super(props);
     this.state = {
       technique: {
-        summary:""
+        summary:"",
+        videos:{
+          canadianUrl:"",
+          britishUrl:""
+        }
       },
       technique_type: [],
       belt : [],
@@ -99,16 +103,40 @@ export default class TechniqueUpdatePage extends React.Component {
     }
 
     updatePostRequest = (event) => {
-      fetch(`/api/v1/techniques/${this.state.technique.id}`, {
-        method: 'PUT',
-        body: JSON.stringify(this.state.technique),
-        headers: { 'Content-Type': 'application/json' },
-      }).then((response) => {
-        alert('Post updated successfully');
-        if (typeof window !== 'undefined') {
-          window.location.href = `/techniques/${this.state.technique.id}`;
-     }
-      });
+
+      // Technique.create(params).then(technique => {
+      //   console.log("$$$$$$$$$", technique)
+      //   if (Technique.errors) {
+      //     this.setState({ errors: technique.errors });
+      //   } else {
+      //     this.props.history.push(`/syllabus`);
+      //   }
+      //   console.log(params);
+      // });
+      console.log(event);
+      Technique.update(this.state.technique.id, event).then(
+        (technique) => {
+          console.log(technique);
+
+          if (Technique.errors) {
+            this.setState({ errors: technique.errors });
+          } else {
+            this.props.history.push(`/syllabus`);
+          }
+        }
+      )
+      
+    //   console.log(event);
+    //   fetch(`/api/v1/techniques/${this.state.technique.id}`, {
+    //     method: 'PATCH',
+    //     body: JSON.stringify(event),
+    //     headers: { 'Content-Type': 'application/json' },
+    //   }).then((response) => {
+    //     alert('Post updated successfully');
+    //     if (typeof window !== 'undefined') {
+    //       window.location.href = `/techniques/${this.state.technique.id}`;
+    //  }
+    //   });
     };
 
   render() {

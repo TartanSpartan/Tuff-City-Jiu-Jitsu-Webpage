@@ -37,18 +37,18 @@ class Api::V1::VideosController < Api::ApplicationController
     end
 
     def show
-
-        puts "Here are the params", params["id"]
-        technique = Technique.find params["id"]
-        puts technique
-        if technique
-        puts "Here is the technique", technique
-        render(
-            json: technique
-                )
+        puts "Here are the video params", params["id"]
+        video = Video.find params["id"]
+        puts video
+        if video
+            puts "Here is the video", video
+            render(
+                json: video
+                    )
         else
-            render(json: {error: "Technique Not Found"})
+            render(json: {error: "Video Not Found"})
         end
+
     end
 
     def destroy

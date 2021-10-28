@@ -29,35 +29,53 @@ class TechniqueShowPage extends Component {
       };
     }
 
-
     componentDidMount() {
-        Technique.one(this.props.match.params.id).then(technique=> {
+        Technique.one(this.props.match.params.id).then(
+          technique => {
             this.setState({
                 technique: technique,
                 isLoading: false,
                 error: false
             });
-        });
-
-        Belt.all().then(belt => {
-            this.setState({
-              belt: belt,
-            });
+            return technique;
+        }).then(
+          technique => {
+            if (technique && technique.videourls?.length) {
+              return Video.find(technique.videourls[0])
+            };
+          }
+        )
+        .then(video => {
+          this.setState({
+            video: video,
           });
+        })
 
-        Syllabus.one(2).then(syllabus => { // This is hardcoded for Canada in this version of the database, fine as it is the only syllabus we are showing
-            console.log(syllabus)
-            this.setState({
-            technique_type: syllabus.technique_types,
-            isLoading: false
-            });
-        });
+        // Belt.all().then(belt => {
+        //     this.setState({
+        //       belt: belt,
+        //     });
+        //   });
 
-        Video.find(this.props.match.params.id).then(video => {
-            this.setState({
-              video: video,
-            });
-        });
+        // Syllabus.one(2).then(syllabus => { // This is hardcoded for Canada in this version of the database, fine as it is the only syllabus we are showing
+        //     console.log(syllabus)
+        //     this.setState({
+        //     technique_type: syllabus.technique_types,
+        //     isLoading: false
+        //     });
+        // });
+        console.log("Does the videourls array have a length?", this.state.technique);
+        console.log("Does it actually?", (this.state.technique && this.state.technique.videourls?.length));
+
+
+
+    //   Video.find(2).then(video => {
+    //     this.setState({
+    //       video: video,
+    //     });
+    //     console.log("This is the video", video)
+    //     console.log("This is the props", this.props.match)
+    // });
     }
 
     deleteTechnique(id) {
@@ -111,17 +129,21 @@ class TechniqueShowPage extends Component {
     // const technique = this.state.technique;
     
     render() {
+      console.log("Do we have access to the technique?", this.state.technique)
+
 
         if (!this.state.video || this.state.video.length === 0) {
             return <div></div>;
         }
 
         const currentUser = this.props.currentUser;
-        const renderVideo = this.state.video[0]["canadian_version"];
+        // const renderVideo = this.state.video[0]["canadian_version"];
        
 
         // asyncHandler(renderVideo);
         // console.log("This is the video", renderVideo);
+        // console.log("This is the state's video", this.state.video);
+
 
         return (
             <main className="TechniqueShowPage">
@@ -187,7 +209,7 @@ class TechniqueShowPage extends Component {
                         {this.state.technique.summary}
                         <br />
                         <br />
-                        <iframe src={renderVideo}
+                        <iframe src={this.state.video.canadian_version}
                         height="300px"
                         width="40%"
                         frameBorder='0'
@@ -196,7 +218,7 @@ class TechniqueShowPage extends Component {
                         title='video'
                          />
 
-
+{/* https://www.youtube.com/embed/Cvb3hkHJUVk */}
 
                         <br />
 

@@ -96,15 +96,18 @@ class Api::V1::TechniquesController < Api::ApplicationController
         
         # end
         # videos: params["technique"]["videos"]
+
         technique = Technique.new summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i
         puts "This is the belt", technique.belt_id
         # byebug
         technique.save!
         # byebug
-        puts "This is the params to be committed", params
-        video = Video.create! canadian_version: params["videos"][0]["canadianUrl"], technique_id: technique.id
-        puts "This is the technique", technique
+        video = Video.create! canadian_version: params["videos"][0]["canadianUrl"]
         puts "This is the video", video
+        technique.videourls = [video.id]
+        technique.save!
+        puts "This is the params to be committed", params
+        puts "This is the technique", technique
         render json: { id: new_syllabus.id }
     end
 
@@ -131,7 +134,36 @@ class Api::V1::TechniquesController < Api::ApplicationController
     end
 
     def update
-        if @technique.update technique_params
+        # Manually pass in the exact parameters that we want to update first
+        # Then add in the videos, summary, etc for the separate relationships; ensure that a new technique type is created
+        # Implement testing to make the feedback loop faster and more efficient
+        # Pattern this after the create function
+        # E.g. technique = Technique.update summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i
+        # Find, or create
+        # video = Video.create! canadian_version: params["videos"][0]["canadianUrl"], technique_id: technique.id
+        
+        puts "Here are the params", params
+        modified_syllabus = Syllabus.find_by(country: params["syllabus"]) # The id it should find will be 2
+        puts modified_syllabus
+        existing_technique_type = TechniqueType.where(category: params["category"], sub_category: params["sub_category"])
+        if existing_technique_type.length > 0
+            technique_type_id = existing_technique_type[0].id
+        else
+            type_of_technique = TechniqueType.new category: params["category"], sub_category: params["sub_category"], syllabus_id:modified_syllabus.id
+            puts type_of_technique
+            type_of_technique.belt = Belt.where(id: params["belt"])[0]
+            type_of_technique.save! # Note: on next lines, videos is hardcoded until video functionality added
+            technique_type_id = type_of_technique.id
+        end
+        puts "The technique type ID is ", technique_type_id
+        puts "This is the summary", params["technique"]["summary"]
+        puts "This "
+        puts "*************************************************************************"
+        puts "these are the params:", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i
+
+
+
+        if @technique.update summary: params["summary"], is_different:params["is_different"], difference_content:params["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i
             puts "These are the technique params to be updated", technique_params
             render json: { id: @technique.id }
         else

@@ -30,10 +30,10 @@ export const Video = {
   },
 
   find(id) {
-    return fetch(`${process.env.REACT_APP_BASE_URL}/find_video/${id}`, {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/videos/${id}`, {
       credentials: "include"
     }).then(res=>{
-      console.log(res);
+      console.log("This is the video response", res);
       return(res.json())
       }
     );

@@ -8,17 +8,16 @@ export default UpdateTechniqueForm;
 function UpdateTechniqueForm(props){
     const [videos, setVideos] = useState([{canadianUrl: "", britishUrl: ""}]);
     let truncatedVideos = JSON.stringify(videos).split(":").join(" : ").split(",").join(" , ").slice(2, -2);
+    console.log(props);
     // Try to make these videos display on new lines for e.g. half width page, and correctly output for multiple entries
         
     // handle input change
     const handleInputChange = (e, index) => {
-        console.log("This is e", e);
-        console.log("This is the index", index);
         const { name, value } = e.target;
         const list = [...videos];
         list[index][name] = value;
         setVideos(list);
-        console.log("This is the video list", list)
+        // console.log("This is the video list", list)
     };
 
     // handle click event of the Remove button
@@ -27,6 +26,7 @@ function UpdateTechniqueForm(props){
         list.splice(index, 1);
         setVideos(list);
         };
+
     
     // handle click event of the Add button
     const handleAddClick = () => {
@@ -35,6 +35,7 @@ function UpdateTechniqueForm(props){
 
     // function to handle the submission for an event
     function handleSubmit(event) {
+        console.log(event);
         event.preventDefault();
         const { currentTarget } = event;
         const formData = new FormData(currentTarget);
@@ -42,23 +43,35 @@ function UpdateTechniqueForm(props){
         console.log("Here are the videos to be submitted", videos)
         props.onSubmit({
             syllabus: formData.get("country").toLowerCase(),
-            belt: formData.get("belt"),
+            belt: parseInt(formData.get("belt")),
             summary: formData.get("summary"),
             category: formData.get("category"),
             sub_category: formData.get("sub_category"),
-            videos: videos, // This is an ID so need a different way to share e.g. YouTube URLs?
+            videourls: [
+                {
+                    "type":"canadianUrl",
+                    "url":formData.get("canadianUrl")
+                },
+                {
+                    "type":"britishUrl",
+                    "url":formData.get("britishUrl")
+                },
+            ],
             is_different: formData.get("is_different") ==="No"?false:true,
             difference_content: formData.get("difference_content")
         });
 
         console.log("######## here's the props", props);
 
-        console.log("Here's the video we're passing in", formData.get("videos"))
+        // console.log("Here's the video we're passing in", ("canadianUrl" + formData.get("canadianURL"),
+        // "britishUrl" + formData.get("britishUrl")));
 
         currentTarget.reset();
     }
     return (
+       
         <Form onSubmit={handleSubmit}>
+             
         <Form.Group controlId="formBasicSyllabus">
         <Form.Control name = "country" type="country" as="select" defaultValue="Canada">
         <option id={1}>Canada </option> 
@@ -72,7 +85,7 @@ function UpdateTechniqueForm(props){
         {/* Note: italicise options */}
         <Form.Group controlId="formBasicGrade">
             <Form.Label>Grade</Form.Label>
-            <Form.Control className="color-belt" name = "belt" type="belt" as="select" defaultValue={7}>
+            <Form.Control className="color-belt" name = "belt" type="belt" as="select" defaultValue={props.technique.belt_id}>
                 <option className="gradecoloroption" style={{backgroundColor:"yellow"}} value={7} >Yellow </option>
                 <option className="gradecoloroption" style={{backgroundColor:"orange"}} value={6}>Orange</option>
                 <option className="gradecoloroption" style={{backgroundColor:"green"}} value={5}>Green</option>
@@ -103,7 +116,7 @@ function UpdateTechniqueForm(props){
         </Form.Group>
         <Form.Group controlId="formBasicSubCategory">
         <Form.Label>Sub Category</Form.Label>
-        <Form.Control name = "sub_category" type="sub_category" placeholder="Can be blank if none comes to mind." />
+        <Form.Control name = "sub_category" type="sub_category" placeHolder="Can be blank if none comes to mind." />
         </Form.Group>
         <Form.Group controlId="formBasicVideos">
         {videos.map((x, i) => {
@@ -113,7 +126,8 @@ function UpdateTechniqueForm(props){
             <Form.Control name = "canadianUrl"
             value = {x.canadianUrl}
             type="primary_video"
-            placeholder="Try to source this from YouTube if possible."
+            // defaultValue={props.technique.videos.canadianUrl}
+            placeHolder="Try to source this from YouTube if possible."
             onChange={e =>handleInputChange(e, i)}/>
             
             <br />
@@ -121,7 +135,7 @@ function UpdateTechniqueForm(props){
             <Form.Control name = "britishUrl" 
             value = {x.britishUrl}
             type="secondary_video"
-            placeholder="Try to source this from YouTube if possible."
+            placeHolder="Try to source this from YouTube if possible."
             onChange={e =>handleInputChange(e, i)}/>
             <div className="btn-box">
             {videos.length !== 1 && 
@@ -150,13 +164,13 @@ function UpdateTechniqueForm(props){
         </Form.Group>
         <Form.Group controlId="formBasicDifferenceContent">
         <Form.Label>If yes, describe the differences here</Form.Label>
-        <Form.Control name = "difference_content" type="difference_content" placeholder="E.g. transitions aren't present for the UK syllabus"/>
+        <Form.Control name = "difference_content" type="difference_content" placeHolder="E.g. transitions aren't present for the UK syllabus"/>
         </Form.Group>
         <Form.Group controlId="formBasicSecondaryVideo">
         <Form.Label>If different, provide the UK video URL if present</Form.Label>
-        <Form.Control name = "secondary_video" type="secondary_video" placeholder="Try to source this from YouTube if possible."/>
+        <Form.Control name = "secondary_video" type="secondary_video" placeHolder="Try to source this from YouTube if possible."/>
         </Form.Group>
-        <Button variant="primary" type="Update" onClick={props.onSubmit}>
+        <Button variant="primary" type="submit">
     Update
     </Button>
     </Form>
