@@ -143,7 +143,7 @@ export default class TechniqueUpdatePage extends React.Component {
     return(
       <main>
       <div className="central">
-        <h1>Edit A TECHNIQUE</h1>
+        <h1>EDIT A TECHNIQUE</h1>
       </div>
       <br />
        <UpdateTechniqueForm

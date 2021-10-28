@@ -113,10 +113,14 @@ class Api::V1::TechniquesController < Api::ApplicationController
 
     def show
         puts "Here are the params", params["id"]
+
         technique = Technique.find params["id"]
         puts technique
         if technique
             puts "Here is the technique", technique
+            puts "Here are the technique params", technique.videourls
+            #puts "these are the params (to test videourls):", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i, "videourls: ", params["videourls"].to_s
+
             render(
                 json: technique
                     )
@@ -159,11 +163,11 @@ class Api::V1::TechniquesController < Api::ApplicationController
         puts "This is the summary", params["technique"]["summary"]
         puts "This "
         puts "*************************************************************************"
-        puts "these are the params:", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i
+        puts "these are the params:", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i, "videourls: ", params["videourls"][0]["url"].to_s
 
 
 
-        if @technique.update summary: params["summary"], is_different:params["is_different"], difference_content:params["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i
+        if @technique.update summary: params["summary"], is_different:params["is_different"], difference_content:params["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i, videourls: params["videourls"]
             puts "These are the technique params to be updated", technique_params
             render json: { id: @technique.id }
         else
