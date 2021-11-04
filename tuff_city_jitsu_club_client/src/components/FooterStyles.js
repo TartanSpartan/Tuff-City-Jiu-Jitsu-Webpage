@@ -2,11 +2,14 @@ import styled from 'styled-components';
    
 export const Box = styled.div`
 position: relative;
-padding: 50px 60px;
+padding-top: 10rem;
+//  5rem;
 margin-top: 10rem;
+margin-left: 11rem;
+padding-left: 15rem;
 bottom: 0;
-width: 100%;
-height: 31rem;          
+width: 80%;
+height: 56rem;          
 background: black;
   
    
@@ -28,7 +31,8 @@ export const Column = styled.div`
   display: flex;
   flex-direction: column;
   text-align: left;
-  margin-left: 60px;
+  margin-left: -4rem;
+  padding-left: 10rem;
 `;
    
 export const Row = styled.div`
@@ -40,6 +44,7 @@ export const Row = styled.div`
   @media (max-width: 1000px) {
     grid-template-columns: repeat(auto-fill, 
                            minmax(200px, 1fr));
+                      
   }
 `;
    
@@ -59,5 +64,6 @@ export const Heading = styled.p`
   font-size: 24px;
   color: #fff;
   margin-bottom: 40px;
+  padding-right: -10rem;
   font-weight: bold;
 `;

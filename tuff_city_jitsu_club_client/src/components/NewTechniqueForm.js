@@ -2,13 +2,15 @@ import React, {useState} from "react";
 // import FormErrors from "./FormErrors";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import "../App.css";
+import "../App.scss";
 
+// Useful features would be to batch-process entire technique type groups at a time, and to copy a technique for easy editing, but these will come down the road at some point
 
 function NewTechniqueForm(props) {
     const [videos, setVideos] = useState([{canadianUrl: "", britishUrl: ""}]);
-    let truncatedVideos = JSON.stringify(videos).split(":").join(" : ").split(",").join(" , ").slice(2, -2);
-    // Try to make these videos display on new lines for e.g. half width page, and correctly output for multiple entries
+    let truncatedVideos = JSON.stringify(videos).split(":").join(" : ").split(",").join(" , ").split('l"').join("l ").slice(3, -2);
+    let canadianVideo = truncatedVideos.substr(0, truncatedVideos.indexOf(","))
+    let britishVideo = truncatedVideos.substr(truncatedVideos.indexOf("b"))    // Try to make these videos display on new lines for e.g. half width page, and correctly output for multiple entries
         
     // handle input change
     const handleInputChange = (e, index) => {
@@ -60,11 +62,15 @@ function NewTechniqueForm(props) {
     return (
         <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formBasicSyllabus">
+        <Form.Label id="top-label">Input new technique</Form.Label>
+        <br/>
+        <br/>
+        <Form.Label name="syllabus">Syllabus associated with the technique</Form.Label>
+
         <Form.Control name = "country" type="country" as="select" defaultValue="Canada">
         <option id={1}>Canada </option> 
         </Form.Control>
         </Form.Group>
-        <Form.Label id="top-label">Input new technique</Form.Label>
         <Form.Group controlId="formBasicSummary">
           <Form.Label>Name of the technique</Form.Label>
           <Form.Control name="summary" type="summary" placeholder="E.g. O-goshi"  required={true}/>
@@ -85,8 +91,7 @@ function NewTechniqueForm(props) {
         {/* Note: try to italicise options */}
         <Form.Group controlId="formBasicCategory">
             <Form.Label>Category of technique</Form.Label>
-            <Form.Control name = "category" type="category" as="select" defaultValue="Waza(techniques)">
-                <option>Waza (techniques) </option>
+            <Form.Control name="category" type="category" as="select" defaultValue="Bunkai (application for defence)">
                 <option>Ukemi (breakfalling) </option>
                 <option>Atemi (striking)</option>
                 <option>Kansetsu (locks)</option>
@@ -109,7 +114,7 @@ function NewTechniqueForm(props) {
         {videos.map((x, i) => {
           return (
             <>
-              <Form.Label>Canadian video URL</Form.Label>
+              <Form.Label>Provide the Canadian video URL (if available)</Form.Label>
               <Form.Control name = "canadianUrl"
               value = {x.canadianUrl}
               type="primary_video"
@@ -117,12 +122,19 @@ function NewTechniqueForm(props) {
               onChange={e =>handleInputChange(e, i)}/>
               
               <br />
-              <Form.Label>If the UK technique is different, provide the UK video URL if present</Form.Label>
+              <Form.Label>If the UK technique is different, provide the UK video URL (if available)</Form.Label>
               <Form.Control name = "britishUrl" 
+              
               value = {x.britishUrl}
               type="secondary_video"
               placeholder="Try to source this from YouTube if possible."
               onChange={e =>handleInputChange(e, i)}/>
+              
+              {/* Temporary button for farming out easy techniques (but have to scroll down for difference handling). Can comment out when full form instantiation is required. */}
+              <Button variant="primary" type="submit">
+               Submit
+               </Button>
+
               <div className="btn-box">
               {videos.length !== 1 && 
               
@@ -135,13 +147,14 @@ function NewTechniqueForm(props) {
           </>
           );
         })}
-        <div style={{ marginTop: 20 }}>{truncatedVideos}</div>
+        <div style={{ marginTop: 20 }}>{canadianVideo}</div>
+        <div style={{ marginTop: 20 }}>{britishVideo}</div>
 
         
           {/* This should be a form which permits multiple URL inputs with a plus button causing new input fields to appear, with an onChange handler, and groups the URLs into an array (print this on the console, and also on the TechniqueShowPage) */}
         </Form.Group>
         <Form.Group controlId="formBasicDifferenceCheck">
-          <Form.Label>Is this different from the UK syllabus?</Form.Label>
+          <Form.Label>Is this technique different, or separate from the UK syllabus?</Form.Label>
           <Form.Control name = "is_different" type="is_different" as="select" defaultValue="Maybe it's on a different belt or is done differently in the UK" defaultValue="No">
                 <option>No </option>
                 <option>Yes </option>
@@ -151,12 +164,13 @@ function NewTechniqueForm(props) {
           <Form.Label>If yes, describe the differences here</Form.Label>
           <Form.Control name = "difference_content" type="difference_content" placeholder="E.g. transitions aren't present for the UK syllabus"/>
         </Form.Group>
-        <Form.Group controlId="formBasicSecondaryVideo">
-          <Form.Label>If different, provide the UK video URL if present</Form.Label>
-          <Form.Control name = "secondary_video" type="secondary_video" placeholder="Try to source this from YouTube if possible."/>
-        </Form.Group>
         <Button variant="primary" type="submit">
           Submit
+        </Button>
+        <br/>
+        <br/>
+        <Button href={`/syllabus`} variant="secondary" type="cancel" onClick={props.onCancel}> 
+            Cancel
         </Button>
       </Form>
     );

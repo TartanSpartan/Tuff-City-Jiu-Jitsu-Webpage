@@ -1,74 +1,98 @@
 // Show an individual technique here, including it's video, and allow for an edit function
 // Work in progress
 
-import { Nav } from 'react-bootstrap';
+import { Nav } from "react-bootstrap";
 import React, { Component, Link } from "react";
-import { Technique, Syllabus, Belt, Video  } from "../requests";
+import { Technique, Syllabus, Belt, Video, TechniqueType } from "../requests";
 import moment from "moment";
 import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
 
-function asyncHandler(Object) {
-  if(!Object.keys(Object)){
-     return null;
+import "../App.scss";
+
+function urlHandler(url) {
+  console.log("This is the url", url);
+  // This function is to parse YouTube URLs to be easy to embed (but not all URLs are set to permit this) and hence be compatible to show off in this page
+  let watch = "watch?v=";
+  let embed = "embed/";
+  let shortenedUrl = "https://youtu.be/";
+  let extendedUrl = "https://www.youtube.com/embed/";
+  let identifier = ""; // This is the unique identifying part of the URL, at the end of it
+  let embeddedUrl = "";
+  if (url.includes(watch) === true) {
+    // This condition is to instruct URLs with "watch" as a substring to use "embed" instead
+    embeddedUrl = url.replace(watch, embed);
+    return embeddedUrl;
+  } else if (url.includes(shortenedUrl)) {
+    // This condition grows a short "sharable" URL into an appropriate one for this purpose
+    identifier = url.replace(shortenedUrl, "");
+    embeddedUrl = extendedUrl.concat(identifier);
+    return embeddedUrl;
   } else {
-    return Object;
+    // In this default case then the URL already works to be embedded and no changes are required
+    return url;
   }
 }
 
 class TechniqueShowPage extends Component {
-    constructor(props) {
-      super(props);
-  
-      this.state = {
-        technique: {},
-        technique_type: [],
-        belt : [],
-        video : [],
-        isLoading: true,
-        error: false
-      };
-    }
+  constructor(props) {
+    super(props);
 
-    componentDidMount() {
-        Technique.one(this.props.match.params.id).then(
-          technique => {
-            this.setState({
-                technique: technique,
-                isLoading: false,
-                error: false
-            });
-            return technique;
-        }).then(
-          technique => {
-            if (technique && technique.videourls?.length) {
-              return Video.find(technique.videourls[0])
-            };
-          }
-        )
-        .then(video => {
-          this.setState({
-            video: video,
-          });
-        })
+    this.state = {
+      technique: {},
+      technique_type: {},
+      belt: {},
+      video: [],
+      isLoading: true,
+      error: false,
+    };
+  }
 
-        // Belt.all().then(belt => {
-        //     this.setState({
-        //       belt: belt,
-        //     });
-        //   });
+  componentDidMount() {
+    Technique.one(this.props.match.params.id)
+      .then((technique) =>
+        Promise.all([
+          technique,
+          TechniqueType.find(technique.technique_type_id),
+          Belt.find(technique.belt_id),
+          Video.find(technique.id),
+        ])
+      )
 
-        // Syllabus.one(2).then(syllabus => { // This is hardcoded for Canada in this version of the database, fine as it is the only syllabus we are showing
-        //     console.log(syllabus)
-        //     this.setState({
-        //     technique_type: syllabus.technique_types,
-        //     isLoading: false
-        //     });
-        // });
-        console.log("Does the videourls array have a length?", this.state.technique);
-        console.log("Does it actually?", (this.state.technique && this.state.technique.videourls?.length));
+      .then(([technique, technique_type, belt, video]) => {
+        this.setState({
+          isLoading: false,
+          technique: technique,
+          technique_type: technique_type,
+          belt: belt,
+          video: video
+        });
+        return technique_type;
+      })
+      .then((response) => {
+        console.log("This is the response", response);
+      });
 
+    // The following handler probably isn't required so can remove the commented block
 
+    // Syllabus.one(2).then(syllabus => { // This is hardcoded for Canada in this version of the database, fine as it is the only syllabus we are showing
+    //     console.log(syllabus)
+    //     this.setState({
+    //     technique_type: syllabus.technique_types,
+    //     isLoading: false
+    //     });
+    // });
+    // console.log(
+    //   "Does the videourls array have a length?",
+    //   this.state.technique
+    // );
+    // console.log(
+    //   "Does it actually?",
+    //   this.state.technique && this.state.technique.videourls?.length
+    // );
 
+    // Likewise this block can probably be removed
     //   Video.find(2).then(video => {
     //     this.setState({
     //       video: video,
@@ -76,225 +100,361 @@ class TechniqueShowPage extends Component {
     //     console.log("This is the video", video)
     //     console.log("This is the props", this.props.match)
     // });
+  }
+
+  deleteTechnique(id) {
+    Technique.destroy(id).then((data) => {
+      if (data.status === 200) {
+        this.props.history.push("/syllabus");
+      } else {
+        this.setState((state) => {
+          return {
+            error: true,
+          };
+        });
+      }
+    });
+  }
+
+  // Edit the following codeblock for updating a technique; never really did this in CodeCore
+
+  updateTechnique(id, params) {
+    console.log(id);
+
+    return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    }).then((res) => {
+      // console.log(res.json());
+    });
+  }
+
+  // Modify this block to delete comments, if and only if comments are a feature to be implemented; discuss with David
+
+  // deleteBid(id) {
+  // this.setState({
+  //     auction: {
+  //     ...this.state.auction,
+  //     bids: this.state.auction.bids.filter(a => a.id !== id)
+  //     }
+  // });
+  // }
+  // const technique = this.state.technique;
+
+  render() {
+    console.log("This is the state", this.state);
+    // console.log("Do we have access to the technique?", this.state.technique);
+    // console.log("Do we have access to the technique type?", this.state.technique_type);
+
+    if (!this.state.video || this.state.video.length === 0) {
+      return <div></div>;
     }
 
-    deleteTechnique(id) {
-      Technique.destroy(id).then(data =>{
-        if (data.status === 200){
-          this.props.history.push("/syllabus")
-        }
-        else {
-          this.setState((state)=>{
-            return{
-            error: true
-            }
-          })}
-      })
-        
-    }
+    const currentUser = this.props.currentUser;
+    // const renderVideo = this.state.video[0]["canadian_version"];
 
-    
+    // asyncHandler(renderVideo);
+    // console.log("This is the video", renderVideo);
+    // console.log("This is the state's video", this.state.video);
 
-    // Edit the following codeblock for updating a technique; never really did this in CodeCore
+    return (
+      <main className="TechniqueShowPage">
+        <br />
+        <div className="central">
+          <h2>TECHNIQUE</h2>
+        </div>
+        <br />
+        <div
+          className="ui list"
+          style={{
+            listStyle: "none",
+            paddingLeft: 0,
+          }}
+        >
+          {/* <> */}
+          if (this.state.belt.id === 3) {
+            return (
+              <>
+                <option
+                  className="gradecoloroption"
+                  style={{
+                    backgroundColor: "lightblue",
+                    pointerEvents: "none",
+                  }}
+                >
+                  3rd kyu (Light Blue){" "}
+                  </option>
+              </>
+            );
+          }}
 
-    updateTechnique(id, params) {
-        console.log(id);
-        // console.log("These are the params", params)
-        // console.log("These is the id", id)
-
-        return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
-            method: 'PATCH',
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(params)
-          }).then(res => {
-            // console.log(res.json());
-          });
-    }
-
-  
-
-    // Modify this block to delete comments
-
-    // deleteBid(id) {
-    // this.setState({
-    //     auction: {
-    //     ...this.state.auction,
-    //     bids: this.state.auction.bids.filter(a => a.id !== id)
-    //     }
-    // });
-    // }
-    // const technique = this.state.technique;
-    
-    render() {
-      console.log("Do we have access to the technique?", this.state.technique)
-
-
-        if (!this.state.video || this.state.video.length === 0) {
-            return <div></div>;
-        }
-
-        const currentUser = this.props.currentUser;
-        // const renderVideo = this.state.video[0]["canadian_version"];
-       
-
-        // asyncHandler(renderVideo);
-        // console.log("This is the video", renderVideo);
-        // console.log("This is the state's video", this.state.video);
-
-
-        return (
-            <main className="TechniqueShowPage">
+          {/* if (this.state.belt.id === 3) {
+            return (
+              <>
+                <option
+                  className="gradecoloroption"
+                  style={{
+                    backgroundColor: "lightblue",
+                    pointerEvents: "none",
+                  }}
+                >
+                  3rd kyu (Light Blue){" "}
+                </option>
+              </>
+            );
+          } */}
+            {/* {this.state.belt?.map((belt) => {
+              if (belt.id === this.state.technique.belt_id)
+                if (belt.id === 3) {
+                  // Here we need to match the main belt.id with the technique.belt_id which has many different values based on which technique it is
+                  // Special case for light blue belt with "rd" as a suffix
+                  return (
+                    <>
+                      <option
+                        className="gradecoloroption"
+                        style={{
+                          backgroundColor: "lightblue",
+                          pointerEvents: "none",
+                        }}
+                      >
+                        3rd kyu (Light Blue){" "}
+                      </option>
+                    </>
+                  );
+                } else if (belt.id === 2) {
+                  // Special case for dark blue belt with "nd" as a suffix
+                  return (
+                    <>
+                      <option
+                        className="gradecoloroption"
+                        style={{
+                          backgroundColor: "#00008b",
+                          color: "white",
+                          pointerEvents: "none",
+                        }}
+                      >
+                        2nd kyu (Dark Blue){" "}
+                      </option>
+                    </>
+                  );
+                } else if (belt.id === 1) {
+                  // Special case for brown belt with "st" as a suffix
+                  return (
+                    <>
+                      <option
+                        className="gradecoloroption"
+                        style={{
+                          backgroundColor: belt.colour,
+                          pointerEvents: "none",
+                        }}
+                      >
+                        {belt.id +
+                          "st kyu (" +
+                          belt.colour.charAt(0).toUpperCase() +
+                          belt.colour.slice(1) +
+                          ")"}{" "}
+                      </option>
+                    </>
+                  );
+                } else {
+                  // Default case for all other grades with "th" as a suffix
+                  return (
+                    <>
+                      <option
+                        className="gradecoloroption"
+                        style={{
+                          backgroundColor: belt.colour,
+                          pointerEvents: "none",
+                        }}
+                      >
+                        {belt.id +
+                          "th kyu (" +
+                          belt.colour.charAt(0).toUpperCase() +
+                          belt.colour.slice(1) +
+                          ")"}{" "}
+                      </option>
+                    </>
+                  );
+                }
+            })} */}
             <br />
-            <div className="central">
-            <h2>TECHNIQUE</h2>
-            </div>
+
+            {/* {
+            // this.state.technique_type.map((type) => {
+              // console.log("Testing 1 2 3");
+              // console.log(
+              //   "LHS " +
+              //     type.id +
+              //     "RHS " +
+              //     this.state.technique.technique_type_id
+              // );
+            //   if (technique_type?.id) {
+            //     return (
+            //       <>
+            //         {
+                    
+            //         }
+            //         <br />
+            //         {type.sub_category}
+            //       </>
+            //     );
+            //   }
+            // )}
+            } */}
+
+            <text style={{ fontStyle: "italic", padding: "20rem" }}>
+              {this.state.technique_type.category}
+            </text>
             <br />
-                <div
-                    className="ui list"
-                    style={{
-                        listStyle: "none",
-                        paddingLeft: 0
-                    }}
-                    >
+            <text style={{ fontWeight: "bold", padding: "14rem" }}>
+            {this.state.technique.summary}
+            </text>
+            <br />
+            <br />
+            {this.state.video?.map((video) => {
+              return (
+                <>
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="row">
+                          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                          {/* test */}
+                          <iframe
+                          className="iframe"
+                          src={
+                            video.canadian_version
+                              ? urlHandler(video.canadian_version)
+                              : ""
+                          }
+                          height="200rem"
+                          width="100%"
+                          frameBorder="0"
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
+                          title="video"
+                        />
                         
-                        <>
-
-                        {this.state.belt.map(belt => {
-                             if(belt.id === this.state.technique.belt_id) // Here we need to match the main belt.id with the technique.belt_id which has many different values based on which technique it is
-                              if(belt.id === 3){ // Special case for light blue belt with "rd" as a suffix
-                                return(
-                                  <>
-                                  <option className="gradecoloroption" style={{backgroundColor:"lightblue", pointerEvents:"none"}}>3rd kyu (Light Blue) </option>
-                                  </>
-                                )}
-                              else if(belt.id === 2){ // Special case for dark blue belt with "nd" as a suffix
-                                return(
-                                  <>
-                                  <option className="gradecoloroption" style={{backgroundColor:"#00008b", color:"white", pointerEvents:"none"}}>2nd kyu (Dark Blue) </option>
-                                  </>
-                                )}
-                              else if(belt.id === 1){ // Special case for brown belt with "st" as a suffix
-                                return(
-                                  <>
-                                  <option className="gradecoloroption" style={{backgroundColor:belt.colour, pointerEvents:"none"}}>{belt.id + "st kyu (" + belt.colour.charAt(0).toUpperCase() + belt.colour.slice(1) + ")"} </option>
-                                  </>
-                                )}
-                              else {
-                                  return(
-                                    <>
-                                    <option className="gradecoloroption" style={{backgroundColor:belt.colour, pointerEvents:"none"}}>{belt.id + "th kyu (" + belt.colour.charAt(0).toUpperCase() + belt.colour.slice(1) + ")"} </option>
-                                    </>
-                                  )}
-                        })}
-                        <br />
-
-                         
-                        {this.state.technique_type.map(type => {
-
-                        console.log("Testing 1 2 3"); 
-                        console.log("LHS " + type.id + "RHS " + this.state.technique.technique_type_id);
-                         if(type.id === this.state.technique.technique_type_id){
-                         return(
-                             <>
-                                {<text style={{fontStyle:"italic"}}>{type.category}</text> }
-                                <br />
-                                {type.sub_category}
-                                </>
-                           )}
-                        })}
-                        <br />
-                        {this.state.technique.summary}
-                        <br />
-                        <br />
-                        <iframe src={this.state.video.canadian_version}
-                        height="300px"
-                        width="40%"
-                        frameBorder='0'
-                        allow='autoplay; encrypted-media'
-                        allowFullScreen
-                        title='video'
-                         />
-
-{/* https://www.youtube.com/embed/Cvb3hkHJUVk */}
-
-                        <br />
-
-
-                        {/*{this.state.technique.videos_id}*/}
-                        <br />
-                        {this.state.technique.is_different ? 
-                         <>
-                             {<text style={{fontWeight:"bold"}}>What's different to the UK syllabus?</text> }
-                             <br />
-                             {this.state.technique.difference_content}
-                             <br />
-                             <br />
-                         </>
-                         
-                        : ""
-
-                        }
-                        <>
+                        <div className= "caTitle">{video.canadian_version ? "Canadian Version" : ""}</div>
                         
-                        { this.state.technique?.created_at? 
-                        <>
-                             <p>Posted on {moment(this.state.technique.created_at ).format("MMM Do, YYYY")}</p>
-                             <Button variant="danger" type="danger" onClick={id => this.deleteTechnique(this.state.technique.id)}>
-                             Delete
-                           </Button>
-                           {this.state.error ? 
-                             <p>Cannot delete technique</p>
-                              :<></>}
-                           <br />
-                           <br />
-                           <br />
-                           </>
-                         : ""
-                         }
-                         </>
-                         <Nav.Link key = {this.state.technique.id} style={{ paddingLeft: 0, paddingTop: 0 }} href={`/techniques/${this.state.technique.id}/edit`}>Edit</Nav.Link>
+                          </div>
+                        {/* <div class="w-100"></div> */}
 
-                         {/* <Link to={`/techniques/edit/${this.state.technique.id}`}>
-                          Edit
-                          <Button variant="info" type="info" onClick={(id) =>
-                          // this.updateTechnique(this.props.technique.id, this.props.technique)
-                          {  }
-                          }>
-                             Edit
-                           </Button>
-                        </Link> */}
+                          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 
+                            {/* testing */}
+                            <iframe
+                          className="iframe"
+                          src={
+                            video.uk_version ? urlHandler(video.uk_version) : ""
+                          }
+                          height="200rem"
+                          width="100%"
+                          frameBorder="0"
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
+                          title="video"
+                        />
+                        <div className= "ukTitle">{video.uk_version ? "British Version" : ""}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br />
+                  <br />
 
-                        </>
-              </div>
-        </main>
-    );}
-                        
+                  <br />
+                </>
+              );
+            })}
 
-            // <main>
-            //     <AuctionDetails {...this.state.auction} />
-            
-            //     {currentUser ? (
-            //         <>
-            //             <NewBidForm
-            //                 auction={this.state.auction}
-            //                 onSubmit={this.createBid}
-            //                 errors={this.state.errors}
-            //             />
-            //         </>
-            //     ) : (
-            //         <React.Fragment></React.Fragment>
-            //     )}
-            //     <br />
-            //      <p><u>Previous Bids</u> {userIsOwner()}</p>
+            <br />
 
-            //         <BidList bids={bids} onBidDeleteClick={id => this.deleteBid(id)} />
-            // </main>
+            {/*{this.state.technique.videos_id}*/}
+            <br />
+            {this.state.technique.is_different ? (
+              <>
+                {
+                  <text style={{ fontWeight: "bold" }}>
+                    What's different to the UK syllabus?
+                  </text>
+                }
+                <br />
+                {this.state.technique.difference_content}
+                <br />
+                <br />
+              </>
+            ) : (
+              ""
+            )}
+            <>
+              {this.state.technique?.created_at ? (
+                <>
+                  <p>
+                    Posted on{" "}
+                    {moment(this.state.technique.created_at).format(
+                      "MMM Do, YYYY"
+                    )}
+                  </p>
 
+                  {/* Delete button currently isn't working- fix! */}
+                  <Button
+                    variant="danger"
+                    type="danger"
+                    onClick={(id) =>
+                      this.deleteTechnique(this.state.technique.id)
+                    }
+                  >
+                    Delete
+                  </Button>
+                  {this.state.error ? <p>Cannot delete technique</p> : <></>}
+                  <br />
+                  <br />
+                  <br />
+                </>
+              ) : (
+                ""
+              )}
+            </>
+            <Button
+              variant="success"
+              key={this.state.technique.id}
+              style={{ paddingLeft: 10, paddingRight: 10 }}
+              href={`/techniques/${this.state.technique.id}/edit`}
+            >
+              Edit
+            </Button>
+          {/* </> */}
+        </div>
+      </main>
+    );
+  }
+
+  // If comments are a thing to be implemented, this block may be a useful guide
+  // <main>
+  //     <AuctionDetails {...this.state.auction} />
+
+  //     {currentUser ? (
+  //         <>
+  //             <NewBidForm
+  //                 auction={this.state.auction}
+  //                 onSubmit={this.createBid}
+  //                 errors={this.state.errors}
+  //             />
+  //         </>
+  //     ) : (
+  //         <React.Fragment></React.Fragment>
+  //     )}
+  //     <br />
+  //      <p><u>Previous Bids</u> {userIsOwner()}</p>
+
+  //         <BidList bids={bids} onBidDeleteClick={id => this.deleteBid(id)} />
+  // </main>
 }
-
 
 export default TechniqueShowPage;

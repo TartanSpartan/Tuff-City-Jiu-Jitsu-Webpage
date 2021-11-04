@@ -5,6 +5,7 @@ class Api::V1::TechniquesController < Api::ApplicationController
     rescue_from(ActiveRecord:: RecordNotFound, with: :record_not_found)
     rescue_from(ActiveRecord:: RecordInvalid, with: :record_invalid)
 
+    # Bug: can't delete videos, thus can't delete techniques except by total database reset
 
     def index
         techniques = Technique.all.order(belt_id: :desc) # This should order the techniques by beltcode
@@ -98,15 +99,24 @@ class Api::V1::TechniquesController < Api::ApplicationController
         # videos: params["technique"]["videos"]
 
         technique = Technique.new summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i
-        technique_id = technique.id
+
 
         puts "This is the belt", technique.belt_id
         # byebug
         technique.save!
         # byebug
-        video = Video.create! canadian_version: params["videos"][0]["canadianUrl"], technique_id: technique_id
-        puts "This is the video", video
-        technique.videourls = [video.id]
+        video_array = []
+        # Take the video array from the front end
+        # params videos.each
+        # for each in that array
+        # do video.create
+        params["videos"].each do |video|
+            puts "This is the video loop", video
+            new_video = Video.create! canadian_version: video["canadianUrl"], uk_version: video["britishUrl"], technique_id: technique.id
+            video_array.push(new_video.id)
+        end
+        #byebug
+        technique.videourls = video_array
         technique.save!
         puts "This are the params to be committed", params
         puts "This is the technique", technique
@@ -132,6 +142,13 @@ class Api::V1::TechniquesController < Api::ApplicationController
     end
 
     def destroy
+        # We do a cascading delete for the videos associated with the technique, then delete the technique itself
+        puts "######@"
+        puts @technique.id
+        videos = Video.where(:technique_id =>@technique.id)
+        videos.each do |video|
+            video.destroy
+        end
         @technique.destroy
         render(json: { status: 200 }, status: 200)
     end
@@ -167,12 +184,14 @@ class Api::V1::TechniquesController < Api::ApplicationController
         #  "videos_id: ", params["videos_id"].to_i
         #, "videourls: ", params["videourls"][0]["url"].to_s
 
-
-        # New approach, does this work?
-        technique = Technique.update summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i
+        technique = Technique.find(params["id"])
+        technique.update(summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i)
         puts "This is the belt", technique.belt_id
         technique.save!
-        video = Video.update canadian_version: params["videos"][0]["canadianUrl"]
+        puts "This is the video id", Video.find(params["id"])
+        # byebug
+        video = Video.find(params["id"])
+        video.update(canadian_version: params["videos"][0]["canadianUrl"], technique_id: technique.id)
         puts "This is the video", video
         video.save!
         technique.videourls = [video.id]
@@ -216,6 +235,7 @@ class Api::V1::TechniquesController < Api::ApplicationController
     def technique_params
         params.require(:technique)
         .permit( # Replace these as appropriate
+            :id,
             :summary,
             :is_different,
             :difference_content,

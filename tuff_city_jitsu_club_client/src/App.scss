@@ -1,0 +1,180 @@
+@import "~bootstrap/scss/bootstrap";
+// @import "bootstrap/scss/functions"; 
+// @import "bootstrap/scss/variables";
+// @import "bootstrap/scss/mixins";
+
+// include customized bootstrap
+@import './scss/config';
+
+// .App {
+//   text-align: center;
+// }
+
+// .App-logo {
+//   height: 40vmin;
+//   pointer-events: none;
+// }
+
+// @media (prefers-reduced-motion: no-preference) {
+//   .App-logo {
+//     animation: App-logo-spin infinite 20s linear;
+//   }
+// }
+
+// .App-header {
+//   background-color: #282c34;
+//   min-height: 100vh;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   font-size: calc(10px + 2vmin);
+//   color: white;
+// }
+
+// .App-link {
+//   color: #61dafb;
+// }
+
+// @keyframes App-logo-spin {
+//   from {
+//     transform: rotate(0deg);
+//   }
+//   to {
+//     transform: rotate(360deg);
+//   }
+// }
+
+.body {
+  background-color: "#cc0000";
+}
+
+.caTitle{
+  padding-right: 4rem;
+}
+
+.central {
+  border-left: "1px solid";
+}
+
+.clubLogo{
+  display: flex;
+  justify-content: center;
+ }
+ 
+.editButton {
+  color: blue !important;
+}
+
+.gradecoloroption:hover, .gradecoloroption:focus {
+  background-color:white !important;
+}
+
+.gettingAround {
+  // display: flex !important;
+  // justify-content: center !important;
+  margin-top: 2.2rem;
+  color: white !important;
+}
+
+.grabber{
+  display: flex;
+  justify-content: center;
+  
+}
+
+.h1 {
+  background-color: "#cc0000";
+}
+
+.iframe {
+  margin-bottom: 1rem;
+  margin-right: 2rem;
+
+}
+
+// .jcLogo {
+//   padding-left: 10rem;
+// }
+
+// .logoBox {
+//   padding-left: 10rem;
+// }
+
+.me-auto {
+  // color: white !important;
+}
+
+.navbar  {
+  /* Make a collapsible navbar for small page widths */
+  background-color:lightgray;
+  color: white;
+}
+
+.nav-container {
+  display: flex !important;
+  justify-content: space-around !important;
+  // align-items: stretch;
+}
+
+.nav-link {
+  margin-bottom: 1rem;
+  color: yellow !important;
+}
+
+.photo {
+  height: 35vh;
+  width: 35vh;
+  display:flex;
+  justify-content: center;
+
+}
+
+.techniqueBox {
+  border-top: "1px solid" !important;
+  border-bottom: "1px solid";
+}
+
+.techniqueLink {
+  margin-left:0;
+  color:blue !important;
+}
+
+#top-label {
+  font-weight: bold !important;
+}
+
+.whatIsLink { // this isn't taking...? When it does work, offload from inline into here
+  padding-left: 1rem;
+}
+
+.whiteText {
+  color: white !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+ 
+
+/* body {
+  background-color: #282c34;
+  color: white;
+  padding: 40px;
+  font-family: Arial;
+  text-align: center;
+} */
+
+/* .gradecoloroption {
+  font-size: 20px;
+} */

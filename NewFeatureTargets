@@ -1,0 +1,15 @@
+For every "Add New Technique" button on the syllabus page, it loads the appropriate belt in the menu option based on where you clicked it. If it's from the header, then default to Yellow.
+
+Similarly, allow admin to choose default belt and technique type for when they want to focus on those in particular.
+
+Batch technique type processing. Add all techniques under a specific technique type for a specific grade; continuously add more fields to handle all of these by filling in a number specifying how many, then fill out ALL fields, submit, then they're all done.
+
+If manual technique input is tedious, then need to do it ALL in the seed file... also tedious, but at least it only has to be written out once and it can be regenerated after resetting the database.
+
+Lock out the admin features and test for regular users, mandatory before deployment.
+
+Copy a technique into a new create (or also, potentially, update) form, so that a very similar one can be created with very minimal changes.
+
+Once everything is tiptop on the syllabus side, visualise it as a semantic tree mindmap.
+
+Show multiple videos per technique, if required (some techniques just need one).

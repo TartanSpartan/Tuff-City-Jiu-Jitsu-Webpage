@@ -37,17 +37,26 @@ class Api::V1::VideosController < Api::ApplicationController
     end
 
     def show
-        puts "Here are the video params", params["id"]
-        video = Video.find params["id"]
-        puts video
-        if video
-            puts "Here is the video", video
-            render(
-                json: video
-                    )
-        else
-            render(json: {error: "Video Not Found"})
-        end
+        # puts "Here are the video params", params["id"]
+        # video = Video.find params["id"]
+        # puts video
+        # if video
+        #     puts "Here is the video", video
+        #     render(
+        #         json: video
+        #             )
+        # else
+        #     render(json: {error: "Video Not Found"})
+        # end
+        puts "These are the search parameters", params["id"]
+        # technique_id = Technique.where("video_ids = ?", Video.ids).first.id
+        video = Video.where("technique_id = ?", params["id"]) 
+
+        puts "################# here are the videos", video
+
+        render(
+            json: video.as_json
+        )
 
     end
 
@@ -81,6 +90,10 @@ class Api::V1::VideosController < Api::ApplicationController
             json: video.as_json
         )
     end
+
+    # def where
+
+    # end
 
     private 
 

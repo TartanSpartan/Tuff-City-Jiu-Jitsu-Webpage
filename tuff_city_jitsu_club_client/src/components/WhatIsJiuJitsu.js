@@ -3,6 +3,11 @@ import new_students from '../img/new_students.jpg';
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
 import Table from "react-bootstrap/Table";
+import { HashLink as Link } from 'react-router-hash-link';
+import { HashRouter, Route } from 'react-router-dom'; 
+import '../App.scss';
+
+
 // import * as Scroll from 'react-scroll';
 // import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
@@ -13,7 +18,7 @@ export class WhatIsJiuJitsu extends React.Component {
       this.state = {};
     }
   
-    
+
     render() {
       return (
           <>
@@ -21,14 +26,15 @@ export class WhatIsJiuJitsu extends React.Component {
             <img src={new_students} alt="newstudents"></img>
               <Card.Header id="capitalised-header" style={{textTransform: 'uppercase'}}>Beginner's Information for New Students</Card.Header>
               <br />
-              <Card.Link href="#" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14, paddingLeft: 20}} activeClass="active" to="equipment" spy={true} smooth={true}>Equipment Requirements</Card.Link>
-              <Card.Link href="#" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14}}  to="expect" spy={true} smooth={true}>What to Expect When Training</Card.Link>
-              <Card.Link href="#" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14}} to="etiquette" spy={true} smooth={true}>Dojo Etiquette</Card.Link>
-              <Card.Link href="#" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14}} to="belts" spy={true} smooth={true}>Belt System</Card.Link>
-              <Card.Link href="#" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14}} to="terminology" spy={true} smooth={true}>Terminology</Card.Link>
+              <HashRouter basename="/whatisjitsu"/>
+              <Link smooth to="/whatisjitsu#equipment" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14, paddingLeft: 13}} activeClass="active" id="whatIsLink" spy={true} smooth={true}>Equipment Requirements</Link>
+              <Link smooth to="/whatisjitsu#expect" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14, paddingLeft: 13}} spy={true} smooth={true}>What to Expect When Training</Link>
+              <Link smooth to="/whatisjitsu#etiquette" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14, paddingLeft: 13}} spy={true} smooth={true}>Dojo Etiquette</Link>
+              <Link smooth to="/whatisjitsu#belts" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14, paddingLeft: 13}} spy={true} smooth={true}>Belt System</Link>
+              <Link smooth to="/whatisjitsu#terminology" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14, paddingLeft: 13}} spy={true} smooth={true}>Terminology</Link>
               <br />
               <div id="home" style={{height: 500}}>
-            <Card.Header id="capitalised-header" style={{textTransform: 'uppercase'}}>Equipment Requirements</Card.Header>
+            <Card.Header id="equipment" style={{textTransform: 'uppercase'}}>Equipment Requirements</Card.Header>
             <br />
 
             <Card.Text style={{paddingLeft: 15, paddingRight: 15, fontSize: 14}} >To try jiu jitsu, all you need is comfortable loose clothing without buckles, or buttons.
@@ -41,7 +47,7 @@ export class WhatIsJiuJitsu extends React.Component {
 
             As you progress in your Jiu Jitsu training, you may wish to purchase other equipment. You can discuss these options with your instructor.</Card.Text>
             </div>
-            <Card.Header id="capitalised-header" style={{textTransform: 'uppercase'}}>What To Expect When Training</Card.Header>
+            <Card.Header id="expect" style={{textTransform: 'uppercase'}}>What To Expect When Training</Card.Header>
             <br />
 
             <Card.Text style={{paddingLeft: 15, paddingRight: 15, fontSize: 14}} >
@@ -94,7 +100,7 @@ export class WhatIsJiuJitsu extends React.Component {
             <br />
             </Card.Text>
 
-            <Card.Header id="capitalised-header" style={{textTransform: 'uppercase'}}>Dojo Etiquette</Card.Header>
+            <Card.Header id="etiquette" style={{textTransform: 'uppercase'}}>Dojo Etiquette</Card.Header>
             <br />
 
             <Card.Text style={{paddingLeft: 15, paddingRight: 15, fontSize: 14}} >
@@ -135,7 +141,7 @@ export class WhatIsJiuJitsu extends React.Component {
     <Card.Body >
     <br />
     <br />
-    <Card.Header id="capitalised-header" style={{textTransform: 'uppercase', paddingLeft: 0}}>Belt System</Card.Header>
+    <Card.Header id="belts" style={{textTransform: 'uppercase', paddingLeft: 0}}>Belt System</Card.Header>
     <Card.Text  style={{paddingLeft: 0, paddingRight: 0, fontSize: 14}}>
     <br />
     <br />
@@ -218,7 +224,7 @@ export class WhatIsJiuJitsu extends React.Component {
   </Card>
 </CardGroup>
 <Card style={{backgroundColor: "gray", color: "white", paddingLeft: 15}}>
-<Card.Header id="capitalised-header" style={{textTransform: 'uppercase', paddingLeft: 0}}>Terminology</Card.Header>
+<Card.Header id="terminology" style={{textTransform: 'uppercase', paddingLeft: 0}}>Terminology</Card.Header>
 <Card.Body>
     <Table responsive>
   <thead>
@@ -317,7 +323,7 @@ export class WhatIsJiuJitsu extends React.Component {
 </Table>
     </Card.Body>
 </Card> 
-    <Card.Text style={{paddingLeft: 90, fontSize: 14}} >
+    <Card.Text style={{paddingLeft: 90, marginLeft: 90, fontSize: 14}} >
         Reproduced With Permission. All Contents Copyright © Jitsu Canada 1999-2018 
     </Card.Text>
         </Card>

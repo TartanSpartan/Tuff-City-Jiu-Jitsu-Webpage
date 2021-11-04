@@ -1,6 +1,6 @@
 import React from "react";
 // import { NavLink } from "react-router-dom";
-import "../App.css";
+import "../App.scss";
 import { Navbar, Nav, Container } from 'react-bootstrap';
 // import { NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 
@@ -18,29 +18,29 @@ function NavBar(props) {
 
 };
 return (
-    <Navbar bg="light" variant="light">
-    <Container id="nav-container">
-    <Navbar.Brand href="/">Getting around</Navbar.Brand>
+    <Navbar id="navbar" className="navbar">
+    <Container id="nav-container" className="nav-container">
+    <Navbar.Brand className="gettingAround" id="gettingAround" href="/">Getting Around</Navbar.Brand>
     <Nav className="me-auto">
-      <Nav.Link href="/">Home</Nav.Link>
+      <Nav.Link className="nav-link" href="/">Home</Nav.Link>
       {/* <Nav.Link href="/posts">Blog</Nav.Link> */}
-      <Nav.Link href="/whatisjitsu">What Is Jiu Jitsu?</Nav.Link>
-      <Nav.Link href="/profiles">Who Are We?</Nav.Link>
+      <Nav.Link className="nav-link" href="/whatisjitsu">What Is Jiu Jitsu?</Nav.Link>
+      <Nav.Link className="nav-link" href="/profiles">Who Are We?</Nav.Link>
       {currentUser ? (
         <>
-        <Nav.Link href="/syllabus">Syllabus</Nav.Link>
-        <Nav.Link href="/technique/new">Add Techniques To Syllabus</Nav.Link>
+        <Nav.Link className="nav-link" href="/syllabus">Syllabus</Nav.Link>
+        <Nav.Link className="nav-link" className="nav-link" href="/technique/new">Add Techniques To Syllabus</Nav.Link>
         {/* <Nav.Link href="/syllabus/mindmap">Mindmap For Syllabus</Nav.Link> */}
         {/* <Nav.Link href="/events">Events</Nav.Link> */}
-        <Nav.Link href="/" onClick={onSignOut}>Sign Out</Nav.Link>
-        <Nav.Link className="item" style={{ color: "green" }}>
+        <Nav.Link className="nav-link" href="/" onClick={onSignOut}>Sign Out</Nav.Link>
+        <Nav.Link className="nav-link" className="item" style={{ color: "green" }}>
           Welcome {currentUser.full_name}
         </Nav.Link>
       </>
       ) : (
         <React.Fragment>
-        <Nav.Link href="/sign_in">Sign In</Nav.Link>
-        <Nav.Link href="/sign_up">Sign Up</Nav.Link>
+        <Nav.Link className="nav-link" href="/sign_in">Sign In</Nav.Link>
+        <Nav.Link className="nav-link" href="/sign_up">Sign Up</Nav.Link>
         </React.Fragment>
       )}
       {/* {adminUser ? (

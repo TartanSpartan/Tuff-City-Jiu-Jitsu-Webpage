@@ -25,6 +25,8 @@ gem 'cancancan'
 gem 'rack-cors'
 gem 'active_model_serializers'
 
+gem 'rexml', '~> 3.2', '>= 3.2.4'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

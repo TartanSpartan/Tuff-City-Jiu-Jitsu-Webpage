@@ -9,13 +9,15 @@ export class Welcome extends React.Component {
     render() {
       return (
         <main className="Welcome">
-          <h1 className="ml-4a">
+          <h1 className="grabber">
             Tuff City Jitsu Club
-            <br />
+          </h1>
+          <h1 className="grabber">
             Learn self defence and make some new friends
           </h1>
-          <span style={{ marginLeft: "20rem" }}>
-          <li><a href='/profiles'><img src={tuff_logo} alt="clublogo" /></a></li>
+          <span className="clubLogo">
+            {/* There is a full stop/period/bulletpoint next to the image there, how to remove it? */}
+          <a href='/profiles'><img src={tuff_logo} alt="clublogo" /></a>
           </span>
         </main>
       );

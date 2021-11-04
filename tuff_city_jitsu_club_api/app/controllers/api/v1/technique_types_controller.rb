@@ -49,6 +49,40 @@ class Api::V1::TechniqueTypesController < Api::ApplicationController
     def find
         # puts "TESTING ========#{current_user.id}" 
         # @technique = Technique.where("belt_grade LIKE ? OR technique_type.category LIKE ?", "%#{params[:search_string]}%", "%#{params[:search_string]}%")
+        # belt_id = BeltGrade.where("user_id = ?", current_user.id).first.id
+        # technique_type = TechniqueType.where("belt_id = ?", belt_id) #, current_user.id)
+        # puts "This is the belt we're referring to", belt_id
+        # puts "This is the technique type we want", @technique_type
+
+        puts "These are the search parameters", params["id"]
+        # technique_id = Technique.where("video_ids = ?", Video.ids).first.id
+        technique_type = TechniqueType.where("technique_type_id = ?", params["id"]) 
+
+        puts "################# here are the technique_types", technique_type
+
+
+
+
+
+        # render(
+        #     json: technique #, each_serializer: TechniquesSerializer
+        #     )
+
+        # technique_type = TechniqueType.all
+        render(
+            json: technique_type.as_json
+        )
+
+
+
+
+
+
+
+
+
+        # puts "TESTING ========#{current_user.id}" 
+        # @technique = Technique.where("belt_grade LIKE ? OR technique_type.category LIKE ?", "%#{params[:search_string]}%", "%#{params[:search_string]}%")
         # belt_id = BeltGrade.where("user_id = ?", current_user.id).first.id # Might need to change this one and so on, test
         # technique_type = TechniqueType.where("belt_id = ?", belt_id) #, current_user.id)
         # puts "This is the belt we're referring to", belt_id
@@ -59,10 +93,10 @@ class Api::V1::TechniqueTypesController < Api::ApplicationController
         #     json: technique #, each_serializer: TechniquesSerializer
         #     )
 
-        technique_types = TechniqueType.all
+        # technique_types = TechniqueType.all
         
-        puts "#################", technique_types
-        techniques = Technique.all
+        # puts "#################", technique_types
+        # techniques = Technique.all
 
         # render(
         #     json: technique_types, each_serializer: TechniqueTypesSerializer
@@ -72,9 +106,9 @@ class Api::V1::TechniqueTypesController < Api::ApplicationController
         #     json: techniques, each_serializer:TechniquesSerializer
         # )
 
-        render(
-            json: technique_types.as_json
-        )
+        # render(
+        #     json: technique_types.as_json
+        # )
 
 
         

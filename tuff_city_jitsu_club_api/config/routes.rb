@@ -12,6 +12,8 @@ Rails.application.routes.draw do
         end
         resources :mindmap
       end
+      resources :belts
+      get "/belts_find", {to: "belts#find"}
       resources :techniques
       get "/techniques_find", {to: "techniques#find"}
       get '/techniques/:id/edit', to: "syllabi#get_syllabus_index_page_data";

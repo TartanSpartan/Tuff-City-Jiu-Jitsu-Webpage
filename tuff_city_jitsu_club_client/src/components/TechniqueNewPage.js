@@ -29,7 +29,9 @@ export default class TechniqueNewPage extends Component {
         <NewTechniqueForm
           key={this.state.id}
           onSubmit={this.createTechnique}
+          onCancel={this.props.handleCancelClick}
           errors={this.state.errors}
+          
         />
       </main>
     );

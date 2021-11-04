@@ -51,6 +51,16 @@ export const Belt = {
     }).then(res => res.json());
   },
 
+  find(id) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/belts/${id}`, {
+      credentials: "include"
+    }).then(res=>{
+      console.log("This is the belt response", res);
+      return(res.json())
+      }
+    );
+  },
+
   // // Fetch one belt from the server
   // one() {
   //   return fetch(`${REACT_APP_BASE_URL}/belts`, {
@@ -72,8 +82,9 @@ export const TechniqueType = {
     );
   },
 
-  find() {
-    return fetch(`${process.env.REACT_APP_BASE_URL}/technique_types_find`, {
+
+  find(id) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/technique_types/${id}`, {
       credentials: "include"
     }).then(res=>{
       console.log(res);

@@ -84,7 +84,7 @@ during a Masters degree, and then in South West England for work,
 serving as a sempai or senior mentor in these clubs. However he
 was soon drawn back to his roots in Edinburgh and started
 intensive training for brown belt, which he achieved in December,
-2016. Since then he did some help teaching in the city but was
+2016. Since then he provided some help to teach in the city but was
 aching for a chance to take up more responsibilities, and such
 opportunities were hard to find in such a talent-rich and
 competitive environment. Always drawn to Canada, he connected
@@ -103,17 +103,17 @@ good pool of new members who will become both proficient in self
 defence and willing to oblige the senior members in dishing out
 tough beatings to hone them up for subsequent gradings, and to
 foster good links with the Kilarney, Vancouver club and those
-further afield. A fond participant of the triennial Internationa
+further afield. A fond participant of the triennial International
 event, he has been present for it in Edinburgh, then in
 Collingwood, Ontario, Canada, and most recently in Drakensberg,
 South Africa. It's one of his earnest wishes that he'll be able
-to attend the next event in Vienna, Austria, with the virus
+to attend the next event in Vienna, Austria, in 2022 with the virus
 hopefully more or less eradicated by then.
 <br />
 <br />
 One of Seumas' major goals in creating this website was to provide
 an easily searchable syllabus document, not just for students but
-also with a view to allow foreign instructors such as himself to 
+also with a view to allow foreign instructors such as himself and David to 
 better understand the Canadian version, which is quite similar to
 the UK version but does differ in several key ways with specific
 techniques and ordering through the belt grades. He also hopes that
@@ -165,7 +165,7 @@ James Owen, Eric Lau and Paul Glieboska of University of Birmingham and
 Aston University, and perhaps foremost so with the assistance of Pristen 
 Sibanda. Back in Tofino again, and now a permanent resident of
 Canada, David founded the Tuff City Jitsu club. He's very proud of this and
-also his students who regularly come to learn about the martial art. He
+also of his students who regularly come to learn about the martial art. He
 couldn't be more keen to get training resumed in a safe and welcoming
 fashion, and is delighted to see enduring interest during the closure
 amongst like-minded newbies in the community. His other interests include

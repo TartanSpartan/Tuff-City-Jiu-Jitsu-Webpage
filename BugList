@@ -1,0 +1,42 @@
+API:
+
+1. URL array is blank (but might not be an issue as can't save videos right now- come back to this when we can)
+
+2. Consider which methods in which controllers are superfluous, and which are required but aren't currently doing anything (e.g. they have unfunctional code copy/pasted from another controller)
+
+
+Client:
+
+3. Can't access TechniqueType.find props(for category and sub-category) to cache these for their fields in the TechniqueUpdatePage.js form. This needs to be done async to finish after Technique.details finishes. Likewise, for video information.
+
+4. Sometimes when e.g. going to update the difference content, you can't; the form just can't be filled out. May have fixed this but watch out in case it manifests again.
+
+5. When updating the video, it borks. Ditto difference content ?/? is_different. 
+"TypeError: Converting circular structure to JSON
+    --> starting at object with constructor 'HTMLButtonElement'
+    |     property '__reactFiber$koq63rqnbo' -> object with constructor 'FiberNode'
+    --- property 'stateNode' closes the circle"
+    
+    Now a purple belt technique is lost to the ether...
+    
+6. Page load doesn't work e.g. for async functions in UpdateTechniqueForms
+
+7. Ensure that the create and update pages are in line with each other
+
+8. CSS doesn't work on: WhatIsJiuJitsu.js (including inline?), SyllabusShowPage.js, TechniqueShowPage.js,
+
+9. Footer is poorly formatted on e.g. half page width
+
+10. When page jumps to awkward location on load for half-width
+
+11. Is it possible to make the highlighted menu option the right colour (instead of garish orange) on Chromium?
+
+12. Is NotFound page being used? Try to, if not required, remove it. Same with CreatedAt and Technique Summary
+
+13. More illustrative error messages, if possible don't let the pages fail on bad input, but warn the user as to why they're failing
+
+14. If a technique isn't fully filled out in the form, trying to submit it will work but then the technique is "invisible" in the front end. So, need to guard against this so that the filling out of the entire (or majority) of the form is required.
+
+Both:
+
+15. Code cleanup, remove redundant print statements and commented out blocks which will never be used

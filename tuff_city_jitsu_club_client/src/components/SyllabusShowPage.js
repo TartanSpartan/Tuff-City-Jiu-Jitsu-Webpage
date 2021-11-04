@@ -1,20 +1,21 @@
-// Fetch all syllabus data and render here, not on the show page(s)
+// Fetch all syllabus data and render here, not on the syllabus show page(s) (those will be for accessing specific syllabi and info about them)
 
 import React, {useState} from 'react';
 import { Technique, TechniqueType, Syllabus, Belt } from '../requests';
 import _ from "lodash";
 import { Link } from 'react-router-dom';
 import moment from "moment";
+import Button from "react-bootstrap/Button";
 // import Button from "react-bootstrap/Button";
 import { Nav } from 'react-bootstrap'
 // import {confirm} from 'react-bootstrap-confirmation';
-import "../App.css";
+import jc_logo from '../img/jc_logo.jpg'
+import "../App.scss";
 
 /* TO DO:
-Include working update/edit button
+WORKING SCSS!
 Word-specific highlighting in sentences?
 Hover-over instead of permanent date stamps
-Try for cards/borders between the techniques
 Have all techniques be collapsible under technique types
 
 */
@@ -56,7 +57,7 @@ let finishKyuNumber = function(integer) {
   }
 }
 
-let orderArray = ["Waza (techniques)", "Ukemi (breakfalling)", "Atemi (striking)", "Kansetsu (locks)", "Shime-waza (strangles)", "Ne-waza (groundwork)", "Nage-waza (throwing)", "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~", "Henka-waza (transition techniques)", "Kaeshi-waza (counter techniques)", "Bunkai (application for defence)", "(Misc)"];
+let orderArray = ["Waza (techniques)", "Ukemi (breakfalling)", "Atemi (striking)", "Kansetsu (locks)", "Shime-waza (strangles)", "Ne-waza (groundwork)", "Nage-waza (throwing)", "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~", "Henka-waza (transition techniques)", "Kaeshi-waza (counter techniques)", "Bunkai (application for defence)", "Miscellaneous"];
 let sortedArray = [];
 // Where to put the following lines?
 function groupedTechniqueTypes(technique_types){
@@ -88,7 +89,7 @@ export class SyllabusShowPage extends React.Component {
 
 
     componentDidMount() {
-        Syllabus.all(1).then(syllabus => { // Hardcoded as 1 for now for Canada but eventually move it to be dynamic
+        Syllabus.all(1).then(syllabus => { // Hardcoded as 1 for now for Canada but eventually move it to be dynamic for multiple syllabi
             this.setState({
             syllabus: syllabus,
             technique_types: syllabus.technique_types,
@@ -129,10 +130,14 @@ export class SyllabusShowPage extends React.Component {
                 <div className="central">
                 <h2 style={{display: "flex", justifyContent:'center'}}>SYLLABUS</h2>
                 <br />
-
+                <div id="logoBox">
+                {/* Uncomment when this image (and the whole page!) can use SCSS correctly: */}
+                {/* <img src={jc_logo} alt="jitsuCanadaLogo" id="jcLogo"/> */}
+                </div>
                 
                     {this.state.belts.reverse().filter(belt => belt.id !== 8).map(belt =>
                         <>
+                        <br />
                         <h1 style={{fontWeight:"bold", textDecorationLine: 
                         'underline', textDecorationSkipInk: 'none', display: 
                         "flex", justifyContent:'center', 
@@ -153,7 +158,10 @@ export class SyllabusShowPage extends React.Component {
                                 <div class="underline-me" style={{fontWeight:"bold", fontStyle:"italic", textDecorationLine: 'underline', textDecorationSkipInk: 'none'}}>{"Waza (techniques)"}</div> 
                             ) : (key[0].category === "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" )
                             ? (
-                                <div style={{fontWeight:"bold", fontStyle:"italic"}}>{"~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"}</div> 
+                                <>
+                                <br />
+                                <div style={{fontWeight:"bold", fontStyle:"italic", textAlign:"center"}}>{"~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"}</div> 
+                                </>
                             ) : (key[0].category === "Bunkai (application for defence)" )
                             ? (
                                 <div style={{fontWeight:"bold", fontStyle:"italic", textDecorationLine: 'underline', textDecorationSkipInk: 'none'}}>{"Bunkai (application for defence):"}</div> 
@@ -163,8 +171,14 @@ export class SyllabusShowPage extends React.Component {
                             ) : (key[0].category === "Kaeshi-waza (counter techniques)" )
                             ? ( 
                                 <div style={{fontWeight:"bold", fontStyle:"italic", textDecorationLine: 'underline', textDecorationSkipInk: 'none'}}>{"Kaeshi-waza (counter techniques):"}</div> 
-                            ) : (    <div style={{fontWeight:"bold", fontStyle:"italic", borderTop: "1px solid"}}>{key[0].category + ":"}</div> 
+                            ) : (key[0].category === "Miscellaneous" )
+                            ? ( <div></div>
+                            ) : (   
+                                <div style={{fontWeight:"bold", fontStyle:"italic"}}>{key[0].category + ":"}</div>
+                            
                             )}
+                            <br />
+
                             {key.map(technique_type => {
                             return(
                                 <div key = {technique_type.id}>
@@ -172,10 +186,10 @@ export class SyllabusShowPage extends React.Component {
                                 {belt.techniques.filter(technique => technique.technique_type_id === technique_type.id).map(element => {
                                     console.log("This is the technique we want", element)
                                     return(
-                                       
-                                    <div key = {element.id}>
+                                    
+                                    <div key={element.id} className="techniqueBox" id="techniqueBox" style={{ borderBottom: "1px solid", borderTop: "1px solid", borderLeft: "1px solid", borderRight: "1px solid", paddingLeft: "1rem", paddingTop: "0.5rem"}}>
                                         
-                                    <Nav.Link key = {element.id} style={{ paddingLeft: 0, paddingTop: 0 }} href={`/techniques/${element.id}`}>{element.summary}</Nav.Link>
+                                    <Link to={`/techniques/${element.id}`} key = {element.id} id="techniqueLink" style={{ paddingLeft: 0, paddingTop: 0}} >{element.summary}</Link>
                                     <div>{technique_type.sub_category}</div>
                                     
 
@@ -195,6 +209,7 @@ export class SyllabusShowPage extends React.Component {
                                     )
                                 })}
                                 <br />
+                                
                                 {
                                 (technique_type.category === "Waza (techniques)" ) 
                                 ? (
@@ -207,13 +222,23 @@ export class SyllabusShowPage extends React.Component {
                                 <div>{technique_type.techniques_id}</div>
                                 <br />
                                 </div>
+                                
                             )})}
+                            
                         </div>)}
+
+                        {/* The following button should only be visible to admins, and it may be preferential to turn it off even for them once all techniques are recorded such that the syllabus is complete*/}
+                        <Button variant="success" style={{ paddingLeft: 10, paddingRight: 10 }} href={`/technique/new`}>Add New Technique</Button>
+                        <br/ >
+                        <br/ >
+
+
                         
                         </>
                                               
                                         )}
                 </div>
+
                 <br />
                     <div
                         className="ui list"

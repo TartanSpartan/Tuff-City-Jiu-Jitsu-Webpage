@@ -1,9 +1,8 @@
 import React from 'react';
 import NavBar from "./NavBar";
-
 import Footer from "./Footer";
 import AuthRoute from "./AuthRoute";
-import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Link, HashRouter } from "react-router-dom";
 // import NotFoundPage from "./NotFoundPage";
 import SignInPage from "./SignInPage";
 import { SignUpPage } from "./SignUpPage";
@@ -19,6 +18,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { WhoAreWe } from "./WhoAreWe";
 import TechniqueUpdatePage from "./TechniqueUpdatePage";
 // import { AdminPage } from "./AdminPage";
+import '../App.scss';
+// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.css';
+
 
 
 class App extends React.Component {
@@ -63,6 +66,7 @@ class App extends React.Component {
 
         return (
           <>
+                <HashRouter>
                 <BrowserRouter>
                 <div className= "ui container segment">
                     <NavBar currentUser={currentUser} onSignOut={this.signOut}/>
@@ -81,6 +85,7 @@ class App extends React.Component {
                             path="/syllabus"
                             component={SyllabusIndexPage}
                             /> */}
+                            
                            <AuthRoute
                             isAuthenticated={currentUser}
                             path="/syllabus"
@@ -139,6 +144,7 @@ class App extends React.Component {
                         </Switch>
                 </div>
             </BrowserRouter>
+            </HashRouter>
             <Footer />
                         </>
         );
