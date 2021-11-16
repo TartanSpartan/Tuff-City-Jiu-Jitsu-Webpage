@@ -124,7 +124,7 @@ function UpdateTechniqueForm(props){
         {/* Note: italicise options */}
         <Form.Group controlId="formBasicCategory">
             <Form.Label>Category of technique</Form.Label>
-            <Form.Control name = "category" type="category" as="select" value={props.technique_type.category} defaultValue={props.technique_type.category}>
+            <Form.Control name = "category" type="category" as="select" defaultValue={props.technique_type.category}>
                 <option>Ukemi (breakfalling) </option>
                 <option>Atemi (striking)</option>
                 <option>Kansetsu (locks)</option>
@@ -141,7 +141,7 @@ function UpdateTechniqueForm(props){
         </Form.Group>
         <Form.Group controlId="formBasicSubCategory">
         <Form.Label>Sub Category</Form.Label>
-        <Form.Control name = "sub_category" type="sub_category" placeHolder="Can be blank if none comes to mind." value={props.technique_type.sub_category} />
+        <Form.Control name = "sub_category" type="sub_category" placeHolder="Can be blank if none comes to mind." defaultValue={props.technique_type.sub_category} />
         </Form.Group>
         <Form.Group controlId="formBasicVideos">
         {videos.map((x, i) => {
