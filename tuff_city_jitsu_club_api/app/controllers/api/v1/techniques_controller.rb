@@ -177,29 +177,23 @@ class Api::V1::TechniquesController < Api::ApplicationController
         puts "Did that create a new TT?", technique_type.inspect
 
         technique.update(summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type.id)
-        # technique.update(summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i)
-
-        # puts "This is the belt", technique.belt_id
         technique.save!
-        # puts "The technique type ID is ", technique_type_id
-        # puts "*************************************************************************"
-        # puts "these are the params:", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i
         #  "videos_id: ", params["videos_id"].to_i
         #, "videourls: ", params["videourls"][0]["url"].to_s
 
 
         # byebug
-        # video_array = []
-        # params["videos"].each do |video|
-            # puts "This is the video loop", video
-        #     update_video = Video.create! canadian_version: video["canadianUrl"], uk_version: video["britishUrl"], technique_id: technique.id
-        #     video_array.push(update_video.id)
-        # end
-        # technique.videourls = video_array
-        # technique.save!
-        # puts "This are the params to be committed", params
-        # puts "This is the updated technique", technique
-        # render json: { id: modified_syllabus.id }
+        video_array = []
+        params["videos"].each do |video|
+            puts "This is the video loop", video
+            update_video = Video.create! canadian_version: video["canadianUrl"], uk_version: video["britishUrl"], technique_id: technique.id
+            video_array.push(update_video.id)
+        end
+        technique.videourls = video_array
+        technique.save!
+        puts "This are the params to be committed", params
+        puts "This is the updated technique", technique
+        render json: { id: modified_syllabus.id }
 
         # if @technique.update summary: params["summary"], is_different:params["is_different"], difference_content:params["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i, videourls: params["videourls"]
         #     puts "These are the technique params to be updated", technique_params
