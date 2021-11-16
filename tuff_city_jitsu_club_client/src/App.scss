@@ -49,12 +49,19 @@
   background-color: "#cc0000";
 }
 
-.caTitle{
-  padding-right: 4rem;
+.category { // Unfunctional
+  font-style: "italic" !important;
+  padding: "20rem";
 }
 
-.central {
-  border-left: "1px solid";
+.caTitle {
+  text-align: center;
+}
+
+
+
+.central { 
+  padding-left: 1rem !important;
 }
 
 .clubLogo{
@@ -80,7 +87,10 @@
 .grabber{
   display: flex;
   justify-content: center;
-  
+}
+
+.gradeColor{
+  text-align: center;
 }
 
 .h1 {
@@ -90,7 +100,11 @@
 .iframe {
   margin-bottom: 1rem;
   margin-right: 2rem;
+}
 
+.iframeAndCaption {
+  display: flex;
+  flex-direction: column;
 }
 
 // .jcLogo {
@@ -130,6 +144,11 @@
 
 }
 
+.subCategory { // Unfunctional
+  font-style: "bold" !important;
+  padding-left: "14rem";
+}
+
 .techniqueBox {
   border-top: "1px solid" !important;
   border-bottom: "1px solid";
@@ -140,16 +159,49 @@
   color:blue !important;
 }
 
+.TechniqueShowPage {
+  display: flex;
+}
+
+.techniqueTitle {
+  justify-content: central;
+  text-align: center;
+}
+
+.TechniqueShowPage {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.techniqueType {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+}
+
 #top-label {
   font-weight: bold !important;
 }
+// Hash is ID, ./dot is class(name)
+
+.ukTitle {
+  padding-left: 6rem;
+  text-align: center;
+}
 
 .whatIsLink { // this isn't taking...? When it does work, offload from inline into here
-  padding-left: 1rem;
+  padding-left: 10rem !important;
 }
 
 .whiteText {
   color: white !important;
+}
+
+.wideView {
+  padding-left: 20rem !important;
+  // border: 1px solid black;
 }
 
 

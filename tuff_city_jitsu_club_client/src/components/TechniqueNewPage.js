@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Technique } from "../requests";
 import NewTechniqueForm from "./NewTechniqueForm";
+import "../App.scss";
 
 export default class TechniqueNewPage extends Component {
   state = {

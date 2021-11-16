@@ -154,8 +154,9 @@ function NewTechniqueForm(props) {
           {/* This should be a form which permits multiple URL inputs with a plus button causing new input fields to appear, with an onChange handler, and groups the URLs into an array (print this on the console, and also on the TechniqueShowPage) */}
         </Form.Group>
         <Form.Group controlId="formBasicDifferenceCheck">
-          <Form.Label>Is this technique different, or separate from the UK syllabus?</Form.Label>
-          <Form.Control name = "is_different" type="is_different" as="select" defaultValue="Maybe it's on a different belt or is done differently in the UK" defaultValue="No">
+          <Form.Label>Is this technique different, or separate, from the UK syllabus?</Form.Label>
+          <Form.Control name = "is_different" type="is_different" as="select" defaultValue="Please select.">
+                <option>Please select </option>
                 <option>No </option>
                 <option>Yes </option>
             </Form.Control>        

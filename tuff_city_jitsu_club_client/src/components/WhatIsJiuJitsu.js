@@ -27,7 +27,7 @@ export class WhatIsJiuJitsu extends React.Component {
               <Card.Header id="capitalised-header" style={{textTransform: 'uppercase'}}>Beginner's Information for New Students</Card.Header>
               <br />
               <HashRouter basename="/whatisjitsu"/>
-              <Link smooth to="/whatisjitsu#equipment" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14, paddingLeft: 13}} activeClass="active" id="whatIsLink" spy={true} smooth={true}>Equipment Requirements</Link>
+              <Link smooth to="/whatisjitsu#equipment" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14}} activeClass="active" className="whatIsLink" spy={true} smooth={true}>Equipment Requirements</Link>
               <Link smooth to="/whatisjitsu#expect" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14, paddingLeft: 13}} spy={true} smooth={true}>What to Expect When Training</Link>
               <Link smooth to="/whatisjitsu#etiquette" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14, paddingLeft: 13}} spy={true} smooth={true}>Dojo Etiquette</Link>
               <Link smooth to="/whatisjitsu#belts" style={{textDecorationLine: 'underline', color: 'red', fontSize: 14, paddingLeft: 13}} spy={true} smooth={true}>Belt System</Link>

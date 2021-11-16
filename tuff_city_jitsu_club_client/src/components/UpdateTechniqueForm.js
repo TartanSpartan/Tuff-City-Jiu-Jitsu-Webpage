@@ -7,8 +7,12 @@ import "../App.scss";
 
 // Find out how to override defaults if this means a technique can't have a field written into it
 
+
+// Add onChange handler to change value for each select-based menu input
+
 export default UpdateTechniqueForm;
 function UpdateTechniqueForm(props){
+    
     const [videos, setVideos] = useState([{canadianUrl: "", britishUrl: ""}]);
     let truncatedVideos = JSON.stringify(videos).split(":").join(" : ").split(",").join(" , ").split('l"').join("l ").slice(3, -2);
     let canadianVideo = truncatedVideos.substr(0, truncatedVideos.indexOf(","))
@@ -39,50 +43,57 @@ function UpdateTechniqueForm(props){
     setVideos([...videos, { canadianUrl: "", britishURL: "" }]);
     };
 
+    const handleChange = (e) => {
+        console.log("This is e", e.target.value)
+        console.log("These are the belt id props", props.technique.belt_id)
+        // this.setState({selectValue:e.target.value});
+      }
+
     // function to handle the submission for an event
-    function handleSubmit(event) {
-        console.log(event);
-        event.preventDefault();
-        const { currentTarget } = event;
-        const formData = new FormData(currentTarget);
+    // function handleSubmit(event) {
+    //     console.log(event);
+    //     event.preventDefault();
+    //     const { currentTarget } = event;
+    //     const formData = new FormData(currentTarget);
 
-        console.log("Here are the videos to be submitted", videos)
-        props.onSubmit({
-            syllabus: formData.get("country").toLowerCase(),
-            belt: parseInt(formData.get("belt")),
-            summary: formData.get("summary"),
-            category: formData.get("category"),
-            sub_category: formData.get("sub_category"),
+    //     console.log("Here are the videos to be submitted", videos)
+    //     props.onSubmit({
+    //         syllabus: formData.get("country").toLowerCase(),
+    //         belt: parseInt(formData.get("belt")),
+    //         summary: formData.get("summary"),
+    //         category: formData.get("category"),
+    //         sub_category: formData.get("sub_category"),
             
-            // Following commented block is probably a candidate for removal- redundant
-            // videourls: [
-            //     {
-            //         "type":"canadianUrl",
-            //         "url":formData.get("canadianUrl")
-            //     },
-            //     {
-            //         "type":"britishUrl",
-            //         "url":formData.get("britishUrl")
-            //     },
-            // ],
-            videos: videos,
-            is_different: formData.get("is_different") ==="No"?false:true,
-            difference_content: formData.get("difference_content")
-        });
+    //         // Following commented block is probably a candidate for removal- redundant
+    //         // videourls: [
+    //         //     {
+    //         //         "type":"canadianUrl",
+    //         //         "url":formData.get("canadianUrl")
+    //         //     },
+    //         //     {
+    //         //         "type":"britishUrl",
+    //         //         "url":formData.get("britishUrl")
+    //         //     },
+    //         // ],
+    //         videos: videos,
+    //         is_different: formData.get("is_different") ==="No"?false:true,
+    //         difference_content: formData.get("difference_content")
+    //     });
 
-        console.log("######## here's the props", props);
+    //     console.log("######## here's the props", props);
 
-        // console.log("Here's the video we're passing in", ("canadianUrl" + formData.get("canadianURL"),
-        // "britishUrl" + formData.get("britishUrl")));
+    //     // console.log("Here's the video we're passing in", ("canadianUrl" + formData.get("canadianURL"),
+    //     // "britishUrl" + formData.get("britishUrl")));
 
-        currentTarget.reset();
-    }
+    //     currentTarget.reset();
+    // }
+
     return (
         // Page loading function isn't working so ask a TA
         // <div> { isLoading ? <p>Loading</p> 
         // : 
         // technique.map(
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={props.onSubmit}>
              
         <Form.Group controlId="formBasicSyllabus">
         <Form.Label id="top-label">Edit existing technique</Form.Label>
@@ -100,7 +111,7 @@ function UpdateTechniqueForm(props){
         {/* Note: italicise options */}
         <Form.Group controlId="formBasicGrade">
             <Form.Label>Grade</Form.Label>
-            <Form.Control className="color-belt" name="belt" type="belt" as="select" value={props.technique.belt_id} defaultValue={props.technique.belt_id}>
+            <Form.Control className="color-belt" name="belt" type="belt" as="select" value={props.technique.belt_id} defaultValue={props.technique.belt_id} onChange = {props.changeSelectHandler}>
                 <option className="gradecoloroption" style={{backgroundColor:"yellow"}} value={7} >Yellow </option>
                 <option className="gradecoloroption" style={{backgroundColor:"orange"}} value={6}>Orange</option>
                 <option className="gradecoloroption" style={{backgroundColor:"green"}} value={5}>Green</option>
@@ -174,17 +185,17 @@ function UpdateTechniqueForm(props){
         {/* This should be a form which permits multiple URL inputs with a plus button causing new input fields to appear, with an onChange handler, and groups the URLs into an array (print this on the console, and also on the TechniqueShowPage) */}
         </Form.Group>
         <Form.Group controlId="formBasicDifferenceCheck">
-        <Form.Label>Is this technique different, or separate from the UK syllabus?</Form.Label>
-        <Form.Control name="is_different" type="is_different" as="select" defaultValue="Maybe it's on a different belt or is done differently in the UK" value={props.technique.is_different}>
-                <option>No </option>
-                <option>Yes </option>
+        <Form.Label>Is this technique different, or separate, from the UK syllabus?</Form.Label>
+        <Form.Control name="is_different" type="is_different" as="select" placeHolder="Please select" defaultValue={props.technique.is_different} value={props.technique.is_different}>
+                <option value={0}>No </option>
+                <option value={1}>Yes </option>
             </Form.Control>        
         </Form.Group>
         <Form.Group controlId="formBasicDifferenceContent">
         <Form.Label>If yes, describe the differences here</Form.Label>
-        <Form.Control name="difference_content" type="difference_content" placeHolder="E.g. transitions aren't present for the UK syllabus" />
+        <Form.Control name="difference_content" type="difference_content" placeHolder={props.technique.difference_content} defaultValue={props.technique.difference_content}/>
         </Form.Group>
-        <Button variant="primary" type="submit" onClick={props.onSubmit}> 
+        <Button variant="primary" type="submit" onClick={props.onSubmit()}> 
             Update
         </Button>
         <br/>

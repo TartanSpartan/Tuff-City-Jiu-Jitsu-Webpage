@@ -35,6 +35,17 @@ function urlHandler(url) {
   }
 }
 
+function textColour(integer) {
+  let color = "";
+  if (integer === 2 || integer === 4) {
+    color = "white"; // This makes the dark blue's or purple's header text display better
+    return color;
+  } else {
+    color = "black";
+    return color;
+  }
+}
+
 class TechniqueShowPage extends Component {
   constructor(props) {
     super(props);
@@ -50,6 +61,7 @@ class TechniqueShowPage extends Component {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     Technique.one(this.props.match.params.id)
       .then((technique) =>
         Promise.all([
@@ -66,7 +78,7 @@ class TechniqueShowPage extends Component {
           technique: technique,
           technique_type: technique_type,
           belt: belt,
-          video: video
+          video: video,
         });
         return technique_type;
       })
@@ -154,6 +166,81 @@ class TechniqueShowPage extends Component {
       return <div></div>;
     }
 
+    const returnBeltBar = () => {
+      // const belt.id = this.state.belt.id
+      if (this.state.belt.id === 3) {
+        return (
+          <>
+            <option
+              className="gradeColor"
+              style={{
+                backgroundColor: this.state.belt.colour.replace(/ +/g, ""),
+                color: textColour(this.state.belt.id),
+                pointerEvents: "none",
+              }}
+            >
+              3rd kyu (Light Blue){" "}
+            </option>
+          </>
+        );
+      } else if (this.state.belt.id === 2) {
+        // Special case for dark blue belt with "nd" as a suffix
+        return (
+          <>
+            <option
+              className="gradeColor"
+              style={{
+                backgroundColor: this.state.belt.colour.replace(/ +/g, ""),
+                color: textColour(this.state.belt.id),
+                pointerEvents: "none",
+              }}
+            >
+              2nd kyu (Dark Blue){" "}
+            </option>
+          </>
+        );
+      } else if (this.state.belt.id === 1) {
+        // Special case for brown belt with "st" as a suffix
+        return (
+          <>
+            <option
+              className="gradeColor"
+              style={{
+                backgroundColor: this.state.belt.colour.replace(/ +/g, ""),
+                color: textColour(this.state.belt.id),
+                pointerEvents: "none",
+              }}
+            >
+              {this.state.belt.id +
+                "st kyu (" +
+                this.state.belt.colour.charAt(0).toUpperCase() +
+                this.state.belt.colour.slice(1) +
+                ")"}{" "}
+            </option>
+          </>
+        );
+      } else {
+        // Default case for all other grades with "th" as a suffix
+        return (
+          <>
+            <option
+              className="gradeColor"
+              style={{
+                backgroundColor: this.state.belt.colour.replace(/ +/g, ""),
+                color: textColour(this.state.belt.id),
+                pointerEvents: "none",
+              }}
+            >
+              {this.state.belt.id +
+                "th kyu (" +
+                this.state.belt.colour.charAt(0).toUpperCase() +
+                this.state.belt.colour.slice(1) +
+                ")"}{" "}
+            </option>
+          </>
+        );
+      }
+    };
     const currentUser = this.props.currentUser;
     // const renderVideo = this.state.video[0]["canadian_version"];
 
@@ -165,7 +252,7 @@ class TechniqueShowPage extends Component {
       <main className="TechniqueShowPage">
         <br />
         <div className="central">
-          <h2>TECHNIQUE</h2>
+          <h2 className="techniqueTitle">TECHNIQUE</h2>
         </div>
         <br />
         <div
@@ -175,260 +262,141 @@ class TechniqueShowPage extends Component {
             paddingLeft: 0,
           }}
         >
-          {/* <> */}
-          if (this.state.belt.id === 3) {
-            return (
-              <>
-                <option
-                  className="gradecoloroption"
-                  style={{
-                    backgroundColor: "lightblue",
-                    pointerEvents: "none",
-                  }}
-                >
-                  3rd kyu (Light Blue){" "}
-                  </option>
-              </>
-            );
-          }}
+          {returnBeltBar()}
+          <br />
 
-          {/* if (this.state.belt.id === 3) {
-            return (
-              <>
-                <option
-                  className="gradecoloroption"
-                  style={{
-                    backgroundColor: "lightblue",
-                    pointerEvents: "none",
-                  }}
-                >
-                  3rd kyu (Light Blue){" "}
-                </option>
-              </>
-            );
-          } */}
-            {/* {this.state.belt?.map((belt) => {
-              if (belt.id === this.state.technique.belt_id)
-                if (belt.id === 3) {
-                  // Here we need to match the main belt.id with the technique.belt_id which has many different values based on which technique it is
-                  // Special case for light blue belt with "rd" as a suffix
-                  return (
-                    <>
-                      <option
-                        className="gradecoloroption"
-                        style={{
-                          backgroundColor: "lightblue",
-                          pointerEvents: "none",
-                        }}
-                      >
-                        3rd kyu (Light Blue){" "}
-                      </option>
-                    </>
-                  );
-                } else if (belt.id === 2) {
-                  // Special case for dark blue belt with "nd" as a suffix
-                  return (
-                    <>
-                      <option
-                        className="gradecoloroption"
-                        style={{
-                          backgroundColor: "#00008b",
-                          color: "white",
-                          pointerEvents: "none",
-                        }}
-                      >
-                        2nd kyu (Dark Blue){" "}
-                      </option>
-                    </>
-                  );
-                } else if (belt.id === 1) {
-                  // Special case for brown belt with "st" as a suffix
-                  return (
-                    <>
-                      <option
-                        className="gradecoloroption"
-                        style={{
-                          backgroundColor: belt.colour,
-                          pointerEvents: "none",
-                        }}
-                      >
-                        {belt.id +
-                          "st kyu (" +
-                          belt.colour.charAt(0).toUpperCase() +
-                          belt.colour.slice(1) +
-                          ")"}{" "}
-                      </option>
-                    </>
-                  );
-                } else {
-                  // Default case for all other grades with "th" as a suffix
-                  return (
-                    <>
-                      <option
-                        className="gradecoloroption"
-                        style={{
-                          backgroundColor: belt.colour,
-                          pointerEvents: "none",
-                        }}
-                      >
-                        {belt.id +
-                          "th kyu (" +
-                          belt.colour.charAt(0).toUpperCase() +
-                          belt.colour.slice(1) +
-                          ")"}{" "}
-                      </option>
-                    </>
-                  );
-                }
-            })} */}
-            <br />
-
-            {/* {
-            // this.state.technique_type.map((type) => {
-              // console.log("Testing 1 2 3");
-              // console.log(
-              //   "LHS " +
-              //     type.id +
-              //     "RHS " +
-              //     this.state.technique.technique_type_id
-              // );
-            //   if (technique_type?.id) {
-            //     return (
-            //       <>
-            //         {
-                    
-            //         }
-            //         <br />
-            //         {type.sub_category}
-            //       </>
-            //     );
-            //   }
-            // )}
-            } */}
-
-            <text style={{ fontStyle: "italic", padding: "20rem" }}>
+          <div className="techniqueType">
+            <text className="category" style={{fontStyle: "italic"}}>
               {this.state.technique_type.category}
             </text>
             <br />
-            <text style={{ fontWeight: "bold", padding: "14rem" }}>
-            {this.state.technique.summary}
-            </text>
-            <br />
-            <br />
-            {this.state.video?.map((video) => {
-              return (
-                <>
-                  <div class="container-fluid">
-                    <div class="row">
-                      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="row">
-                          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <text className="subCategory">{this.state.technique.summary}</text>
+          </div>
+
+          <br />
+          <br />
+          {this.state.video?.map((video) => {
+            return (
+              <>
+                <div class="container-fluid">
+                  <div className="wideView" class="row wideView">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                      <div class="row">
+                        <div
+                          className="iframeAndCaption"
+                          class="col-xs-4 col-sm-4 col-md-4 col-lg-4"
+                        >
                           {/* test */}
                           <iframe
-                          className="iframe"
-                          src={
-                            video.canadian_version
-                              ? urlHandler(video.canadian_version)
-                              : ""
-                          }
-                          height="200rem"
-                          width="100%"
-                          frameBorder="0"
-                          allow="autoplay; encrypted-media"
-                          allowFullScreen
-                          title="video"
-                        />
-                        
-                        <div className= "caTitle">{video.canadian_version ? "Canadian Version" : ""}</div>
-                        
+                            className="iframe"
+                            src={
+                              video.canadian_version
+                                ? urlHandler(video.canadian_version)
+                                : ""
+                            }
+                            height="200rem"
+                            width="100%"
+                            frameBorder="0"
+                            allow="autoplay; encrypted-media"
+                            allowFullScreen
+                            title="video"
+                          />
+
+                          <div className="caTitle">
+                            {video.canadian_version ? "Canadian Version" : ""}
                           </div>
+                        </div>
                         {/* <div class="w-100"></div> */}
 
-                          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-
-                            {/* testing */}
-                            <iframe
-                          className="iframe"
-                          src={
-                            video.uk_version ? urlHandler(video.uk_version) : ""
-                          }
-                          height="200rem"
-                          width="100%"
-                          frameBorder="0"
-                          allow="autoplay; encrypted-media"
-                          allowFullScreen
-                          title="video"
-                        />
-                        <div className= "ukTitle">{video.uk_version ? "British Version" : ""}</div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                          <iframe
+                            className="iframe"
+                            src={
+                              video.uk_version
+                                ? urlHandler(video.uk_version)
+                                : ""
+                            }
+                            height="200rem"
+                            width="100%"
+                            frameBorder="0"
+                            allow="autoplay; encrypted-media"
+                            allowFullScreen
+                            title="video"
+                          />
+                          <div className="ukTitle">
+                            {video.uk_version ? "British Version" : ""}
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <br />
-                  <br />
+                </div>
+                <br />
+                <br />
 
-                  <br />
-                </>
-              );
-            })}
+                <br />
+              </>
+            );
+          })}
 
-            <br />
+          <br />
 
-            {/*{this.state.technique.videos_id}*/}
-            <br />
-            {this.state.technique.is_different ? (
+          {/*{this.state.technique.videos_id}*/}
+          <br />
+          {this.state.technique.is_different ? (
+            <>
+              {
+                <text style={{ fontWeight: "bold" }}>
+                  What's different to the UK syllabus?
+                </text>
+              }
+              <br />
+              {this.state.technique.difference_content}
+              <br />
+              <br />
+            </>
+          ) : (
+            ""
+          )}
+          <>
+            {this.state.technique?.created_at ? (
               <>
-                {
-                  <text style={{ fontWeight: "bold" }}>
-                    What's different to the UK syllabus?
-                  </text>
-                }
+                <p>
+                  Posted on{" "}
+                  {moment(this.state.technique.created_at).format(
+                    "MMM Do, YYYY"
+                  )}
+                </p>
+
+                <Button
+                  variant="success"
+                  key={this.state.technique.id}
+                  style={{ paddingLeft: 10, paddingRight: 10 }}
+                  href={`/techniques/${this.state.technique.id}/edit`}
+                >
+                  Edit
+                </Button>
                 <br />
-                {this.state.technique.difference_content}
                 <br />
-                <br />
+
+
+                {/* Delete button currently isn't working- fix! */}
+                <Button
+                  variant="danger"
+                  type="danger"
+                  onClick={(id) =>
+                    this.deleteTechnique(this.state.technique.id)
+                  }
+                >
+                  Delete
+                </Button>
+                {this.state.error ? <p>Cannot delete technique</p> : <></>}
+
               </>
             ) : (
               ""
             )}
-            <>
-              {this.state.technique?.created_at ? (
-                <>
-                  <p>
-                    Posted on{" "}
-                    {moment(this.state.technique.created_at).format(
-                      "MMM Do, YYYY"
-                    )}
-                  </p>
-
-                  {/* Delete button currently isn't working- fix! */}
-                  <Button
-                    variant="danger"
-                    type="danger"
-                    onClick={(id) =>
-                      this.deleteTechnique(this.state.technique.id)
-                    }
-                  >
-                    Delete
-                  </Button>
-                  {this.state.error ? <p>Cannot delete technique</p> : <></>}
-                  <br />
-                  <br />
-                  <br />
-                </>
-              ) : (
-                ""
-              )}
-            </>
-            <Button
-              variant="success"
-              key={this.state.technique.id}
-              style={{ paddingLeft: 10, paddingRight: 10 }}
-              href={`/techniques/${this.state.technique.id}/edit`}
-            >
-              Edit
-            </Button>
+          </>
           {/* </> */}
         </div>
       </main>

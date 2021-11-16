@@ -5,7 +5,7 @@ class Api::V1::TechniquesController < Api::ApplicationController
     rescue_from(ActiveRecord:: RecordNotFound, with: :record_not_found)
     rescue_from(ActiveRecord:: RecordInvalid, with: :record_invalid)
 
-    # Bug: can't delete videos, thus can't delete techniques except by total database reset
+    # Bug: can't delete videos, thus can't delete techniques except by total database reset (may have been fixed)
 
     def index
         techniques = Technique.all.order(belt_id: :desc) # This should order the techniques by beltcode
@@ -166,39 +166,46 @@ class Api::V1::TechniquesController < Api::ApplicationController
         # video = Video.create! canadian_version: params["videos"][0]["canadianUrl"], technique_id: technique.id
         
         puts "Here are the params", params
-        modified_syllabus = Syllabus.find_by(country: params["syllabus"]) # The id it should find will be 2
-        puts modified_syllabus
-        existing_technique_type = TechniqueType.where(category: params["category"], sub_category: params["sub_category"])
-        if existing_technique_type.length > 0
-            technique_type_id = existing_technique_type[0].id
-        else
-            type_of_technique = TechniqueType.new category: params["category"], sub_category: params["sub_category"], syllabus_id:modified_syllabus.id
-            puts type_of_technique
-            type_of_technique.belt = Belt.where(id: params["belt"])[0]
-            type_of_technique.save! # Note: on next lines, videos is hardcoded until video functionality added
-            technique_type_id = type_of_technique.id
-        end
-        puts "The technique type ID is ", technique_type_id
-        puts "*************************************************************************"
-        puts "these are the params:", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i
+        # modified_syllabus = Syllabus.find_by(country: params["syllabus"]) # The id it should find will be 2
+        # puts modified_syllabus
+        technique = Technique.find(params["id"])
+        technique.update(summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"])
+        # technique.update(summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i)
+
+        # puts "This is the belt", technique.belt_id
+        technique.save!
+
+
+
+        # existing_technique_type = TechniqueType.where(category: params["category"], sub_category: params["sub_category"])
+        # if existing_technique_type.length > 0
+        #     technique_type_id = existing_technique_type[0].id
+        # else
+        #     type_of_technique = TechniqueType.new category: params["category"], sub_category: params["sub_category"], syllabus_id:modified_syllabus.id
+        #     puts type_of_technique
+        #     type_of_technique.belt = Belt.where(id: params["belt"])[0]
+        #     type_of_technique.save! # Note: on next lines, videos is hardcoded until video functionality added
+        #     technique_type_id = type_of_technique.id
+        # end
+        # puts "The technique type ID is ", technique_type_id
+        # puts "*************************************************************************"
+        # puts "these are the params:", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i
         #  "videos_id: ", params["videos_id"].to_i
         #, "videourls: ", params["videourls"][0]["url"].to_s
 
-        technique = Technique.find(params["id"])
-        technique.update(summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i)
-        puts "This is the belt", technique.belt_id
-        technique.save!
-        puts "This is the video id", Video.find(params["id"])
+
         # byebug
-        video = Video.find(params["id"])
-        video.update(canadian_version: params["videos"][0]["canadianUrl"], technique_id: technique.id)
-        puts "This is the video", video
-        video.save!
-        technique.videourls = [video.id]
-        technique.save!
-        puts "This are the params to be committed", params
-        puts "This is the technique", technique
-        render json: { id: modified_syllabus.id }
+        # video_array = []
+        # params["videos"].each do |video|
+            # puts "This is the video loop", video
+        #     update_video = Video.create! canadian_version: video["canadianUrl"], uk_version: video["britishUrl"], technique_id: technique.id
+        #     video_array.push(update_video.id)
+        # end
+        # technique.videourls = video_array
+        # technique.save!
+        # puts "This are the params to be committed", params
+        # puts "This is the updated technique", technique
+        # render json: { id: modified_syllabus.id }
 
         # if @technique.update summary: params["summary"], is_different:params["is_different"], difference_content:params["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i, videourls: params["videourls"]
         #     puts "These are the technique params to be updated", technique_params

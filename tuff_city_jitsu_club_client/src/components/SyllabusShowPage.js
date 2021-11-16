@@ -146,7 +146,7 @@ export class SyllabusShowPage extends React.Component {
                         finishKyuNumber(belt.id) + " Kyu (" +
                         capitaliseTheFirstLetterOfEachWord(belt.colour) + ")"}</h1>
                         
-
+{/* 1:52,2:04,2:16, 2:33:35 */}
                         
                         {groupedTechniqueTypes(belt.technique_types).map((key, index) => 
                             

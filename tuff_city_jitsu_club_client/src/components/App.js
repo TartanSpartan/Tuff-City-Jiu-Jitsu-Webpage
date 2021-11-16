@@ -10,15 +10,15 @@ import { User, Session, Technique } from "../requests";
 import { Welcome } from "./Welcome";
 // import { SyllabusIndexPage } from "./SyllabusIndexPage";
 import { SyllabusShowPage } from "./SyllabusShowPage";
-// import SyllabusMindmapPage from "./SyllabusMindmapPage";
+import SyllabusMindmapPage from "./SyllabusMindmapPage";
 import TechniqueNewPage from "./TechniqueNewPage";
 import TechniqueShowPage from "./TechniqueShowPage";
 import { WhatIsJiuJitsu } from "./WhatIsJiuJitsu";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { WhoAreWe } from "./WhoAreWe";
 import TechniqueUpdatePage from "./TechniqueUpdatePage";
 // import { AdminPage } from "./AdminPage";
 import '../App.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
 // import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 // import 'bootstrap/dist/css/bootstrap.css';
 
@@ -96,11 +96,11 @@ class App extends React.Component {
                             path="/techniques/:id"
                             component={TechniqueShowPage}
                             />
-                            {/* <AuthRoute
+                            <AuthRoute
                             isAuthenticated={currentUser}
-                            path="/api/v1/syllabi/:syllabus_id/mindmap"
+                            path="/syllabi/:syllabus_id/mindmap"
                             component={SyllabusMindmapPage} 
-                            /> */}
+                            />
                             {/* <AuthRoute
                             isAuthenticated={currentUser}
                             path="/syllabus/:id"

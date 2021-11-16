@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Technique, Syllabus, Belt, TechniqueType } from "../requests";
 import UpdateTechniqueForm from "./UpdateTechniqueForm";
+import "../App.scss";
 
 export default class TechniqueUpdatePage extends React.Component {
   constructor(props) {
@@ -10,6 +11,9 @@ export default class TechniqueUpdatePage extends React.Component {
     this.state = {
       technique: {
         summary: "",
+        is_different: false,
+        difference_content: "",
+
         videos: {
           canadianUrl: "",
           britishUrl: "",
@@ -46,6 +50,7 @@ export default class TechniqueUpdatePage extends React.Component {
           technique: technique,
           isLoading: false,
         });
+        console.log("Is the video inside the technique?", technique)
         return technique;
       })
       .then((technique) => TechniqueType.find(technique.technique_type_id))
@@ -58,31 +63,60 @@ export default class TechniqueUpdatePage extends React.Component {
       );
   }
 
+  updateSelectBox = (event) => {
+    this.setState(state => {
+      state.technique.belt_id = event.target.value;
+    })
+    this.forceUpdate()
+  }
+
   handleInputChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
+  simpleStringify = (object) => {
+    var simpleObject = {};
+    for (var prop in object ){
+        if (!object.hasOwnProperty(prop)){
+            continue;
+        }
+        if (typeof(object[prop]) == 'object'){
+            continue;
+        }
+        if (typeof(object[prop]) == 'function'){
+            continue;
+        }
+        simpleObject[prop] = object[prop];
+    }
+    return JSON.stringify(simpleObject); // returns cleaned up JSON
+};
 
+  // Fix this one to remove fetch request and avoid duplication of work
   updatePostRequest = (event) => {
-    console.log(event);
-    Technique.update(this.state.technique.id, event).then((technique) => {
-      console.log(technique);
-      if (Technique.errors) {
-        this.setState({ errors: technique.errors });
-      } else {
-        this.props.history.push(`/syllabus`);
-      }
-    });
-      console.log(event);
-      fetch(`/api/v1/techniques/${this.state.technique.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(event),
-        headers: { 'Content-Type': 'application/json' },
-      }).then((response) => {
-        alert('Post updated successfully');
-        if (typeof window !== 'undefined') {
-          window.location.href = `/techniques/${this.state.technique.id}`;
-     }
-      });
+    // console.log("this is the event", event);
+    // console.log("this is the technique.id", this.state.technique.id)
+    // console.log(this.simpleStringify(event));
+    console.log("This is the event", event);
+    console.log("This is the event's current target", event.currentTarget);
+
+    console.log("This is the event.target", event.target)    
+    const formData = new FormData(event.target)
+    console.log("This is the formData", formData)
+    const formDataObj = Object.fromEntries(formData.entries())
+    console.log("New test", formDataObj)
+
+
+    Technique.update(this.state.technique.id, this.simpleStringify(event));
+    
+    // .then((technique) => {
+    //   console.log(technique);
+    //   this.props.history.push(`/syllabus#/`);
+    //   // if (technique.errors) {
+    //   //   this.setState({ errors: technique.errors });
+    //   // } else {
+    //   //   this.props.history.push(`/syllabus`);
+    //   // }
+    // });
+
   };
 
   render() {
@@ -92,14 +126,15 @@ export default class TechniqueUpdatePage extends React.Component {
           <h1>EDIT A TECHNIQUE</h1>
         </div>
         <br />
-
         <UpdateTechniqueForm
           technique={this.state.technique}
           technique_type={this.state.technique_type}
+          video={this.state.video}
           key={this.state.id}
           onSubmit={this.updatePostRequest}
           onCancel={this.props.handleCancelClick}
           errors={this.state.errors}
+          changeSelectHandler={this.updateSelectBox.bind(this)}
         />
       </main>
     );

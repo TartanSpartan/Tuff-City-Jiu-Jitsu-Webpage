@@ -143,15 +143,22 @@ export const Technique = {
     },
 
     // Update a technique
+
+    // Try to debug this
     update(id, params) {
+      console.log("this is from request js and the params", params)
       return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
-          method: 'PATCH',
           credentials: "include",
-          headers: {
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify(params)
-      }).then(res => res.json());
+          method: "PATCH",
+          body: params,
+          headers: { "Content-Type": "application/json" },
+      })
+      // .then((res) => {
+      //   alert("Post updated successfully");
+      //   if (typeof window !== "undefined") {
+      //   window.location.href = `/techniques/${id}`;
+      // }
+    // });
   },
 
     // Destroy a technique
