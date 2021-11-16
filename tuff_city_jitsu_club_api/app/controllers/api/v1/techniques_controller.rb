@@ -157,14 +157,7 @@ class Api::V1::TechniquesController < Api::ApplicationController
     end
 
     def update
-        # Manually pass in the exact parameters that we want to update first
-        # Then add in the videos, summary, etc for the separate relationships; ensure that a new technique type is created
-        # Implement testing to make the feedback loop faster and more efficient
-        # Pattern this after the create function
-        # E.g. technique = Technique.update summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i
-        # Find, or create
-        # video = Video.create! canadian_version: params["videos"][0]["canadianUrl"], technique_id: technique.id
-        
+
         puts "Here are the params", params
         # puts "We need to search for this", country: params["country"]
         modified_syllabus = Syllabus.find_by(country: "canada") # The id it should find will be 2
@@ -177,33 +170,23 @@ class Api::V1::TechniquesController < Api::ApplicationController
         puts "Did that create a new TT?", technique_type.inspect
 
         technique.update(summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type.id)
+        update_video = Video.create! canadian_version: params["canadianUrl"], uk_version: params["britishUrl"], technique_id: technique.id
+        technique.videourls = [update_video]
         technique.save!
-        #  "videos_id: ", params["videos_id"].to_i
-        #, "videourls: ", params["videourls"][0]["url"].to_s
-
 
         # byebug
-        video_array = []
-        params["videos"].each do |video|
-            puts "This is the video loop", video
-            update_video = Video.create! canadian_version: video["canadianUrl"], uk_version: video["britishUrl"], technique_id: technique.id
-            video_array.push(update_video.id)
-        end
-        technique.videourls = video_array
-        technique.save!
+        # Convert the following to work by a map instead of using .each
+        # video_array = []
+        # params["videos"].each do |video|
+        #     puts "This is the video loop", video
+        #     update_video = Video.create! canadian_version: video["canadianUrl"], uk_version: video["britishUrl"], technique_id: technique.id
+        #     video_array.push(update_video.id)
+        # end
+        # technique.videourls = video_array
+        # technique.save!
         puts "This are the params to be committed", params
         puts "This is the updated technique", technique
         render json: { id: modified_syllabus.id }
-
-        # if @technique.update summary: params["summary"], is_different:params["is_different"], difference_content:params["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i, videourls: params["videourls"]
-        #     puts "These are the technique params to be updated", technique_params
-        #     render json: { id: @technique.id }
-        # else
-        #     render(
-        #         json: { errors: technique.errors },
-        #         status: 422 # Unprocessable Entity
-        #     )
-        # end
     end
 
     def find
