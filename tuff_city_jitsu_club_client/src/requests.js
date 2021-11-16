@@ -150,7 +150,7 @@ export const Technique = {
       return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
           credentials: "include",
           method: "PATCH",
-          body: params,
+          body: JSON.stringify(params),
           headers: { "Content-Type": "application/json" },
       })
       // .then((res) => {

@@ -104,8 +104,7 @@ export default class TechniqueUpdatePage extends React.Component {
     const formDataObj = Object.fromEntries(formData.entries())
     console.log("New test", formDataObj)
 
-
-    Technique.update(this.state.technique.id, this.simpleStringify(event));
+    Technique.update(this.state.technique.id, formDataObj);
     
     // .then((technique) => {
     //   console.log(technique);

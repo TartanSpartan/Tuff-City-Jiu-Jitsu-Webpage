@@ -195,7 +195,7 @@ function UpdateTechniqueForm(props){
         <Form.Label>If yes, describe the differences here</Form.Label>
         <Form.Control name="difference_content" type="difference_content" placeHolder={props.technique.difference_content} defaultValue={props.technique.difference_content}/>
         </Form.Group>
-        <Button variant="primary" type="submit" onClick={props.onSubmit()}> 
+        <Button variant="primary" type="submit" onClick={props.onSubmit}> 
             Update
         </Button>
         <br/>
