@@ -44,6 +44,8 @@ Fixed. I think. Check!
 
 17. Similarly ensure video captions won't show for videos which don't exist
 
+18. Ensure that videos are removed if on edit their fields are blank
+
 Both:
 
 15. Code cleanup, remove redundant print statements and commented out blocks which will never be used

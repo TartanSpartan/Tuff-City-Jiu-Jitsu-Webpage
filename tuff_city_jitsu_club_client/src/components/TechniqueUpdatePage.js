@@ -92,29 +92,30 @@ export default class TechniqueUpdatePage extends React.Component {
 
   // Fix this one to remove fetch request and avoid duplication of work
   updatePostRequest = (event) => {
+    console.log("Are we hitting update post request?")
     // console.log("this is the event", event);
     // console.log("this is the technique.id", this.state.technique.id)
     // console.log(this.simpleStringify(event));
-    console.log("This is the event", event);
-    console.log("This is the event's current target", event.currentTarget);
+    // console.log("This is the event", event);
+    // console.log("This is the event's current target", event.currentTarget);
 
-    console.log("This is the event.target", event.target)    
+    // console.log("This is the event.target", event.target)    
     const formData = new FormData(event.target)
-    console.log("This is the formData", formData)
+    // console.log("This is the formData", formData)
     const formDataObj = Object.fromEntries(formData.entries())
-    console.log("New test", formDataObj)
+    // console.log("New test", formDataObj)
 
-    Technique.update(this.state.technique.id, formDataObj);
-    
-    // .then((technique) => {
-    //   console.log(technique);
+    Technique.update(this.state.technique.id, formDataObj)
+    .then((technique) => {
+      console.log(technique);
     //   this.props.history.push(`/syllabus#/`);
-    //   // if (technique.errors) {
-    //   //   this.setState({ errors: technique.errors });
-    //   // } else {
-    //   //   this.props.history.push(`/syllabus`);
-    //   // }
-    // });
+      if (technique.errors) {
+        this.setState({ errors: technique.errors });
+      } else {
+        console.log("This is the history", this.props.history)
+        this.props.history.push(`/syllabus`);
+      }
+    });
 
   };
 

@@ -111,7 +111,7 @@ function UpdateTechniqueForm(props){
         {/* Note: italicise options */}
         <Form.Group controlId="formBasicGrade">
             <Form.Label>Grade</Form.Label>
-            <Form.Control className="color-belt" name="belt" type="belt" as="select" value={props.technique.belt_id} defaultValue={props.technique.belt_id} onChange = {props.changeSelectHandler}>
+            <Form.Control className="color-belt" name="belt" type="belt" as="select" defaultValue={props.technique.belt_id} onChange={props.changeSelectHandler}>
                 <option className="gradecoloroption" style={{backgroundColor:"yellow"}} value={7} >Yellow </option>
                 <option className="gradecoloroption" style={{backgroundColor:"orange"}} value={6}>Orange</option>
                 <option className="gradecoloroption" style={{backgroundColor:"green"}} value={5}>Green</option>
@@ -124,7 +124,7 @@ function UpdateTechniqueForm(props){
         {/* Note: italicise options */}
         <Form.Group controlId="formBasicCategory">
             <Form.Label>Category of technique</Form.Label>
-            <Form.Control name = "category" type="category" as="select" defaultValue={props.technique_type.category}>
+            <Form.Control name = "category" type="category" as="select" defaultValue={props.technique_type.category} onChange={props.changeSelectHandler}>
                 <option>Ukemi (breakfalling) </option>
                 <option>Atemi (striking)</option>
                 <option>Kansetsu (locks)</option>
@@ -186,7 +186,7 @@ function UpdateTechniqueForm(props){
         </Form.Group>
         <Form.Group controlId="formBasicDifferenceCheck">
         <Form.Label>Is this technique different, or separate, from the UK syllabus?</Form.Label>
-        <Form.Control name="is_different" type="is_different" as="select" placeHolder="Please select" defaultValue={props.technique.is_different} value={props.technique.is_different}>
+        <Form.Control name="is_different" type="is_different" as="select" placeHolder="Please select" defaultValue={props.technique.is_different} onChange = {props.changeSelectHandler}>
                 <option value={0}>No </option>
                 <option value={1}>Yes </option>
             </Form.Control>        

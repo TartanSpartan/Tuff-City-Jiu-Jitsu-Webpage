@@ -130,20 +130,7 @@ class TechniqueShowPage extends Component {
 
   // Edit the following codeblock for updating a technique; never really did this in CodeCore
 
-  updateTechnique(id, params) {
-    console.log(id);
 
-    return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(params),
-    }).then((res) => {
-      // console.log(res.json());
-    });
-  }
 
   // Modify this block to delete comments, if and only if comments are a feature to be implemented; discuss with David
 

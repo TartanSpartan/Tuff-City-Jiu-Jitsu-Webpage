@@ -153,12 +153,11 @@ export const Technique = {
           body: JSON.stringify(params),
           headers: { "Content-Type": "application/json" },
       })
-      // .then((res) => {
-      //   alert("Post updated successfully");
-      //   if (typeof window !== "undefined") {
-      //   window.location.href = `/techniques/${id}`;
-      // }
-    // });
+      .then((res) => {
+        console.log("Are we hitting this?")
+        return res.json()
+      }
+    );
   },
 
     // Destroy a technique
