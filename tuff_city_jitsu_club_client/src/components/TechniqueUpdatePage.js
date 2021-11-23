@@ -63,9 +63,23 @@ export default class TechniqueUpdatePage extends React.Component {
       );
   }
 
-  updateSelectBox = (event) => {
+  updateColorBox = (event) => {
     this.setState(state => {
       state.technique.belt_id = event.target.value;
+    })
+    this.forceUpdate()
+  }
+
+  updateCategoryBox = (event) => {
+    this.setState(state => {
+      state.technique_type.category = event.target.value;
+    })
+    this.forceUpdate()
+  }
+
+  updateDifferentBox = (event) => {
+    this.setState(state => {
+      state.technique.is_different = event.target.value;
     })
     this.forceUpdate()
   }
@@ -91,28 +105,25 @@ export default class TechniqueUpdatePage extends React.Component {
 };
 
   // Fix this one to remove fetch request and avoid duplication of work
-  updatePostRequest = (event) => {
-    console.log("Are we hitting update post request?")
-    // console.log("this is the event", event);
+  updatePostRequest = (data) => {
     // console.log("this is the technique.id", this.state.technique.id)
     // console.log(this.simpleStringify(event));
     // console.log("This is the event", event);
     // console.log("This is the event's current target", event.currentTarget);
-
     // console.log("This is the event.target", event.target)    
-    const formData = new FormData(event.target)
+    // const formData = new FormData(event.target)
     // console.log("This is the formData", formData)
-    const formDataObj = Object.fromEntries(formData.entries())
+    // const formDataObj = Object.fromEntries(formData.entries())
     // console.log("New test", formDataObj)
 
-    Technique.update(this.state.technique.id, formDataObj)
+    Technique.update(this.state.technique.id, data)
     .then((technique) => {
       console.log(technique);
-    //   this.props.history.push(`/syllabus#/`);
+      this.props.history.push(`/syllabus#/`);
       if (technique.errors) {
         this.setState({ errors: technique.errors });
       } else {
-        console.log("This is the history", this.props.history)
+        // console.log("This is the history", this.props.history)
         this.props.history.push(`/syllabus`);
       }
     });
@@ -134,7 +145,10 @@ export default class TechniqueUpdatePage extends React.Component {
           onSubmit={this.updatePostRequest}
           onCancel={this.props.handleCancelClick}
           errors={this.state.errors}
-          changeSelectHandler={this.updateSelectBox.bind(this)}
+          changeSelectColorHandler={this.updateColorBox.bind(this)}
+          changeSelectCategoryHandler={this.updateCategoryBox.bind(this)}
+          changeSelectDifferentHandler={this.updateDifferentBox.bind(this)}
+
         />
       </main>
     );

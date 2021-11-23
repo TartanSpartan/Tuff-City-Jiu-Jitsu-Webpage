@@ -18,7 +18,7 @@ function UpdateTechniqueForm(props){
     let canadianVideo = truncatedVideos.substr(0, truncatedVideos.indexOf(","))
     let britishVideo = truncatedVideos.substr(truncatedVideos.indexOf("b"))
 
-    console.log("These are the props", props);
+    // console.log("These are the props", props);
     // Try to make these videos display on new lines for e.g. half width page, and correctly output for multiple entries
         
     // handle input change
@@ -44,56 +44,56 @@ function UpdateTechniqueForm(props){
     };
 
     const handleChange = (e) => {
-        console.log("This is e", e.target.value)
-        console.log("These are the belt id props", props.technique.belt_id)
+        // console.log("This is e", e.target.value)
+        // console.log("These are the belt id props", props.technique.belt_id)
         // this.setState({selectValue:e.target.value});
       }
 
     // function to handle the submission for an event
-    // function handleSubmit(event) {
-    //     console.log(event);
-    //     event.preventDefault();
-    //     const { currentTarget } = event;
-    //     const formData = new FormData(currentTarget);
+    function handleSubmit(event) {
+        event.preventDefault();
+        const { currentTarget } = event;
+        const formData = new FormData(currentTarget);
+        console.log(formData);
 
-    //     console.log("Here are the videos to be submitted", videos)
-    //     props.onSubmit({
-    //         syllabus: formData.get("country").toLowerCase(),
-    //         belt: parseInt(formData.get("belt")),
-    //         summary: formData.get("summary"),
-    //         category: formData.get("category"),
-    //         sub_category: formData.get("sub_category"),
+        // console.log("Here are the videos to be submitted", videos)
+        props.onSubmit({
+            syllabus: formData.get("country").toLowerCase(),
+            belt: parseInt(formData.get("belt")),
+            summary: formData.get("summary"),
+            category: formData.get("category"),
+            sub_category: formData.get("sub_category"),
             
-    //         // Following commented block is probably a candidate for removal- redundant
-    //         // videourls: [
-    //         //     {
-    //         //         "type":"canadianUrl",
-    //         //         "url":formData.get("canadianUrl")
-    //         //     },
-    //         //     {
-    //         //         "type":"britishUrl",
-    //         //         "url":formData.get("britishUrl")
-    //         //     },
-    //         // ],
-    //         videos: videos,
-    //         is_different: formData.get("is_different") ==="No"?false:true,
-    //         difference_content: formData.get("difference_content")
-    //     });
+    //          Following commented block is probably a candidate for removal- redundant
+    //          videourls: [
+    //              {
+    //                  "type":"canadianUrl",
+    //                  "url":formData.get("canadianUrl")
+    //              },
+    //              {
+    //                  "type":"britishUrl",
+    //                  "url":formData.get("britishUrl")
+    //              },
+    //          ],
+            videos: videos,
+            is_different: formData.get("is_different") ==="No"?false:true,
+            difference_content: formData.get("difference_content")
+        });
 
     //     console.log("######## here's the props", props);
 
-    //     // console.log("Here's the video we're passing in", ("canadianUrl" + formData.get("canadianURL"),
-    //     // "britishUrl" + formData.get("britishUrl")));
+    //      console.log("Here's the video we're passing in", ("canadianUrl" + formData.get("canadianURL"),
+    //      "britishUrl" + formData.get("britishUrl")));
 
-    //     currentTarget.reset();
-    // }
+        currentTarget.reset();
+    }
 
     return (
         // Page loading function isn't working so ask a TA
         // <div> { isLoading ? <p>Loading</p> 
         // : 
         // technique.map(
-        <Form onSubmit={props.onSubmit}>
+        <Form onSubmit={handleSubmit}>
              
         <Form.Group controlId="formBasicSyllabus">
         <Form.Label id="top-label">Edit existing technique</Form.Label>
@@ -111,7 +111,7 @@ function UpdateTechniqueForm(props){
         {/* Note: italicise options */}
         <Form.Group controlId="formBasicGrade">
             <Form.Label>Grade</Form.Label>
-            <Form.Control className="color-belt" name="belt" type="belt" as="select" defaultValue={props.technique.belt_id} onChange={props.changeSelectHandler}>
+            <Form.Control className="color-belt" name="belt" type="belt" as="select" value={props.technique.belt_id} onChange={props.changeSelectColorHandler}>
                 <option className="gradecoloroption" style={{backgroundColor:"yellow"}} value={7} >Yellow </option>
                 <option className="gradecoloroption" style={{backgroundColor:"orange"}} value={6}>Orange</option>
                 <option className="gradecoloroption" style={{backgroundColor:"green"}} value={5}>Green</option>
@@ -124,7 +124,7 @@ function UpdateTechniqueForm(props){
         {/* Note: italicise options */}
         <Form.Group controlId="formBasicCategory">
             <Form.Label>Category of technique</Form.Label>
-            <Form.Control name = "category" type="category" as="select" defaultValue={props.technique_type.category} onChange={props.changeSelectHandler}>
+            <Form.Control name = "category" type="category" as="select" value={props.technique_type.category} onChange={props.changeSelectCategoryHandler}>
                 <option>Ukemi (breakfalling) </option>
                 <option>Atemi (striking)</option>
                 <option>Kansetsu (locks)</option>
@@ -145,7 +145,7 @@ function UpdateTechniqueForm(props){
         </Form.Group>
         <Form.Group controlId="formBasicVideos">
         {videos.map((x, i) => {
-            console.log("This is the Canadian Video default value", x)
+            // console.log("This is the Canadian Video default value", x)
         return (
             <>
             {/* Need to do clever handling for the URLs to be saved in the update fields when this page loads- look into this */}
@@ -186,7 +186,7 @@ function UpdateTechniqueForm(props){
         </Form.Group>
         <Form.Group controlId="formBasicDifferenceCheck">
         <Form.Label>Is this technique different, or separate, from the UK syllabus?</Form.Label>
-        <Form.Control name="is_different" type="is_different" as="select" placeHolder="Please select" defaultValue={props.technique.is_different} onChange = {props.changeSelectHandler}>
+        <Form.Control name="is_different" type="is_different" as="select" value={props.technique.is_different} onChange={props.changeSelectDifferentHandler}>
                 <option value={0}>No </option>
                 <option value={1}>Yes </option>
             </Form.Control>        
@@ -195,7 +195,7 @@ function UpdateTechniqueForm(props){
         <Form.Label>If yes, describe the differences here</Form.Label>
         <Form.Control name="difference_content" type="difference_content" placeHolder={props.technique.difference_content} defaultValue={props.technique.difference_content}/>
         </Form.Group>
-        <Button variant="primary" type="submit" onClick={props.onSubmit}> 
+        <Button variant="primary" type="submit"> 
             Update
         </Button>
         <br/>

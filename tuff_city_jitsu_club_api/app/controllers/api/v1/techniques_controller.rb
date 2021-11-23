@@ -81,14 +81,13 @@ class Api::V1::TechniquesController < Api::ApplicationController
             technique_type_id = existing_technique_type[0].id
         else 
             type_of_technique = TechniqueType.new category: params["category"], sub_category: params["sub_category"], syllabus_id:new_syllabus.id
-            puts type_of_technique
+            puts "This is the type we are trying to create", type_of_technique, type_of_technique.category
             type_of_technique.belt = Belt.where(id: params["belt"])[0]
-            type_of_technique.save! # Note: on next lines, videos is hardcoded until video functionality added
+            type_of_technique.save! 
             technique_type_id = type_of_technique.id
         end
         puts "The technique type ID is ", technique_type_id
         puts "This is the summary", params["technique"]["summary"]
-        puts "This "
         puts "*************************************************************************"
         puts "these are the params:", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i
         
@@ -165,8 +164,10 @@ class Api::V1::TechniquesController < Api::ApplicationController
         technique = Technique.find(params["id"])
         existing_technique_type = TechniqueType.where(category: params["category"], sub_category: params["sub_category"])[0]
         puts "Do we have an existing TT?", existing_technique_type
-        belt = Belt.where(id: params["belt"])[0]
-        technique_type = existing_technique_type || TechniqueType.create!(category: params["category"], sub_category: params["sub_category"], syllabus_id:modified_syllabus.id, belt: belt)
+        # belt = Belt.where(id: params["belt_id"])[0]
+        # byebug
+        technique_type = existing_technique_type || TechniqueType.create!(category: params["category"], sub_category: params["sub_category"], syllabus_id:modified_syllabus.id, belt_id: params["belt"].to_i)
+        
         puts "Did that create a new TT?", technique_type.inspect
 
         technique.update(summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type.id)
