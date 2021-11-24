@@ -166,6 +166,7 @@ class Api::V1::TechniquesController < Api::ApplicationController
         puts "Do we have an existing TT?", existing_technique_type
         # belt = Belt.where(id: params["belt_id"])[0]
         # byebug
+        # NOTE: Delete empi kata(41), expose Testing multiple videos(51)
 
         if (existing_technique_type) 
             existing_technique_type.update(syllabus_id:modified_syllabus.id, belt_id: params["belt"].to_i)
