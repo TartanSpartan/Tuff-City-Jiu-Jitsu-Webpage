@@ -120,7 +120,7 @@ export class SyllabusShowPage extends React.Component {
         const { showAll = false} = this.props;
         console.log("These are the belts" + this.state.belts)
         console.log("these are the rendered technique types", this.state.rendered_technique_types)
-        console.log("this is the syllabus", this.state.syllabus)
+        console.log("this is the syllabus, is it", this.state.syllabus)
         console.log("These are the belts" + this.state.belts)
 
         return (

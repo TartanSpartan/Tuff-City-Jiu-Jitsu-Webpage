@@ -166,11 +166,16 @@ class Api::V1::TechniquesController < Api::ApplicationController
         puts "Do we have an existing TT?", existing_technique_type
         # belt = Belt.where(id: params["belt_id"])[0]
         # byebug
-        technique_type = existing_technique_type || TechniqueType.create!(category: params["category"], sub_category: params["sub_category"], syllabus_id:modified_syllabus.id, belt_id: params["belt"].to_i)
-        
-        puts "Did that create a new TT?", technique_type.inspect
 
-        technique.update(summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type.id)
+        if (existing_technique_type) 
+            existing_technique_type.update(syllabus_id:modified_syllabus.id, belt_id: params["belt"].to_i)
+            technique_type = existing_technique_type
+        else
+            technique_type = TechniqueType.create(category: params["category"], sub_category: params["sub_category"], syllabus_id:modified_syllabus.id, belt_id: params["belt"].to_i)
+        end
+        puts "Did that create a new TT?", technique_type
+
+        technique.update(summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type.id, belt_id: params["belt"].to_i)
         update_video = Video.create! canadian_version: params["canadianUrl"], uk_version: params["britishUrl"], technique_id: technique.id
         technique.videourls = [update_video]
         technique.save!

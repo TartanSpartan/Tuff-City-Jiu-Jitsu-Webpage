@@ -15,8 +15,19 @@ export const Syllabus = {
   all(id) {
     return fetch(`${process.env.REACT_APP_BASE_URL}/syllabi/${id}/syllabi_full`, {
       credentials: "include"
-    }).then(res => res.json());
+    }).then(res => {
+      // console.log("This is the high level syllabus request", res.json())
+       return res.json();
+    }).then(data => {
+      console.log("This is the high level syllabus request", data)
+      return data;
+    }
+
+    )
   },
+
+// try .then chaining (i.e. at the end), then console.log the return value, because not all of the syllabus is being returned
+  
 }
 
 
