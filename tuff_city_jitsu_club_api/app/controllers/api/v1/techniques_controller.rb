@@ -1,11 +1,10 @@
 class Api::V1::TechniquesController < Api::ApplicationController
     before_action :authenticate_user!, except: [:index, :show]
+    before_action :authorize_user!, except: [:read]
     before_action :find_technique, only: [:edit, :update, :destroy]
     
     rescue_from(ActiveRecord:: RecordNotFound, with: :record_not_found)
     rescue_from(ActiveRecord:: RecordInvalid, with: :record_invalid)
-
-    # Bug: can't delete videos, thus can't delete techniques except by total database reset (may have been fixed)
 
     def index
         techniques = Technique.all.order(belt_id: :desc) # This should order the techniques by beltcode
@@ -66,6 +65,9 @@ class Api::V1::TechniquesController < Api::ApplicationController
 
 
     def create
+        authorize! :create, @technique
+        # authorize_user! :create, @technique
+
         # Get params for technique type and syllabus_id
         # Save technique_type 
         # Create technique with technique_type and the params
@@ -120,6 +122,7 @@ class Api::V1::TechniquesController < Api::ApplicationController
         puts "This are the params to be committed", params
         puts "This is the technique", technique
         render json: { id: new_syllabus.id }
+        # authorize_user! :create, @technique
     end
 
     def show
@@ -156,7 +159,7 @@ class Api::V1::TechniquesController < Api::ApplicationController
     end
 
     def update
-
+        authorize_user!
         puts "Here are the params", params
         # puts "We need to search for this", country: params["country"]
         modified_syllabus = Syllabus.find_by(country: "canada") # The id it should find will be 2
@@ -194,6 +197,7 @@ class Api::V1::TechniquesController < Api::ApplicationController
         puts "This are the params to be committed", params
         puts "This is the updated technique", technique
         render json: { id: modified_syllabus.id }
+        authorize_user! # :update, @technique
     end
 
     def find
@@ -261,5 +265,14 @@ class Api::V1::TechniquesController < Api::ApplicationController
             json: { status: 422, errors: errors }
         )
     end
+
+    def authorize_user!
+        # unless can? :create, @technique
+        return if current_user.is_admin?
+        # else
+        #   flash[:danger] = "Access Denied"
+        #   redirect_to root_path
+        # end
+    end 
 
 end

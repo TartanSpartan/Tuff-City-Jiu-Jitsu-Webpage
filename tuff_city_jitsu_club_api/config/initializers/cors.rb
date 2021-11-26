@@ -21,7 +21,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
         '/api/*', # Limit requests to paths that look like /api
         headers: :any, # All the requests to contain any headers
         credentials: true, # Because we're sending cookies with CORS we must add this flag
-        methods: [:get, :post, :patch, :put, :options, :delete] # Allow these http verbs
+        methods: [:get, :post, :patch, :put, :options, :delete, :head] # Allow these http verbs
       )
     end
 end

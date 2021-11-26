@@ -7,12 +7,19 @@ class Ability
     # Define abilities for the passed in user here. For example:
     #
       user ||= User.new # guest user (not logged in)
-      if user.admin?
-        can :manage, :all
-      elsif user.instrutor?
-        can :manage, :all
+      alias_action :create, :read, :update, :destroy, to: :crud
+
+
+      # if user.has_role? :admin
+      # Alternative:
+      if user.is_admin?
+
+        # can :manage, :all
+        can :crud, :technique
+      # elsif user.is_instructor?
+      #   can :crud, :technique
       else
-        can :read, :all
+        can :read, :technique
       end
 
       # Need to confine these permissions so that user can read up to the next grade from their's, and instructor is the same, but can still manage other things

@@ -46,6 +46,8 @@ class Api::ApplicationController < ActionController::Base
     end
     helper_method :user_signed_in?
 
+
+    
     protected
     # protected is like a private except that it prevents
     # descendent classes from using protected methods
