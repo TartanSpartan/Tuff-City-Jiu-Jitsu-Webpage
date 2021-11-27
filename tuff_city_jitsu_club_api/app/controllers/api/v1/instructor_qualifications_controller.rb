@@ -9,7 +9,7 @@ class Api::V1::InstructorQualificationsController < Api::ApplicationController
 
     def create
         instructorqualification = InstructorQualification.new instructor_qualification_params
-        instructorqualification.user = current_user
+        instructorqualification.user = User.find_by_id session[:user_id]
         instructorqualification.save!
         render json: { id: instructorqualification.id }
     end

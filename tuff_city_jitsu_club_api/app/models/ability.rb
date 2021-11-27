@@ -15,7 +15,7 @@ class Ability
       if user.is_admin?
 
         # can :manage, :all
-        can :crud, :technique
+        can :crud, :all
       # elsif user.is_instructor?
       #   can :crud, :technique
       else

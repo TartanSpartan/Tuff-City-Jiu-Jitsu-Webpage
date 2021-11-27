@@ -203,6 +203,7 @@ class Api::V1::TechniquesController < Api::ApplicationController
     def find
         # puts "TESTING ========#{current_user.id}" 
         # @technique = Technique.where("belt_grade LIKE ? OR technique_type.category LIKE ?", "%#{params[:search_string]}%", "%#{params[:search_string]}%")
+        current_user = User.find_by_id session[:user_id]
         belt_id = BeltGrade.where("user_id = ?", current_user.id).first.id
         technique = Technique.where("belt_id = ?", belt_id) #, current_user.id)
         puts "This is the belt we're referring to", belt_id
@@ -268,9 +269,12 @@ class Api::V1::TechniquesController < Api::ApplicationController
 
     def authorize_user!
         # unless can? :create, @technique
-        return if current_user.is_admin?
-        # else
-        #   flash[:danger] = "Access Denied"
+        if current_user.is_admin?
+            return
+        else
+            puts "Are you denied? Yes you are"
+            flash[:danger] = "Access Denied"
+        end
         #   redirect_to root_path
         # end
     end 

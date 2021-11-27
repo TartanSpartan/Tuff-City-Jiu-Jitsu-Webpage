@@ -12,7 +12,7 @@ class Api::V1::BeltGradeController < Api::ApplicationController
 
     def create
         beltgrade = BeltGrade.new beltgrade_params
-        beltgrade.user = current_user
+        beltgrade.user = User.find_by_id session[:user_id]
         beltgrade.save!
         render json: { id: beltgrade.id }
     end

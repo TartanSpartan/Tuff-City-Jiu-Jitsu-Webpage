@@ -2,6 +2,7 @@ import React, {useState} from "react";
 // import FormErrors from "./FormErrors";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert"
 import isLoading from "./TechniqueUpdatePage";
 import "../App.scss";
 
@@ -87,6 +88,7 @@ function UpdateTechniqueForm(props){
 
         currentTarget.reset();
     }
+    const { errors } = this.state;
 
     return (
         // Page loading function isn't working so ask a TA
@@ -94,6 +96,14 @@ function UpdateTechniqueForm(props){
         // : 
         // technique.map(
         <Form onSubmit={handleSubmit}>
+                  {errors.length > 0 ? (
+            <div className="ui negative message FormErrors">
+              <Alert variant="danger">
+              <div className="header">Access Denied</div>
+              <p>{errors.map(err => err.message).join(",")}</p>
+              </Alert>
+            </div>
+          ) : null}
              
         <Form.Group controlId="formBasicSyllabus">
         <Form.Label id="top-label">Edit existing technique</Form.Label>

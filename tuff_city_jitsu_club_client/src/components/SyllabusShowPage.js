@@ -3,6 +3,7 @@
 import React, {useState} from 'react';
 import { Technique, TechniqueType, Syllabus, Belt } from '../requests';
 import _ from "lodash";
+import AuthRoute from "./AuthRoute";
 import { Link } from 'react-router-dom';
 import moment from "moment";
 import Button from "react-bootstrap/Button";
@@ -203,7 +204,7 @@ export class SyllabusShowPage extends React.Component {
                                         ) : (
                                         <></>
                                         )}
-                                         <p>Posted on {moment(element.created_at ).format("MMM Do, YYYY")}</p>
+                                         <p>Posted on {moment(element.created_at).format("MMM Do, YYYY")}</p>
                                         </div>
 
                                     )

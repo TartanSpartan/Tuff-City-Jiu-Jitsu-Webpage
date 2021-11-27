@@ -19,20 +19,13 @@ class Api::ApplicationController < ActionController::Base
         )
     end
 
-    def authenticate_user!
-        unless current_user.present?
-          render(
-            json: { status: 401 },
-            status: 401, # Unauthorized
-          )
-        end
-    end
-
-    def current_user
-        @current_user ||= User.find_by_id session[:user_id]
-    end
 
     helper_method(:current_user)
+
+    def current_user
+        @current_user ||= User.find_by(id: session[:user_id])
+    end
+
 
     # def authenticate_user!
     #     unless user_signed_in?
@@ -41,13 +34,21 @@ class Api::ApplicationController < ActionController::Base
     #     end
     # end
 
-    def user_signed_in?
-        current_user.present?
+    # def user_signed_in?
+    #     current_user.present?
+    # end
+    # helper_method :user_signed_in?
+
+    private
+    def authenticate_user!
+      unless current_user.present?
+        render(
+          json: { status: 401 },
+          status: 401, # Unauthorized
+        )
+      end
     end
-    helper_method :user_signed_in?
 
-
-    
     protected
     # protected is like a private except that it prevents
     # descendent classes from using protected methods
