@@ -107,7 +107,7 @@ further afield. A fond participant of the triennial International
 event, he has been present for it in Edinburgh, then in
 Collingwood, Ontario, Canada, and most recently in Drakensberg,
 South Africa. It's one of his earnest wishes that he'll be able
-to attend the next event in Vienna, Austria, in 2022 with the virus
+to attend the next event in Vienna, Austria, in 2023 with the virus
 hopefully more or less eradicated by then.
 <br />
 <br />

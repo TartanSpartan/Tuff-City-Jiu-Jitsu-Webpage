@@ -3,7 +3,9 @@
 
 import { Nav } from "react-bootstrap";
 import React, { Component, Link } from "react";
-import { Technique, Syllabus, Belt, Video, TechniqueType } from "../requests";
+import { Technique, User, Belt, Video, TechniqueType } from "../requests";
+import { getUser } from "./AuthRoute.js";
+import App from "./App.js";
 import moment from "moment";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -55,12 +57,36 @@ class TechniqueShowPage extends Component {
       technique_type: {},
       belt: {},
       video: [],
+      currentUser: null,
+      isAdmin: false,
       isLoading: true,
       error: false,
     };
   }
 
+  // Had to lift the following wholesale from App.js; find a more elegant way to import it.
+
+  getUser = () => {
+    User.current()
+      .then((data) => {
+        if (typeof data.id !== "number") {
+          this.setState({ isLoading: false });
+        } else {
+          this.setState({
+            isLoading: false,
+            currentUser: data,
+            isAdmin: data.is_admin,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ loading: false });
+      });
+  };
+
   componentDidMount() {
+    this.getUser();
     window.scrollTo(0, 0);
     Technique.one(this.props.match.params.id)
       .then((technique) =>
@@ -84,6 +110,7 @@ class TechniqueShowPage extends Component {
       })
       .then((response) => {
         console.log("This is the response", response);
+        console.log("This is the user", getUser);
       });
 
     // The following handler probably isn't required so can remove the commented block
@@ -130,8 +157,6 @@ class TechniqueShowPage extends Component {
 
   // Edit the following codeblock for updating a technique; never really did this in CodeCore
 
-
-
   // Modify this block to delete comments, if and only if comments are a feature to be implemented; discuss with David
 
   // deleteBid(id) {
@@ -145,6 +170,10 @@ class TechniqueShowPage extends Component {
   // const technique = this.state.technique;
 
   render() {
+    const { isLoading, currentUser, isAdmin } = this.state;
+    if (isLoading) {
+      return <div />;
+    }
     console.log("This is the state", this.state);
     // console.log("Do we have access to the technique?", this.state.technique);
     // console.log("Do we have access to the technique type?", this.state.technique_type);
@@ -228,7 +257,7 @@ class TechniqueShowPage extends Component {
         );
       }
     };
-    const currentUser = this.props.currentUser;
+    // const currentUser = this.props.currentUser;
     // const renderVideo = this.state.video[0]["canadian_version"];
 
     // asyncHandler(renderVideo);
@@ -253,7 +282,7 @@ class TechniqueShowPage extends Component {
           <br />
 
           <div className="techniqueType">
-            <text className="category" style={{fontStyle: "italic"}}>
+            <text className="category" style={{ fontStyle: "italic" }}>
               {this.state.technique_type.category}
             </text>
             <br />
@@ -294,7 +323,7 @@ class TechniqueShowPage extends Component {
                           </div>
                         </div>
                         {/* <div class="w-100"></div> */}
-
+                        {isAdmin ? (
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                           <iframe
                             className="iframe"
@@ -313,7 +342,8 @@ class TechniqueShowPage extends Component {
                           <div className="ukTitle">
                             {video.uk_version ? "British Version" : ""}
                           </div>
-                        </div>
+                        </div>) : (<></>)
+                        }
                       </div>
                     </div>
                   </div>
@@ -330,6 +360,8 @@ class TechniqueShowPage extends Component {
 
           {/*{this.state.technique.videos_id}*/}
           <br />
+          {isAdmin ? (
+            <>
           {this.state.technique.is_different ? (
             <>
               {
@@ -345,45 +377,46 @@ class TechniqueShowPage extends Component {
           ) : (
             ""
           )}
-          <>
-            {this.state.technique?.created_at ? (
-              <>
-                <p>
-                  Posted on{" "}
-                  {moment(this.state.technique.created_at).format(
-                    "MMM Do, YYYY"
-                  )}
-                </p>
 
-                <Button
-                  variant="success"
-                  key={this.state.technique.id}
-                  style={{ paddingLeft: 10, paddingRight: 10 }}
-                  href={`/techniques/${this.state.technique.id}/edit`}
-                >
-                  Edit
-                </Button>
-                <br />
-                <br />
+              {this.state.technique?.created_at ? (
+                <>
+                  <p>
+                    Posted on{" "}
+                    {moment(this.state.technique.created_at).format(
+                      "MMM Do, YYYY"
+                    )}
+                  </p>
 
+                  <Button
+                    variant="success"
+                    key={this.state.technique.id}
+                    style={{ paddingLeft: 10, paddingRight: 10 }}
+                    href={`/techniques/${this.state.technique.id}/edit`}
+                  >
+                    Edit
+                  </Button>
+                  <br />
+                  <br />
 
-                {/* Delete button currently isn't working- fix! */}
-                <Button
-                  variant="danger"
-                  type="danger"
-                  onClick={(id) =>
-                    this.deleteTechnique(this.state.technique.id)
-                  }
-                >
-                  Delete
-                </Button>
-                {this.state.error ? <p>Cannot delete technique</p> : <></>}
-
-              </>
-            ) : (
-              ""
-            )}
-          </>
+                  {/* Delete button currently isn't working- fix! */}
+                  <Button
+                    variant="danger"
+                    type="danger"
+                    onClick={(id) =>
+                      this.deleteTechnique(this.state.technique.id)
+                    }
+                  >
+                    Delete
+                  </Button>
+                  {this.state.error ? <p>Cannot delete technique</p> : <></>}
+                </>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            <></>
+          )}
           {/* </> */}
         </div>
       </main>

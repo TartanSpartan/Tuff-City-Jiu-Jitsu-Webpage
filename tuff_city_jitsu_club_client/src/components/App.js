@@ -22,7 +22,22 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 // import 'bootstrap/dist/css/bootstrap.css';
 
-
+// export const getUser = () =>  {
+//   User.current()
+//   .then(data => {
+//     if (typeof data.id !== "number") {
+//       this.setState({ loading: false });
+//     } else {
+//       this.setState({ loading: false, currentUser: data });
+//     }
+//     return data;
+//     // console.log("This is the current user", data)
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//     this.setState({ loading: false });
+//   });
+// };
 
 class App extends React.Component {
     constructor(props) {
@@ -39,7 +54,7 @@ class App extends React.Component {
         });
       };
 
-    getUser = () =>  {
+      getUser = () =>  {
         User.current()
         .then(data => {
           if (typeof data.id !== "number") {
@@ -47,12 +62,14 @@ class App extends React.Component {
           } else {
             this.setState({ loading: false, currentUser: data });
           }
+          return data;
+          // console.log("This is the current user", data)
         })
         .catch((err) => {
           console.log(err);
           this.setState({ loading: false });
         });
-    };
+      };
 
     componentDidMount() {
         this.getUser();

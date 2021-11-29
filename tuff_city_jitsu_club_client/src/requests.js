@@ -19,7 +19,7 @@ export const Syllabus = {
       // console.log("This is the high level syllabus request", res.json())
        return res.json();
     }).then(data => {
-      console.log("This is the high level syllabus request", data)
+      // console.log("This is the high level syllabus request", data)
       return data;
     }
 
@@ -210,13 +210,15 @@ export const Session = {
 }
 
 export const User = {
-    // Create a user
+    // Current user
     current() {
         return fetch(`${process.env.REACT_APP_BASE_URL}/users/current`, {
           method: "GET",
           credentials: "include"
         }).then(res => res.json());
       },
+      
+      // Create a user
       create(params) {
         return fetch(`${process.env.REACT_APP_BASE_URL}/users`, {
           method: "POST",
