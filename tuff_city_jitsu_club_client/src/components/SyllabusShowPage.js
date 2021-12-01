@@ -88,6 +88,7 @@ function groupedTechniqueTypes(technique_types) {
 export class SyllabusShowPage extends React.Component {
   constructor(props) {
     super(props);
+    console.log("These are the props", props)
     this.state = {
       // Populate the list of techniques through fetching them from the server and allow the page to load
       syllabus: [],
@@ -106,38 +107,19 @@ export class SyllabusShowPage extends React.Component {
 
   // Had to lift the following wholesale from App.js; find a more elegant way to import it.
 
-  getUser = () => {
-    User.current()
-      .then((data) => {
-        if (typeof data.id !== "number") {
-          this.setState({ isLoading: false });
-        } else {
-          this.setState({
-            isLoading: false,
-            currentUser: data,
-            isAdmin: data.is_admin,
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        this.setState({ loading: false });
-      });
-  };
-
   componentDidMount() {
-    this.getUser();
 
-    Syllabus.all(1).then((syllabus) => {
-      // Hardcoded as 1 for now for Canada but eventually move it to be dynamic for multiple syllabi
-      this.setState({
-        syllabus: syllabus,
-        technique_types: syllabus.technique_types,
-        techniques: syllabus.techniques,
-        belts: syllabus.belts,
-        isLoading: false,
-      });
-    });
+        Syllabus.all({id:1}).then(syllabus => {
+          // Hardcoded as 1 for now for Canada but eventually move it to be dynamic for multiple syllabi
+          this.setState({
+            syllabus: syllabus,
+            technique_types: syllabus.technique_types,
+            techniques: syllabus.techniques,
+            belts: syllabus.belts,
+            isLoading: false,
+          });
+        });
+
   }
 
   deleteTechnique(id) {
@@ -350,7 +332,7 @@ export class SyllabusShowPage extends React.Component {
                                         )}
                                       </p>
                                     ) : (
-                                      <></>
+                                      <br/>
                                     )}
                                   </div>
                                 );

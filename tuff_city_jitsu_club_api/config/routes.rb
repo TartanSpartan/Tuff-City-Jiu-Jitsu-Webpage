@@ -4,7 +4,8 @@ Rails.application.routes.draw do
   root :controller => 'static', :action => '/' 
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
-      resources :belt_grade
+      resources :belt_grades
+      get "/belt_grades_find", {to: "belt_grades#find"}
       resources :instructorqualifications
       resources :syllabi do
         get "/syllabi_full", {to: "syllabi#find_all_belts"}

@@ -57,6 +57,7 @@ class App extends React.Component {
       getUser = () =>  {
         User.current()
         .then(data => {
+          console.log("This is the current user", data)
           if (typeof data.id !== "number") {
             this.setState({ loading: false });
           } else {

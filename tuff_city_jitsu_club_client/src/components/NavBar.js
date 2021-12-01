@@ -48,7 +48,7 @@ function NavBar(props) {
               ) : (
                 <></>
               )}
-              {/* <Nav.Link href="/syllabus/mindmap">Mindmap For Syllabus</Nav.Link> */}
+              <Nav.Link href="/syllabus/mindmap">Mindmap For Syllabus</Nav.Link>
               {/* <Nav.Link href="/events">Events</Nav.Link> */}
               <Nav.Link className="nav-link" href="/" onClick={onSignOut}>
                 Sign Out

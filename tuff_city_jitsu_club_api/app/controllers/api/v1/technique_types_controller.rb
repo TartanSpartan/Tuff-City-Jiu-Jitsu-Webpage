@@ -6,10 +6,10 @@ class Api::V1::TechniqueTypesController < Api::ApplicationController
     rescue_from(ActiveRecord:: RecordInvalid, with: :record_invalid)
 
 
-    # def index
-    #     technique_types = TechniqueTypes.all.order(belt_id: :desc) # This should order the technique types by beltcode
-    #     render(json: technique_types, each_serializer: TechniquesSerializer) # Find out what should be in this serializer
-    # end
+    def index
+        technique_types = TechniqueType.all.order(belt_id: :desc) # This should order the technique types by belt number
+        render(json: technique_types, each_serializer: TechniqueTypesSerializer) # Find out what should be in this serializer
+    end
 
     def show
         puts "Here are the params", params["id"]
@@ -119,8 +119,11 @@ class Api::V1::TechniqueTypesController < Api::ApplicationController
     def technique_type_params
         params.require(:technique_type)
         .permit( # Replace these as appropriate
+            :id, 
             :category,
-            :sub_category
+            :sub_category,
+            :created_at, 
+            :updated_at
         )
     end
     

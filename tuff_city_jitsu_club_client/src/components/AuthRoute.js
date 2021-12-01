@@ -35,7 +35,7 @@ const AuthRoute = props => {
             if (typeof render === "function") {
                 return render(routeProps);
             } else {
-                return <Component {...routeProps} />;
+                return <Component user={isAuthenticated} {...routeProps} />;
             }
         } else {
           return <Redirect to="/sign_in" />;

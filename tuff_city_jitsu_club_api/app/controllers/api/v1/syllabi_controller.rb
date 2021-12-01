@@ -52,15 +52,19 @@ class Api::V1::SyllabiController < Api::ApplicationController
     end
 
     def get_syllabus_index_page_data
+        # Target: create dynamic subset of the syllabus according to which belt grade the current user is
         puts "testing 1 2 3"
         search_belt = params[:belt_id]
+        # current_user = params[:user_id]
         syllabus_id = params[:syllabus_id]
         payload = Hash.new # This is a hash in Rails with everything we need: one belt, with all techniques, technique types, etc, as an all-in-one
         payload[:belts] = Belt.find_by(id:search_belt)
         payload[:techniques] = Technique.where(:belt_id=>search_belt)
         payload[:technique_types] = TechniqueType.where(:belt_id=>search_belt)
+        # payload[:users] = User.find_by(id:user_id)
         if payload
-            puts "Here is the syllabus", payload
+            # puts "This is the current user", current_user
+            puts "Here is the syllabus according to the needs of the current user", payload
             render(json: payload) 
         else
             render(json: {error: "Syllabus Not Found"})
@@ -69,9 +73,22 @@ class Api::V1::SyllabiController < Api::ApplicationController
 
     def find_all_belts
         puts "testing 1 2 3" 
+        puts "These are the params" , params
         search_syllabus = params[:syllabus_id]
+        @user = current_user
+        belt_grade = BeltGrade.where(:user_id => @user.id)
+        puts "This is the current user", @user
+        puts "This is the current belt grade id", belt_grade[0].id
+        user_belt = belt_grade[0].belt_id
+        initial = user_belt - 1
+        puts "This is the initial number", initial
+        last = 8
+        belt_range = Array(initial..last)
+        puts belt_range
+
         payload = Hash.new # This is a hash in Rails with everything we need: all belts, techniques, technique types, etc, as an all-in-one
-        belts = Belt.where(:syllabus_id=>search_syllabus)
+        belts = Belt.where(:id => belt_range)
+        puts "This is the belt up to which the syllabus will print", belts
         payload[:belts]=belts.map do |belt, index|
             puts belt
             techniques = Technique.where(:belt_id=>belt.id)
@@ -81,11 +98,19 @@ class Api::V1::SyllabiController < Api::ApplicationController
         #payload[:techniques] = Technique.where(:belt_id=>search_belt)
         # payload[:technique_types] = TechniqueType.where(:belt_id=>search_belt)
         if payload
-            puts "Here is the syllabus", payload
+            puts "This is the current user", current_user
+            puts "Here is the syllabus according to the grade of the current user", payload
             render(json: payload) 
         else
             render(json: {error: "Syllabus Not Found"})
         end
+        # pseudocode:
+        # if belt_id === 1 
+        #    render the whole syllabus
+        # else
+        #   render the syllabus up to the current grade - 1
+        #   e.g. a purple belt gets to see everything up to light blue belt (the next grade they are training for)
+        # then in front end, devise nice colour coding with e.g. vertical bar strips along with David
     end
 
     private 
@@ -95,7 +120,10 @@ class Api::V1::SyllabiController < Api::ApplicationController
         .permit( # Replace these as appropriate
             :id,
             :country,
-            :user_id
+            :user_id,
+            :belts,
+            :technique_types,
+            :techniques
         )
     end
     

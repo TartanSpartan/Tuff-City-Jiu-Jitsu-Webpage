@@ -3,73 +3,65 @@
 // Handling fetch requests for sessions, users etc
 
 export const Syllabus = {
-
   // Fetch one syllabus from the server
   one(id) {
     return fetch(`${process.env.REACT_APP_REACT_APP_BASE_URL}/syllabi/${id}`, {
-      credentials: "include"
-    }).then(res => res.json());
+      credentials: "include",
+    }).then((res) => res.json());
   },
-  
-// Fetch all syllabi from the server
-  all(id) {
-    return fetch(`${process.env.REACT_APP_BASE_URL}/syllabi/${id}/syllabi_full`, {
-      credentials: "include"
-    }).then(res => {
-      // console.log("This is the high level syllabus request", res.json())
-       return res.json();
-    }).then(data => {
-      // console.log("This is the high level syllabus request", data)
-      return data;
-    }
 
+  // Fetch all syllabi from the server
+  all(params) {
+    return fetch(
+      `${process.env.REACT_APP_BASE_URL}/syllabi/${params.id}/syllabi_full?user_id=${encodeURIComponent(params.user_id)}`,
+      {
+        credentials: "include"
+      }
     )
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        return data;
+      });
   },
 
-// try .then chaining (i.e. at the end), then console.log the return value, because not all of the syllabus is being returned
-  
-}
-
+  // try .then chaining (i.e. at the end), then console.log the return value, because not all of the syllabus is being returned
+};
 
 export const Video = {
-
   // Fetch all videos from the server
   all() {
     return fetch(`${process.env.REACT_APP_BASE_URL}/videos`, {
-      credentials: "include"
-    }).then(res => res.json());
+      credentials: "include",
+    }).then((res) => res.json());
   },
 
   find(id) {
     return fetch(`${process.env.REACT_APP_BASE_URL}/videos/${id}`, {
-      credentials: "include"
-    }).then(res=>{
+      credentials: "include",
+    }).then((res) => {
       console.log("This is the video response", res);
-      return(res.json())
-      }
-    );
+      return res.json();
+    });
   },
-
-  
-}
+};
 
 export const Belt = {
-
   // Fetch all belts from the server
   all() {
     return fetch(`${process.env.REACT_APP_BASE_URL}/belts`, {
-      credentials: "include"
-    }).then(res => res.json());
+      credentials: "include",
+    }).then((res) => res.json());
   },
 
   find(id) {
     return fetch(`${process.env.REACT_APP_BASE_URL}/belts/${id}`, {
-      credentials: "include"
-    }).then(res=>{
+      credentials: "include",
+    }).then((res) => {
       console.log("This is the belt response", res);
-      return(res.json())
-      }
-    );
+      return res.json();
+    });
   },
 
   // // Fetch one belt from the server
@@ -78,157 +70,145 @@ export const Belt = {
   //     credentials: "include"
   //   }).then(res => res.json());
   // },
-}
+};
 
 export const TechniqueType = {
-
   // Fetch all techniques from the server
   all() {
     return fetch(`${process.env.REACT_APP_BASE_URL}/technique_types`, {
-      credentials: "include"
-    }).then(res=>{
+      credentials: "include",
+    }).then((res) => {
       console.log(res);
-      return(res.json())
-      }
-    );
+      return res.json();
+    });
   },
-
 
   find(id) {
     return fetch(`${process.env.REACT_APP_BASE_URL}/technique_types/${id}`, {
-      credentials: "include"
-    }).then(res=>{
+      credentials: "include",
+    }).then((res) => {
       console.log(res);
-      return(res.json())
-      }
-    );
+      return res.json();
+    });
   },
-}
-
+};
 
 export const Technique = {
-
   // Fetch all techniques from the server
   all() {
     return fetch(`${process.env.REACT_APP_BASE_URL}/techniques`, {
-      credentials: "include"
-    }).then(res=>{
+      credentials: "include",
+    }).then((res) => {
       console.log(res);
-      return(res.json())
-      }
-    );
+      return res.json();
+    });
   },
 
   find() {
     return fetch(`${process.env.REACT_APP_BASE_URL}/techniques_find`, {
-      credentials: "include"
-    }).then(res=>{
+      credentials: "include",
+    }).then((res) => {
       console.log(res);
-      return(res.json())
-      }
-    );
+      return res.json();
+    });
   },
 
   // Create a technique
   create(params) {
-        console.log("############## test", params)
-            // Params is an object that represents a technique
-        return fetch(`${process.env.REACT_APP_BASE_URL}/techniques`, {
-            method: 'POST',
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(params)
-
-        }).then(res=>res.json()
-
-        );
+    console.log("############## test", params);
+    // Params is an object that represents a technique
+    return fetch(`${process.env.REACT_APP_BASE_URL}/techniques`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    }).then((res) => res.json());
   },
-    // Fetch a single technique
-    one(id) {
-        return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
-            credentials: "include"
-        }).then(res => res.json())
-        .catch(console.error);
-    },
-
-    // Update a technique
-
-    // Try to debug this
-    update(id, params) {
-      console.log("this is from request js and the params", params)
-      return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
-          credentials: "include",
-          method: "PATCH",
-          body: JSON.stringify(params),
-          headers: { "Content-Type": "application/json" },
-      })
-      .then((res) => {
-        console.log("Are we hitting this?")
-        return res.json()
-      }
-    );
+  // Fetch a single technique
+  one(id) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .catch(console.error);
   },
 
-    // Destroy a technique
-    destroy(id) {
-        return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
-            method: 'DELETE',
-            credentials: "include"
-        }).then(res => res.json());
-    },
+  // Update a technique
 
-    // Get the details of a technique so that it may be updated
-    details(id) {
-      return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
-          method: 'GET',
-          credentials: "include"
-      }).then(res => res.json());
+  // Try to debug this
+  update(id, params) {
+    console.log("this is from request js and the params", params);
+    return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
+      credentials: "include",
+      method: "PATCH",
+      body: JSON.stringify(params),
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
+      console.log("Are we hitting this?");
+      return res.json();
+    });
   },
-  }
+
+  // Destroy a technique
+  destroy(id) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    }).then((res) => res.json());
+  },
+
+  // Get the details of a technique so that it may be updated
+  details(id) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
+      method: "GET",
+      credentials: "include",
+    }).then((res) => res.json());
+  },
+};
 
 export const Session = {
-    // Create a session
-    create(params) {
-        return fetch(`${process.env.REACT_APP_BASE_URL}/session`, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(params)
-          }).then(res => res.json());
-    },
-    destroy() {
-        return fetch(`${process.env.REACT_APP_BASE_URL}/session`, {
-            method: "DELETE",
-            credentials: "include"
-        }).then(res => res.json());
-    }
-}
+  // Create a session
+  create(params) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/session`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    }).then((res) => res.json());
+  },
+  destroy() {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/session`, {
+      method: "DELETE",
+      credentials: "include",
+    }).then((res) => res.json());
+  },
+};
 
 export const User = {
-    // Current user
-    current() {
-        return fetch(`${process.env.REACT_APP_BASE_URL}/users/current`, {
-          method: "GET",
-          credentials: "include"
-        }).then(res => res.json());
-      },
-      
-      // Create a user
-      create(params) {
-        return fetch(`${process.env.REACT_APP_BASE_URL}/users`, {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ user: params })
-        }).then(res => res.json());
-      }
-}
+  // Current user
+  current() {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/users/current`, {
+      method: "GET",
+      credentials: "include",
+    }).then((res) => res.json());
+  },
 
-console.log("This is the session", process.env.REACT_APP_BASE_URL)
+  // Create a user
+  create(params) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/users`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ user: params }),
+    }).then((res) => res.json());
+  },
+};
+
+console.log("This is the session", process.env.REACT_APP_BASE_URL);

@@ -2,7 +2,7 @@ class TechniquesSerializer < ActiveModel::Serializer
   attributes(
     :id, 
     :summary,
-    :videos_id,
+    :videourls,
     :is_different,
     :difference_content,
     :technique_type_id,
