@@ -64,29 +64,7 @@ class TechniqueShowPage extends Component {
     };
   }
 
-  // Had to lift the following wholesale from App.js; find a more elegant way to import it.
-
-  getUser = () => {
-    User.current()
-      .then((data) => {
-        if (typeof data.id !== "number") {
-          this.setState({ isLoading: false });
-        } else {
-          this.setState({
-            isLoading: false,
-            currentUser: data,
-            isAdmin: data.is_admin,
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        this.setState({ loading: false });
-      });
-  };
-
   componentDidMount() {
-    this.getUser();
     window.scrollTo(0, 0);
     Technique.one(this.props.match.params.id)
       .then((technique) =>
@@ -170,10 +148,13 @@ class TechniqueShowPage extends Component {
   // const technique = this.state.technique;
 
   render() {
-    const { isLoading, currentUser, isAdmin } = this.state;
+    const { isLoading } = this.state;
+    const currentUser = this.props.user;
+    const isAdmin = this.props.user.is_admin;
     if (isLoading) {
       return <div />;
     }
+    
     console.log("This is the state", this.state);
     // console.log("Do we have access to the technique?", this.state.technique);
     // console.log("Do we have access to the technique type?", this.state.technique_type);

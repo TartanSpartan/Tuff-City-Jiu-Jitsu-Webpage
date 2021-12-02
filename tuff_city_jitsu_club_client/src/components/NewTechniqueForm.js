@@ -6,6 +6,50 @@ import "../App.scss";
 
 // Useful features would be to batch-process entire technique type groups at a time, and to copy a technique for easy editing, but these will come down the road at some point
 
+function secondConverter(time) {
+  let fullTime = 0;
+  /*pseudocode: 
+  if start/end time is in min:sec format, parse it into seconds
+  i.e. A:BB so time in seconds = A*60 + BB */
+  if (time.includes(":")) {
+    const timeArray = time.split(":");
+    fullTime = (parseInt(timeArray[0] * 60) + parseInt(timeArray[1]));
+  } else {
+    fullTime = time;
+  }
+  return fullTime;
+}
+
+// console.log("secondConverter test", secondConverter("5:30"))
+// If this returns 330 then it works great
+
+function urlStartEndizer (url, startTime, endTime) {
+  // console.log("This is the url, start time and end time", url, startTime, endTime)
+  let outputUrl = "";
+  let startSubStr = "?start=" + secondConverter(startTime);
+  let endSubStr = "&end=" + + secondConverter(endTime);
+  if (url === "") {
+    return outputUrl;
+  } else {
+    return url + startSubStr + endSubStr;
+  }
+  
+  
+  /*pseudocode: 
+
+  
+  if start time === "" && end time === ""
+    then fullUrl = url;
+  else
+    fullUrl = url.concat(startSubStr, fullStartTime, endSubStr, fullEndTime)
+
+    aka
+    fullUrl = url appended with "?start=ST&end=ET" (where ST and ET are both in seconds format);
+  return fullUrl;
+  */
+
+}
+
 function NewTechniqueForm(props) {
     const [videos, setVideos] = useState([{canadianUrl: "", britishUrl: ""}]);
     let truncatedVideos = JSON.stringify(videos).split(":").join(" : ").split(",").join(" , ").split('l"').join("l ").slice(3, -2);
@@ -16,6 +60,7 @@ function NewTechniqueForm(props) {
     const handleInputChange = (e, index) => {
       const { name, value } = e.target;
       const list = [...videos];
+      // console.log(urlStartEndizer(videos["canadianUrl"], formData.get("canadianStartTime"), formData.get("canadianEndTime")));
       list[index][name] = value;
       setVideos(list);
       console.log("This is the video list", list)
@@ -40,6 +85,9 @@ function NewTechniqueForm(props) {
         const formData = new FormData(currentTarget);
 
       console.log("Here are the videos to be submitted", videos)
+      videos[0]["canadianUrl"] = urlStartEndizer(videos[0]["canadianUrl"], formData.get("canadianStartTime"), formData.get("canadianEndTime"));
+      // Set up the following line so that if you don't include a British URL etc, no record is saved
+      videos[0]["britishUrl"] = urlStartEndizer(videos[0]["britishUrl"], formData.get("britishStartTime"), formData.get("britishEndTime"));
         props.onSubmit({
             syllabus: formData.get("country").toLowerCase(),
             belt: formData.get("belt"),
@@ -58,6 +106,7 @@ function NewTechniqueForm(props) {
         currentTarget.reset();
            
     }
+
     
     return (
         <Form onSubmit={handleSubmit}>
@@ -114,13 +163,32 @@ function NewTechniqueForm(props) {
         {videos.map((x, i) => {
           return (
             <>
+              <Form.Label>Note: if you just want to show a segment of a video, you can optionally include the start and end time for that segment.</Form.Label>
+              {/* Eventually need some sophisticated url-time-duration checking to prevent bad/trolling input! For now just test with sensible inputs */}
+              <br/>
               <Form.Label>Provide the Canadian video URL (if available)</Form.Label>
               <Form.Control name = "canadianUrl"
               value = {x.canadianUrl}
               type="primary_video"
               placeholder="Try to source this from YouTube if possible."
               onChange={e =>handleInputChange(e, i)}/>
+              <br />
+              <Form.Label>Segment start time in minutes:seconds or just seconds (optional)</Form.Label>
+              <Form.Control name = "canadianStartTime"
+              value = {x.canadianStartTime}
+              type="primary_video_start_time"
+              placeholder="E.g. 0:23, or 72s"
+              onChange={e =>handleInputChange(e, i)}/>
               
+              <br />
+              <Form.Label>Segment end time in minutes:seconds or just seconds (optional)</Form.Label>
+              <Form.Control name = "canadianEndTime"
+              value = {x.canadianEndTime}
+              type="primary_video_End_time"
+              placeholder="E.g. 2:52, or 210s"
+              onChange={e =>handleInputChange(e, i)}/>
+              
+              {/* {urlStartEndizer(x.canadianURL, x.canadianStartTime, x.canadianEndTime)} */}
               <br />
               <Form.Label>If the UK technique is different, provide the UK video URL (if available)</Form.Label>
               <Form.Control name = "britishUrl" 
@@ -130,6 +198,23 @@ function NewTechniqueForm(props) {
               placeholder="Try to source this from YouTube if possible."
               onChange={e =>handleInputChange(e, i)}/>
               
+              <br />
+              <Form.Label>Segment start time in minutes:seconds or just seconds (optional)</Form.Label>
+              <Form.Control name = "britishStartTime"
+              value = {x.britishStartTime}
+              type="primary_video_start_time"
+              placeholder="E.g. 0:31, or 46s"
+              onChange={e =>handleInputChange(e, i)}/>
+              
+              <br />
+              <Form.Label>Segment end time in minutes:seconds or just seconds (optional)</Form.Label>
+              <Form.Control name = "britishEndTime"
+              value = {x.britishEndTime}
+              type="primary_video_End_time"
+              placeholder="E.g. 7:02, or 307s"
+              onChange={e =>handleInputChange(e, i)}/>
+              
+              <br />
               {/* Temporary button for farming out easy techniques (but have to scroll down for difference handling). Can comment out when full form instantiation is required. */}
               <Button variant="primary" type="submit">
                Submit

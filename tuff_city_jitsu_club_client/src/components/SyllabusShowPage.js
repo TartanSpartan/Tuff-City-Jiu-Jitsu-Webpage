@@ -135,7 +135,9 @@ export class SyllabusShowPage extends React.Component {
   };
 
   render() {
-    const { isLoading, currentUser, isAdmin } = this.state;
+    const { isLoading } = this.state;
+    const currentUser = this.props.user;
+    const isAdmin = this.props.user.is_admin;
     if (isLoading) {
       return <div />;
     }

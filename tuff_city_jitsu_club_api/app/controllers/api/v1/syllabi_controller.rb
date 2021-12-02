@@ -104,12 +104,6 @@ class Api::V1::SyllabiController < Api::ApplicationController
         else
             render(json: {error: "Syllabus Not Found"})
         end
-        # pseudocode:
-        # if belt_id === 1 
-        #    render the whole syllabus
-        # else
-        #   render the syllabus up to the current grade - 1
-        #   e.g. a purple belt gets to see everything up to light blue belt (the next grade they are training for)
         # then in front end, devise nice colour coding with e.g. vertical bar strips along with David
     end
 
