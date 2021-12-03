@@ -26,29 +26,18 @@ function secondConverter(time) {
 function urlStartEndizer (url, startTime, endTime) {
   // console.log("This is the url, start time and end time", url, startTime, endTime)
   let outputUrl = "";
-  let startSubStr = "?start=" + secondConverter(startTime);
-  let endSubStr = "&end=" + + secondConverter(endTime);
+
+  let startSubStr = "?start=" + secondConverter(String(startTime));
+  let endSubStr = "&end=" + + secondConverter(String(endTime));
   if (url === "") {
     return outputUrl;
   } else {
-    return url + startSubStr + endSubStr;
+    outputUrl = url + startSubStr + endSubStr;
+    return outputUrl;
   }
-  
-  
-  /*pseudocode: 
-
-  
-  if start time === "" && end time === ""
-    then fullUrl = url;
-  else
-    fullUrl = url.concat(startSubStr, fullStartTime, endSubStr, fullEndTime)
-
-    aka
-    fullUrl = url appended with "?start=ST&end=ET" (where ST and ET are both in seconds format);
-  return fullUrl;
-  */
-
 }
+
+console.log("Test for urlStartEndizer", urlStartEndizer("https://www.youtube.com/watch?v=tLeu22wenlg", 12, 20))
 
 function NewTechniqueForm(props) {
     const [videos, setVideos] = useState([{canadianUrl: "", britishUrl: ""}]);

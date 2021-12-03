@@ -6,10 +6,6 @@ import Alert from "react-bootstrap/Alert"
 import isLoading from "./TechniqueUpdatePage";
 import "../App.scss";
 
-// Find out how to override defaults if this means a technique can't have a field written into it
-
-
-// Add onChange handler to change value for each select-based menu input
 
 export default UpdateTechniqueForm;
 function UpdateTechniqueForm(props){

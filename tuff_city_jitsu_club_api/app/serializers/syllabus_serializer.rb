@@ -3,9 +3,8 @@ class SyllabusSerializer < ActiveModel::Serializer
   :id,
   :country,
   :user_id,
-  :belts,
-  :technique_types,
-  :techniques
+  :created_at, 
+  :updated_at
   )
   puts "We are in the syllabus serializer",
 

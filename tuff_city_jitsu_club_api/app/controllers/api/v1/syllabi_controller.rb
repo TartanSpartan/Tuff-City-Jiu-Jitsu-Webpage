@@ -72,11 +72,11 @@ class Api::V1::SyllabiController < Api::ApplicationController
     end
 
     def find_all_belts
-        puts "testing 1 2 3" 
-        puts "These are the params" , params
         search_syllabus = params[:syllabus_id]
         @user = current_user
         belt_grade = BeltGrade.where(:user_id => @user.id)
+        puts "testing 1 2 3" 
+        puts "These are the params", params
         puts "This is the current user", @user
         puts "This is the current belt grade id", belt_grade[0].id
         user_belt = belt_grade[0].belt_id
@@ -91,8 +91,8 @@ class Api::V1::SyllabiController < Api::ApplicationController
         puts "This is the belt up to which the syllabus will print", belts
         payload[:belts]=belts.map do |belt, index|
             puts belt
-            techniques = Technique.where(:belt_id=>belt.id)
-            technique_types = TechniqueType.where(:belt_id=>belt.id)
+            techniques = Technique.where(:belt_id=>belt.id).order(created_at: :asc)
+            technique_types = TechniqueType.where(:belt_id=>belt.id).order(created_at: :asc)
             {colour: belt.colour, id: belt.id, techniques:  techniques, technique_types: technique_types}
         end
         #payload[:techniques] = Technique.where(:belt_id=>search_belt)
@@ -115,9 +115,8 @@ class Api::V1::SyllabiController < Api::ApplicationController
             :id,
             :country,
             :user_id,
-            :belts,
-            :technique_types,
-            :techniques
+            :created_at,
+            :updated_at
         )
     end
     

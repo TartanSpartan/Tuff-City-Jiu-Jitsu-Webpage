@@ -15,16 +15,32 @@ import "../App.scss";
 
 function urlHandler(url) {
   console.log("This is the url", url);
-  // This function is to parse YouTube URLs to be easy to embed (but not all URLs are set to permit this) and hence be compatible to show off in this page
+  // This function is to parse YouTube URLs to be easy to embed (but be advised, not all URLs are set to permit this) and hence be compatible to show off in this page
   let watch = "watch?v=";
+  let playlist = "&list="
   let embed = "embed/";
   let shortenedUrl = "https://youtu.be/";
   let extendedUrl = "https://www.youtube.com/embed/";
   let identifier = ""; // This is the unique identifying part of the URL, at the end of it
   let embeddedUrl = "";
+  let startCheck = "?start=";
+  let endCheck = "&end="
+  let timeData = ""; // If time data is in the URL, do not strip it along with the rest of the extraneous parts
+  // case https://www.youtube.com/watch?v=7wUL_tSqdP0&list=PLr0RY5UNadk0RCRKdju3nfohyhl_DaYjK&index=4?start=2&end=10
   if (url.includes(watch) === true) {
     // This condition is to instruct URLs with "watch" as a substring to use "embed" instead
-    embeddedUrl = url.replace(watch, embed);
+    if (url.includes(playlist) === true){
+      identifier = url.substring(url.indexOf("=") + 1, url.indexOf("&"));
+      if ((url.includes(startCheck)) && (url.includes(endCheck))) {
+        timeData = url.substring(url.lastIndexOf("?"), url.lastIndexOf(url.charAt(url.length-1)));
+        console.log("Last character is", url.charAt(url.length-1))
+        console.log("timeData is", timeData);
+        embeddedUrl = extendedUrl.concat(identifier.concat(timeData));
+      } else {
+      embeddedUrl = extendedUrl.concat(identifier)}
+    } else {
+      embeddedUrl = url.replace(watch, embed);
+    }
     return embeddedUrl;
   } else if (url.includes(shortenedUrl)) {
     // This condition grows a short "sharable" URL into an appropriate one for this purpose
@@ -36,6 +52,8 @@ function urlHandler(url) {
     return url;
   }
 }
+
+console.log("Do playlist urls work", urlHandler("https://www.youtube.com/watch?v=7wUL_tSqdP0&list=PLr0RY5UNadk0RCRKdju3nfohyhl_DaYjK&index=4?start=2&end=10"))
 
 function textColour(integer) {
   let color = "";
