@@ -77,11 +77,14 @@ class Api::V1::TechniquesController < Api::ApplicationController
 
         puts "Here are the params", params
         new_syllabus = Syllabus.find_by(country: params["syllabus"])
-        puts new_syllabus
-        existing_technique_type = TechniqueType.where(category: params["category"], sub_category: params["sub_category"])
+        belt_check = Belt.where(id: params["belt"])[0]
+        puts "Here is the new syllabus", new_syllabus
+        existing_technique_type = TechniqueType.where(category: params["category"], sub_category: params["sub_category"], belt_id: params["belt"].to_i)
         if existing_technique_type.length > 0
+            puts "We have an existing technique type"
             technique_type_id = existing_technique_type[0].id
         else 
+            puts "We need to create a new technique type"
             type_of_technique = TechniqueType.new category: params["category"], sub_category: params["sub_category"], syllabus_id:new_syllabus.id
             puts "This is the type we are trying to create", type_of_technique, type_of_technique.category
             type_of_technique.belt = Belt.where(id: params["belt"])[0]
@@ -229,8 +232,10 @@ class Api::V1::TechniquesController < Api::ApplicationController
             :summary,
             :is_different,
             :difference_content,
-            :belt_id,
+            :created_at,
+            :updated_at,
             :technique_type_id,
+            :belt_id,
             :videourls
         )
     end

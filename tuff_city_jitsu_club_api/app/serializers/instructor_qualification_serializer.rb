@@ -1,10 +1,13 @@
 class InstructorQualificationSerializer < ActiveModel::Serializer
   attributes(
     :id,
-    :instructor_qualifications,
+    :achieved_at,
+    :user_id,
+    :belt_id,
+    :belt_grade_id,
     :created_at,
-    :does_expire,
-    :expires_at
+    :updated_at,
+    :qualification_id
     )
 
     belongs_to :user

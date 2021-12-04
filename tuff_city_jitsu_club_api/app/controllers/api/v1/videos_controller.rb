@@ -100,8 +100,11 @@ class Api::V1::VideosController < Api::ApplicationController
     def video_params
         params.require(:video)
         .permit( # Replace these as appropriate
+            :id,
             :canadian_version,
             :uk_version,
+            :created_at,
+            :updated_at,
             :technique_id
         )
     end

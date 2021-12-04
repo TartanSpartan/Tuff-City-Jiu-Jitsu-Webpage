@@ -4,6 +4,8 @@ class TechniqueTypesSerializer < ActiveModel::Serializer
     :category,
     :sub_category,
     :created_at, 
-    :updated_at
+    :updated_at,
+    :syllabus_id,
+    :belt_id
 )
 end

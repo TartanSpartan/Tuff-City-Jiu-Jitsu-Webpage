@@ -59,8 +59,7 @@ class Api::V1::BeltsController < Api::ApplicationController
             :id,
             :colour,
             :created_at,
-            :updated_at,
-            :syllabus_id
+            :updated_at
         )
     end
     

@@ -75,7 +75,6 @@ function NewTechniqueForm(props) {
 
       console.log("Here are the videos to be submitted", videos)
       videos[0]["canadianUrl"] = urlStartEndizer(videos[0]["canadianUrl"], formData.get("canadianStartTime"), formData.get("canadianEndTime"));
-      // Set up the following line so that if you don't include a British URL etc, no record is saved
       videos[0]["britishUrl"] = urlStartEndizer(videos[0]["britishUrl"], formData.get("britishStartTime"), formData.get("britishEndTime"));
         props.onSubmit({
             syllabus: formData.get("country").toLowerCase(),
@@ -116,7 +115,8 @@ function NewTechniqueForm(props) {
         {/* Note: try to italicise options */}
         <Form.Group controlId="formBasicGrade">
             <Form.Label>Grade</Form.Label>
-            <Form.Control className="color-belt" name = "belt" type="belt" as="select" defaultValue={7}>
+            <Form.Control className="color-belt" name = "belt" type="belt" as="select" defaultValue="Yellow">
+              {/* Note: setting defaultValue = 7 in the above means the technique type will default to 7. Is there a different way of setting a default value for this form? */}
                 <option className="gradecoloroption" style={{backgroundColor:"yellow"}} value={7} >Yellow </option>
                 <option className="gradecoloroption" style={{backgroundColor:"orange"}} value={6}>Orange</option>
                 <option className="gradecoloroption" style={{backgroundColor:"green"}} value={5}>Green</option>
@@ -124,6 +124,7 @@ function NewTechniqueForm(props) {
                 <option className="gradecoloroption" style={{backgroundColor:"#add8e6", color:"black"}} value={3}>Light Blue</option>
                 <option className="gradecoloroption" style={{backgroundColor:"#00008b"}} value={2}>Dark Blue </option>
                 <option className="gradecoloroption" style={{backgroundColor:"#b5651d"}} value={1}>Brown</option>
+                {/* {console.log("This is the grade we're trying to use", value)} */}
             </Form.Control>
         </Form.Group>
         {/* Note: try to italicise options */}

@@ -46,7 +46,17 @@ class Api::V1::InstructorQualificationsController < Api::ApplicationController
     private
 
     def instructor_qualification_params
-        params.require(:instructorqualification).permit(:amount)
+        params.require(:instructor_qualification)
+        .permit( # Replace these as appropriate
+            :id,
+            :achieved_at,
+            :user_id,
+            :belt_id,
+            :belt_grade_id,
+            :created_at,
+            :updated_at,
+            :qualification_id
+        )
     end
 
     def find_qualification

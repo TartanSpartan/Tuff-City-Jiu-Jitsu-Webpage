@@ -1,12 +1,17 @@
 class UserSerializer < ActiveModel::Serializer
   attributes(
-    :id, 
-    :email,
-    :first_name, 
-    :last_name, 
-    :full_name,
-    :is_admin,
-    :created_at, 
-    :updated_at
+  :id,
+  :first_name,
+  :last_name,
+  :email,
+  :password_digest,
+  :is_admin,
+  :dues_paid,
+  :owns_gi,
+  :has_first_aid_qualification,
+  :first_aid_achievement_date,
+  :first_aid_expiry_date,
+  :created_at,
+  :updated_at
 )
 end

@@ -6,6 +6,70 @@ import Alert from "react-bootstrap/Alert"
 import isLoading from "./TechniqueUpdatePage";
 import "../App.scss";
 
+function secondConverter(time) {
+    let fullTime = 0;
+    /*pseudocode: 
+    if start/end time is in min:sec format, parse it into seconds
+    i.e. A:BB so time in seconds = A*60 + BB */
+    if (time.includes(":")) {
+      const timeArray = time.split(":");
+      fullTime = (parseInt(timeArray[0] * 60) + parseInt(timeArray[1]));
+    } else {
+      fullTime = time;
+    }
+    return fullTime;
+  }
+  
+  // console.log("secondConverter test", secondConverter("5:30"))
+  // If this returns 330 then it works great
+  
+  function urlStartEndizer (url, startTime, endTime) {
+    // console.log("This is the url, start time and end time", url, startTime, endTime)
+    let outputUrl = "";
+  
+    let startSubStr = "?start=" + secondConverter(String(startTime));
+    let endSubStr = "&end=" + + secondConverter(String(endTime));
+    if (url === "") {
+      return outputUrl;
+    } else {
+      outputUrl = url + startSubStr + endSubStr;
+      return outputUrl;
+    }
+  }
+
+  function urlStringGenerator (url) {
+    let rootUrl = "";
+    let startTime = "";
+    let startCheck = "?start=";
+    let endTime = "";
+    let endCheck = "&end=";
+    if ((url.includes(startCheck)) && (url.includes(endCheck))) {
+      rootUrl = url.substring(url.indexOf("h"), url.indexOf("?"))
+      // console.log("The root URL is", rootUrl)
+      startTime = url.substring((url.lastIndexOf('=', url.lastIndexOf('=')-1) + 1), (url.lastIndexOf("&")))
+      // console.log("The start time is", startTime)
+      endTime = url.substring((url.lastIndexOf("=") + 1), url.lastIndexOf(url.charAt(url.length)))
+      // console.log("The end time is", endTime)
+      let stringArray = [rootUrl, startTime, endTime];
+      return stringArray;
+    } else {
+      rootUrl = url;
+      let stringArray = [rootUrl, "", ""];
+      return stringArray;
+    }
+    
+  }
+  
+  console.log("Test for urlStartEndizer", urlStartEndizer("https://www.youtube.com/watch?v=tLeu22wenlg", 12, 20))
+  console.log("Test for urlStringGenerator", urlStringGenerator("https://www.youtube.com/embed/7wUL_tSqdP0?start=20&end=120"))
+
+  // // Use outputUrl for the following one
+  // function timeFormBuilder(url){
+  //   let urlArray = [];
+
+  // }
+
+  // console.log("Test for timeFormBuilder", timeFormBuilder())
 
 export default UpdateTechniqueForm;
 function UpdateTechniqueForm(props){
@@ -14,6 +78,8 @@ function UpdateTechniqueForm(props){
     let truncatedVideos = JSON.stringify(videos).split(":").join(" : ").split(",").join(" , ").split('l"').join("l ").slice(3, -2);
     let canadianVideo = truncatedVideos.substr(0, truncatedVideos.indexOf(","))
     let britishVideo = truncatedVideos.substr(truncatedVideos.indexOf("b"))
+
+    // console.log("These are the videos", props);
 
     // console.log("These are the props", props);
     // Try to make these videos display on new lines for e.g. half width page, and correctly output for multiple entries
@@ -24,7 +90,7 @@ function UpdateTechniqueForm(props){
         const list = [...videos];
         list[index][name] = value;
         setVideos(list);
-        // console.log("This is the video list", list)
+        console.log(props.technique)
     };
 
     // handle click event of the Remove button
@@ -51,27 +117,18 @@ function UpdateTechniqueForm(props){
         event.preventDefault();
         const { currentTarget } = event;
         const formData = new FormData(currentTarget);
-        console.log(formData);
 
-        // console.log("Here are the videos to be submitted", videos)
+        
+        videos[0]["canadianUrl"] = urlStartEndizer(videos[0]["canadianUrl"], formData.get("canadianStartTime"), formData.get("canadianEndTime"));
+        videos[0]["britishUrl"] = urlStartEndizer(videos[0]["britishUrl"], formData.get("britishStartTime"), formData.get("britishEndTime"));
+
+        console.log("Here are the videos to be submitted", videos)
         props.onSubmit({
             syllabus: formData.get("country").toLowerCase(),
             belt: parseInt(formData.get("belt")),
             summary: formData.get("summary"),
             category: formData.get("category"),
             sub_category: formData.get("sub_category"),
-            
-    //          Following commented block is probably a candidate for removal- redundant
-    //          videourls: [
-    //              {
-    //                  "type":"canadianUrl",
-    //                  "url":formData.get("canadianUrl")
-    //              },
-    //              {
-    //                  "type":"britishUrl",
-    //                  "url":formData.get("britishUrl")
-    //              },
-    //          ],
             videos: videos,
             is_different: formData.get("is_different") ==="No"?false:true,
             difference_content: formData.get("difference_content")
@@ -84,7 +141,9 @@ function UpdateTechniqueForm(props){
 
         currentTarget.reset();
     }
-    const { errors } = this.state;
+    const { errors } = props;
+
+    console.log("These are the props", props)
 
     return (
         // Page loading function isn't working so ask a TA
@@ -153,22 +212,56 @@ function UpdateTechniqueForm(props){
         {videos.map((x, i) => {
             // console.log("This is the Canadian Video default value", x)
         return (
-            <>
+            <>key={this.state.awayMessage ? 'notLoadedYet' : 'loaded'} 
+            <Form.Label>Note: if you just want to show a segment of a video, you can optionally include the start and end time for that segment.</Form.Label>
+            {/* Eventually need some sophisticated url-time-duration checking to prevent bad/trolling input! For now just test with sensible inputs */}
             {/* Need to do clever handling for the URLs to be saved in the update fields when this page loads- look into this */}
             <Form.Label>Provide the Canadian video URL (if available)</Form.Label>
             <Form.Control name = "canadianUrl"
+            // value = {props.video[0].canadian_version}
+            // value = {props.technique}
             value = {x.canadianUrl}
+            defaultValue = {props.technique}
             type="primary_video"
-            defaultValue={x.canadianUrl}
-            placeHolder="Try to source this from YouTube if possible."
+            placeHolder={props.technique.videos}
+            onChange={e =>handleInputChange(e, i)}/>
+            <br />
+            <Form.Label>Segment start time in minutes:seconds or just seconds (optional)</Form.Label>
+            <Form.Control name = "canadianStartTime"
+            value = {x.canadianStartTime}
+            type="primary_video_start_time"
+            placeholder="E.g. 0:23, or 72s"
             onChange={e =>handleInputChange(e, i)}/>
             
+            <br />
+            <Form.Label>Segment end time in minutes:seconds or just seconds (optional)</Form.Label>
+            <Form.Control name = "canadianEndTime"
+            value = {x.canadianEndTime}
+            type="primary_video_End_time"
+            placeholder="E.g. 2:52, or 210s"
+            onChange={e =>handleInputChange(e, i)}/>
             <br />
             <Form.Label>If the UK technique is different, provide the UK video URL (if available)</Form.Label>
             <Form.Control name = "britishUrl" 
             value = {x.britishUrl}
             type="secondary_video"
             placeHolder="Try to source this from YouTube if possible."
+            onChange={e =>handleInputChange(e, i)}/>
+            
+            <br />
+            <Form.Label>Segment start time in minutes:seconds or just seconds (optional)</Form.Label>
+            <Form.Control name = "britishStartTime"
+            value = {x.britishStartTime}
+            type="primary_video_start_time"
+            placeholder="E.g. 0:31, or 46s"
+            onChange={e =>handleInputChange(e, i)}/>
+            
+            <br />
+            <Form.Label>Segment end time in minutes:seconds or just seconds (optional)</Form.Label>
+            <Form.Control name = "britishEndTime"
+            value = {x.britishEndTime}
+            type="primary_video_End_time"
+            placeholder="E.g. 7:02, or 307s"
             onChange={e =>handleInputChange(e, i)}/>
             <div className="btn-box">
             {videos.length !== 1 && 

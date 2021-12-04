@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { Technique, Syllabus, Belt, TechniqueType } from "../requests";
+import { Technique, TechniqueType, Video } from "../requests";
 import UpdateTechniqueForm from "./UpdateTechniqueForm";
 import "../App.scss";
 
@@ -13,7 +13,7 @@ export default class TechniqueUpdatePage extends React.Component {
         summary: "",
         is_different: false,
         difference_content: "",
-
+        videourls: [],
         videos: {
           canadianUrl: "",
           britishUrl: "",
@@ -23,7 +23,7 @@ export default class TechniqueUpdatePage extends React.Component {
       technique_type: [],
       belt: [],
       isLoading: true,
-      error: false,
+      errors: false,
     };
   }
 
@@ -35,6 +35,7 @@ export default class TechniqueUpdatePage extends React.Component {
     } = this.props;
     const {
       videos,
+      videourls,
       setVideos,
       syllabus,
       belt,
@@ -44,23 +45,50 @@ export default class TechniqueUpdatePage extends React.Component {
       is_different,
       difference_content,
     } = this.state;
-    Technique.details(this.props.match.params.id)
-      .then((technique) => {
+    // console.log("These are the params", this.props)
+    Technique.one(this.props.match.params.id)
+      .then((technique) => 
+        Promise.all([
+          technique,
+          TechniqueType.find(technique.technique_type_id),
+          Video.find(technique.id),
+        ])
+        // this.setState({
+        //   technique: technique,
+        //   videourls: technique.videourls,
+        //   isLoading: false,
+        // });
+        // console.log("Is the videourl inside the technique?", technique)
+        // console.log("What are the props?", this.props)
+        // return technique;
+      ).then(([technique, technique_type, video]) => {
         this.setState({
-          technique: technique,
           isLoading: false,
+          technique: technique,
+          technique_type: technique_type,
+          video: video,
         });
-        console.log("Is the video inside the technique?", technique)
         return technique;
       })
-      .then((technique) => TechniqueType.find(technique.technique_type_id))
-      .then((technique_type) =>
-        this.setState({
-          technique_type: technique_type,
-          isLoading: false,
-          error: false,
-        })
-      );
+      // .then((technique) => TechniqueType.find(technique.technique_type_id))
+      // .then((technique_type) =>
+      //   this.setState({
+      //     technique_type: technique_type,
+      //     isLoading: false,
+      //     errors: false,
+      //   })
+      // )
+      // console.log("Does this work?", Video.find(technique.videourls))
+      // .then((technique) => Video.find(technique.videourls[0])) // How do you account for a videourl array of N-size?
+      // .then((videos) =>
+      //   this.setState({
+      //     videos: videos,
+      //     isLoading: false,
+      //     errors: false,
+      //   }),
+      //   console.log("What are the props?", this.props),
+      //   console.log("Is the video inside the state?", this.state.videos),
+      // );
   }
 
   updateColorBox = (event) => {

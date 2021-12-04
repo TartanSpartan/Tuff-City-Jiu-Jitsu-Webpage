@@ -39,13 +39,19 @@ class Api::V1::UsersController < Api::ApplicationController
     def user_params
         params.require(:user)
         .permit(
+            :id,
             :first_name,
             :last_name,
             :email,
-            :password,
-            :password_confirmation
-            # :owns_gi,
-            # :belt_grade_id
+            :password_digest,
+            :is_admin,
+            :dues_paid,
+            :owns_gi,
+            :has_first_aid_qualification,
+            :first_aid_achievement_date,
+            :first_aid_expiry_date,
+            :created_at,
+            :updated_at
         )
     end
     
