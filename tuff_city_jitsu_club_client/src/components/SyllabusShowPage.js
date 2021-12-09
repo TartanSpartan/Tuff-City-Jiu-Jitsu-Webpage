@@ -88,7 +88,7 @@ function groupedTechniqueTypes(technique_types) {
 export class SyllabusShowPage extends React.Component {
   constructor(props) {
     super(props);
-    console.log("These are the props", props)
+    console.log("These are the props", props);
     this.state = {
       // Populate the list of techniques through fetching them from the server and allow the page to load
       syllabus: [],
@@ -108,18 +108,16 @@ export class SyllabusShowPage extends React.Component {
   // Had to lift the following wholesale from App.js; find a more elegant way to import it.
 
   componentDidMount() {
-
-        Syllabus.all({id:1}).then(syllabus => {
-          // Hardcoded as 1 for now for Canada but eventually move it to be dynamic for multiple syllabi
-          this.setState({
-            syllabus: syllabus,
-            technique_types: syllabus.technique_types,
-            techniques: syllabus.techniques,
-            belts: syllabus.belts,
-            isLoading: false,
-          });
-        });
-
+    Syllabus.all({ id: 1 }).then((syllabus) => {
+      // Hardcoded as 1 for now for Canada but eventually move it to be dynamic for multiple syllabi
+      this.setState({
+        syllabus: syllabus,
+        technique_types: syllabus.technique_types,
+        techniques: syllabus.techniques,
+        belts: syllabus.belts,
+        isLoading: false,
+      });
+    });
   }
 
   deleteTechnique(id) {
@@ -195,6 +193,7 @@ export class SyllabusShowPage extends React.Component {
                   (key, index) => (
                     <div key={index}>
                       {key[0].category === "Waza (techniques)" ? (
+                        <>
                         <div
                           class="underline-me"
                           style={{
@@ -205,7 +204,20 @@ export class SyllabusShowPage extends React.Component {
                           }}
                         >
                           {"Waza (techniques)"}
-                        </div>
+                          </div>
+                          <div>
+                            {belt.id === 7 ? (
+                              <div></div>
+                            ) : (
+                              <div>
+                                <br />
+
+                                {"All previous syllabus."}
+                              </div>
+
+                            )}
+                          </div>
+                          </>
                       ) : key[0].category ===
                         "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" ? (
                         <>
@@ -334,7 +346,7 @@ export class SyllabusShowPage extends React.Component {
                                         )}
                                       </p>
                                     ) : (
-                                      <br/>
+                                      <br />
                                     )}
                                   </div>
                                 );

@@ -1,0 +1,14 @@
+Syllabus:
+http://localhost:3000/api/v1/syllabi/1/syllabi_full
+Techniques:
+http://localhost:3000/api/v1/techniques
+Technique Types:
+http://localhost:3000/api/v1/technique_types
+Belt Grades:
+http://localhost:3000/api/v1/belt_grades
+Belts:
+http://localhost:3000/api/v1/belts
+Users:
+http://localhost:3000/api/v1/users
+Videos:
+http://localhost:3000/api/v1/videos

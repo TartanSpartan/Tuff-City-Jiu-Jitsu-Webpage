@@ -46,6 +46,10 @@ Fixed. I think. Check!
 
 18. Ensure that videos are removed if on edit their fields are blank
 
+19. Ensure that video times are updating after edit- and that null videos aren't being created (this doesn't affect other parts of the update form)
+
+20. Ensure that is_different is correct on the update form based on the backend
+
 Both:
 
 15. Code cleanup, remove redundant print statements and commented out blocks which will never be used

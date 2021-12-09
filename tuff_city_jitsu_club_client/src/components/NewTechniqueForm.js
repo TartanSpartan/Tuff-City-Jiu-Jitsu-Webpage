@@ -167,7 +167,7 @@ function NewTechniqueForm(props) {
               <Form.Control name = "canadianStartTime"
               value = {x.canadianStartTime}
               type="primary_video_start_time"
-              placeholder="E.g. 0:23, or 72s"
+              placeholder="E.g. 0:23, or 72"
               onChange={e =>handleInputChange(e, i)}/>
               
               <br />
@@ -175,7 +175,7 @@ function NewTechniqueForm(props) {
               <Form.Control name = "canadianEndTime"
               value = {x.canadianEndTime}
               type="primary_video_End_time"
-              placeholder="E.g. 2:52, or 210s"
+              placeholder="E.g. 2:52, or 210"
               onChange={e =>handleInputChange(e, i)}/>
               
               {/* {urlStartEndizer(x.canadianURL, x.canadianStartTime, x.canadianEndTime)} */}
@@ -193,7 +193,7 @@ function NewTechniqueForm(props) {
               <Form.Control name = "britishStartTime"
               value = {x.britishStartTime}
               type="primary_video_start_time"
-              placeholder="E.g. 0:31, or 46s"
+              placeholder="E.g. 0:31, or 46"
               onChange={e =>handleInputChange(e, i)}/>
               
               <br />
@@ -201,14 +201,14 @@ function NewTechniqueForm(props) {
               <Form.Control name = "britishEndTime"
               value = {x.britishEndTime}
               type="primary_video_End_time"
-              placeholder="E.g. 7:02, or 307s"
+              placeholder="E.g. 7:02, or 307"
               onChange={e =>handleInputChange(e, i)}/>
               
               <br />
               {/* Temporary button for farming out easy techniques (but have to scroll down for difference handling). Can comment out when full form instantiation is required. */}
-              <Button variant="primary" type="submit">
+              {/* <Button variant="primary" type="submit">
                Submit
-               </Button>
+               </Button> */}
 
               <div className="btn-box">
               {videos.length !== 1 && 
@@ -216,8 +216,11 @@ function NewTechniqueForm(props) {
               <button className="mr10"
               onClick={() => handleRemoveClick(i)}>Remove</button>}
               <br/>
+              <br/>
               {videos.length - 1 === i &&         
               <Button onClick={handleAddClick} variant="success" type="add">Add Another Pair Of URLs</Button>}
+              {/* Introduce conditional render so that it only shows two breaks if the add button has been clicked */}
+
             </div>
           </>
           );

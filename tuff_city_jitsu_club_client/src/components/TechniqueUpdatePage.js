@@ -165,6 +165,8 @@ export default class TechniqueUpdatePage extends React.Component {
           <h1>EDIT A TECHNIQUE</h1>
         </div>
         <br />
+        {
+        this.state.video &&
         <UpdateTechniqueForm
           technique={this.state.technique}
           technique_type={this.state.technique_type}
@@ -176,8 +178,8 @@ export default class TechniqueUpdatePage extends React.Component {
           changeSelectColorHandler={this.updateColorBox.bind(this)}
           changeSelectCategoryHandler={this.updateCategoryBox.bind(this)}
           changeSelectDifferentHandler={this.updateDifferentBox.bind(this)}
-
         />
+      }
       </main>
     );
   }

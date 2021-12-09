@@ -43,7 +43,6 @@ class Api::V1::UsersController < Api::ApplicationController
             :first_name,
             :last_name,
             :email,
-            :password_digest,
             :is_admin,
             :dues_paid,
             :owns_gi,
