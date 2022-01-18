@@ -3,6 +3,7 @@ import { User } from "../requests";
 import { Route, Redirect } from "react-router-dom";
 
 export const getUser= () =>  {
+  console.log("Where is the point of failure?")
   User.current()
   .then(data => {
     if (typeof data.id !== "number") {
@@ -10,8 +11,8 @@ export const getUser= () =>  {
     } else {
       this.setState({ loading: false, currentUser: data });
     }
+    console.log("This is the current user from data", data)
     return data;
-    // console.log("This is the current user", data)
   })
   .catch((err) => {
     console.log(err);

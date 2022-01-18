@@ -1,4 +1,5 @@
 // Fetch all syllabus data and render here, not on the syllabus show page(s) (those will be for accessing specific syllabi and info about them)
+// Note: make the header's background colour a darker shade of gray so that the yellow font stands out more
 
 import React, { useState } from "react";
 import { Technique, Syllabus, User } from "../requests";

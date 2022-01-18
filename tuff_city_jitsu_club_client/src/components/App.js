@@ -21,23 +21,8 @@ import '../App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 // import 'bootstrap/dist/css/bootstrap.css';
-
-// export const getUser = () =>  {
-//   User.current()
-//   .then(data => {
-//     if (typeof data.id !== "number") {
-//       this.setState({ loading: false });
-//     } else {
-//       this.setState({ loading: false, currentUser: data });
-//     }
-//     return data;
-//     // console.log("This is the current user", data)
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//     this.setState({ loading: false });
-//   });
-// };
+import { useSelector, useDispatch, connect } from 'react-redux'
+import { userSlice, setUser } from '../slices/userSlice';
 
 class App extends React.Component {
     constructor(props) {
@@ -57,11 +42,13 @@ class App extends React.Component {
       getUser = () =>  {
         User.current()
         .then(data => {
-          console.log("This is the current user", data)
+          console.log("This is the current user as data", data)
           if (typeof data.id !== "number") {
             this.setState({ loading: false });
           } else {
-            this.setState({ loading: false, currentUser: data });
+            this.props.setUser(data);
+            // Try to implement the loading in the store
+            this.setState({ loading: false });
           }
           return data;
           // console.log("This is the current user", data)
@@ -77,7 +64,9 @@ class App extends React.Component {
     }
 
     render() {
-        const { loading, currentUser } = this.state;
+        const { loading } = this.state;
+        const { currentUser } = this.props;
+        console.log("This is the current user from Redux", currentUser);
         if (loading) {
             return <div />;
         }
@@ -139,6 +128,11 @@ class App extends React.Component {
                             path="/techniques/:id/edit"
                             component={TechniqueUpdatePage}
                             /> */}
+                            {/* <AuthRoute
+                            isAuthenticated={currentUser}
+                            path="/videos(???)"
+                            component={VideoIndexPage}
+                            /> */}
                             {/*
                             <Route
                             path="/events"
@@ -169,4 +163,10 @@ class App extends React.Component {
     }
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  currentUser: state.user.user
+});
+
+const mapDispatchToProps = { setUser };
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

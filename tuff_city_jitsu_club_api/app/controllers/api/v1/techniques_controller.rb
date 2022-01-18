@@ -75,26 +75,26 @@ class Api::V1::TechniquesController < Api::ApplicationController
 
         # {"syllabus"=>"Canada", "summary"=>"O-goshi", "category"=>"Nage-waza (throwing)", "sub_category"=>"Hip throw", "is_different"=>"No", "difference_content"=>"", "format"=>:json, "controller"=>"api/v1/techniques", "action"=>"create", "technique"=>{"summary"=>"O-goshi", "is_different"=>"No", "difference_content"=>""}}
 
-        puts "Here are the params", params
+        # puts "Here are the params", params
         new_syllabus = Syllabus.find_by(country: params["syllabus"])
         belt_check = Belt.where(id: params["belt"])[0]
-        puts "Here is the new syllabus", new_syllabus
+        # puts "Here is the new syllabus", new_syllabus
         existing_technique_type = TechniqueType.where(category: params["category"], sub_category: params["sub_category"], belt_id: params["belt"].to_i)
         if existing_technique_type.length > 0
-            puts "We have an existing technique type"
+            # puts "We have an existing technique type"
             technique_type_id = existing_technique_type[0].id
         else 
-            puts "We need to create a new technique type"
+            # puts "We need to create a new technique type"
             type_of_technique = TechniqueType.new category: params["category"], sub_category: params["sub_category"], syllabus_id:new_syllabus.id
-            puts "This is the type we are trying to create", type_of_technique, type_of_technique.category
+            # puts "This is the type we are trying to create", type_of_technique, type_of_technique.category
             type_of_technique.belt = Belt.where(id: params["belt"])[0]
             type_of_technique.save! 
             technique_type_id = type_of_technique.id
         end
-        puts "The technique type ID is ", technique_type_id
-        puts "This is the summary", params["technique"]["summary"]
-        puts "*************************************************************************"
-        puts "these are the params:", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i
+        # puts "The technique type ID is ", technique_type_id
+        # puts "This is the summary", params["technique"]["summary"]
+        # puts "*************************************************************************"
+        # puts "these are the params:", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i
         
         # if 
 
@@ -105,7 +105,7 @@ class Api::V1::TechniquesController < Api::ApplicationController
         technique = Technique.new summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type_id, belt_id: params["belt"].to_i
 
 
-        puts "This is the belt", technique.belt_id
+        # puts "This is the belt", technique.belt_id
         # byebug
         technique.save!
         # byebug
@@ -115,27 +115,27 @@ class Api::V1::TechniquesController < Api::ApplicationController
         # for each in that array
         # do video.create
         params["videos"].each do |video|
-            puts "This is the video loop", video
+            # puts "This is the video loop", video
             new_video = Video.create! canadian_version: video["canadianUrl"], uk_version: video["britishUrl"], technique_id: technique.id
             video_array.push(new_video.id)
         end
         #byebug
         technique.videourls = video_array
         technique.save!
-        puts "This are the params to be committed", params
-        puts "This is the technique", technique
+        # puts "This are the params to be committed", params
+        # puts "This is the technique", technique
         render json: { id: new_syllabus.id }
         # authorize_user! :create, @technique
     end
 
     def show
-        puts "Here are the params", params["id"]
+        # puts "Here are the params", params["id"]
 
         technique = Technique.find params["id"]
-        puts technique
+        # puts technique
         if technique
-            puts "Here is the technique", technique
-            puts "Here are the technique params", technique.videourls
+            # puts "Here is the technique", technique
+            # puts "Here are the technique params", technique.videourls
             #puts "these are the params (to test videourls):", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i, "videourls: ", params["videourls"].to_s
 
             render(
@@ -148,8 +148,8 @@ class Api::V1::TechniquesController < Api::ApplicationController
 
     def destroy
         # We do a cascading delete for the videos associated with the technique, then delete the technique itself
-        puts "######@"
-        puts @technique.id
+        # puts "######@"
+        # puts @technique.id
         videos = Video.where(:technique_id =>@technique.id)
         videos.each do |video|
             video.destroy
@@ -163,16 +163,15 @@ class Api::V1::TechniquesController < Api::ApplicationController
 
     def update
         authorize_user!
-        puts "Here are the params", params
+        # puts "Here are the params", params
         # puts "We need to search for this", country: params["country"]
         modified_syllabus = Syllabus.find_by(country: "canada") # The id it should find will be 2
-        puts "Is the syllabus modified?", modified_syllabus
+        # puts "Is the syllabus modified?", modified_syllabus
         technique = Technique.find(params["id"])
         existing_technique_type = TechniqueType.where(category: params["category"], sub_category: params["sub_category"])[0]
-        puts "Do we have an existing TT?", existing_technique_type
+        # puts "Do we have an existing TT?", existing_technique_type
         # belt = Belt.where(id: params["belt_id"])[0]
         # byebug
-        # NOTE: Delete empi kata(41), expose Testing multiple videos(51)
 
         if (existing_technique_type) 
             existing_technique_type.update(syllabus_id:modified_syllabus.id, belt_id: params["belt"].to_i)
@@ -180,12 +179,72 @@ class Api::V1::TechniquesController < Api::ApplicationController
         else
             technique_type = TechniqueType.create(category: params["category"], sub_category: params["sub_category"], syllabus_id:modified_syllabus.id, belt_id: params["belt"].to_i)
         end
-        puts "Did that create a new TT?", technique_type
+        # puts "Did that create a new TT?", technique_type
 
         technique.update(summary: params["technique"]["summary"], is_different:params["technique"]["is_different"], difference_content:params["technique"]["difference_content"], technique_type_id: technique_type.id, belt_id: params["belt"].to_i)
-        update_video = Video.create! canadian_version: params["canadianUrl"], uk_version: params["britishUrl"], technique_id: technique.id
-        technique.videourls = [update_video]
+        
+        # Comment out the following block and use the one following it if required. But this one seems to work better- it doesn't create null videos.
+        # The logic to be added includes: do not enter this loop if the video hasn't been changed (therefore do not create a new video under that circumstance)
+        # and also, if a new video has been created, then you must destroy the old one, to ensure that only the new one is shown and hence it reflects the updated params
+        # BUT, if an additional video has been created, then add that, and likewise destroy *that* one upon a new update... complicated.
+        
+        # Right now the video update block is adding a video redundantly to an existing one instead of replacing it. To fix this: Delete all videos associated with the technique, then the update can "start from fresh"
+        preexisting_videos = Video.where(:technique_id =>@technique.id)
+        puts "This is the preexisting video list", preexisting_videos
+        preexisting_videos.each do |video|
+            video.destroy
+        end
+
+        video_array = []
+        params["videos"].each do |video|
+            # puts "This is the video loop", video
+            # implement if else loop: either update the video if it exists, or if it doesn't, then create a new one
+            # check if the url provided exists in the video table
+            # if it does then update the video with the new url info
+            # else then create a new video (including url)
+            if (video["canadianUrl"])
+                f_search = video["canadianUrl"].split("start")[0]
+                puts "Check the first condition", f_search
+            end
+            if (video["britishUrl"])
+                s_search = video["britishUrl"].split("start")[0]
+                puts "Check the second condition", s_search
+            end
+            existing_video = Video.where("canadian_version ILIKE :first_search AND uk_version ILIKE :second_search AND technique_id = :id", first_search: "%#{f_search}%", second_search: "%#{s_search}%", id:technique.id)
+            puts "Check the search condition", existing_video.length
+            if (existing_video && existing_video.length > 0)
+                puts "Inside if..."
+                update_existing_video = existing_video.update(canadian_version: video["canadianUrl"], uk_version: video["britishUrl"], technique_id: technique.id)
+                puts "Did the update work?", update_existing_video
+                update_video = update_existing_video[0]
+            else
+                puts "Inside else..."
+                update_video = Video.create!(canadian_version: video["canadianUrl"], uk_version: video["britishUrl"], technique_id: technique.id)
+                
+                # update_video = Video.new
+                # update_video.canadian_version = params["videos"]["canadianUrl"]
+                # update_video.uk_version = params["videos"]["canadianUrl"]
+                # update_video.technique_id = params["id"]
+                puts "This is the video id", update_video.id
+                puts "Did the update work?", update_video
+
+            end
+            # puts "This is the video id", update_video.id
+            # puts "Here is the updated video", update_video
+            if update_video && update_video.id
+                video_array.push(update_video.id)
+            end
+        end
+        #byebug
+        
+        technique.videourls = video_array
         technique.save!
+        
+        # update_video = Video.create! canadian_version: params["canadianUrl"], uk_version: params["britishUrl"], technique_id: technique.id
+        # puts "Here is the updated video", update_video
+
+        # technique.videourls = [update_video]
+        # technique.save!
 
         # byebug
         # Convert the following to work by a map instead of using .each

@@ -6,6 +6,14 @@ import Alert from "react-bootstrap/Alert";
 import isLoading from "./TechniqueUpdatePage";
 import "../App.scss";
 
+// decouple props and state so that they can edit a url if it's there as a string but if it isn't then they can use the default prop value
+// think about flattening state so that urls are easily accessible without having to use nested code
+// setVideos may be overwriting the url values- check and simplify the inputchangehandler functions
+// consider making videos a single element instead of an array- if you wanted to have multiple videos, 
+// edit a single video instead of editing an entire technique may be easier in an architectural sense
+// dev 2 (as opposed to medium) writing is good for resume
+// small projects, going on LinkedIn, look for my language of choice and network
+
 function secondConverter(time) {
   let fullTime = 0;
   /*pseudocode: 
@@ -19,7 +27,6 @@ function secondConverter(time) {
   }
   return fullTime;
 }
-
 // console.log("secondConverter test", secondConverter("5:30"))
 // If this returns 330 then it works great
 
@@ -29,12 +36,13 @@ function urlStartEndizer(url, startTime, endTime) {
 
   let startSubStr = "?start=" + secondConverter(String(startTime));
   let endSubStr = "&end=" + +secondConverter(String(endTime));
+  // console.log("Line 31 in urlStartEndizer" + url);
   if (url === "" || url === undefined) {
     return outputUrl;
   } else {
     outputUrl = url + startSubStr + endSubStr;
-    return outputUrl;
   }
+  return outputUrl;
 }
 
 function urlStringGenerator(url) {
@@ -43,11 +51,13 @@ function urlStringGenerator(url) {
   let startCheck = "?start=";
   let endTime = "";
   let endCheck = "&end=";
+
+  // console.log("Line 47 in urlStringGenerator" + url);
   if (url === "" || url === undefined) {
     let stringArray = ["", "", ""];
     return stringArray;
   } else {
-    if (url.includes(startCheck) && url.includes(endCheck)) {
+    if (url?.includes(startCheck) && url?.includes(endCheck)) {
       rootUrl = url.substring(url.indexOf("h"), url.indexOf(startCheck));
       // console.log("The root URL is", rootUrl)
       startTime = url.substring(
@@ -70,23 +80,33 @@ function urlStringGenerator(url) {
   }
 }
 
-console.log(
-  "Test for urlStartEndizer",
-  urlStartEndizer("https://www.youtube.com/watch?v=tLeu22wenlg", 12, 20)
-);
-console.log(
-  "Test for urlStringGenerator",
-  urlStringGenerator(
-    "https://www.youtube.com/embed/7wUL_tSqdP0?start=20&end=120"
-  )
-);
+let test_array = ["https://www.youtube.com/watch?v=tLeu22wenlg", 3, 8]
 
-console.log(
-  "Second test for urlStringGenerator- blank url",
-  urlStringGenerator("")
-);
+// console.log(
+//   "Array test for urlStartEndizer",
+//   urlStartEndizer.apply(null, test_array)
+// );
+// THIS WORKS! A successful approach to taking in an array as an argument
 
-console.log("Third, heavy test for urlStringGenerator", urlStringGenerator("https://www.youtube.com/watch?v=L202EJPSeYM?start=38&end=56?start=39&end=56"))
+// console.log(
+//   "Test for urlStartEndizer",
+//   urlStartEndizer("https://www.youtube.com/watch?v=tLeu22wenlg", 12, 20)
+// );
+// console.log(
+//   "Test for urlStringGenerator",
+//   urlStringGenerator(
+//     "https://www.youtube.com/embed/7wUL_tSqdP0?start=20&end=120"
+//   )
+// );
+
+// console.log(
+//   "Second test for urlStringGenerator- blank url",
+//   urlStringGenerator("")
+// );
+
+// console.log("Third, heavy test for urlStringGenerator", urlStringGenerator("https://www.youtube.com/watch?v=L202EJPSeYM?start=38&end=56?start=39&end=56"))
+
+
 
 // // Use outputUrl for the following one
 // function timeFormBuilder(url){
@@ -99,11 +119,17 @@ console.log("Third, heavy test for urlStringGenerator", urlStringGenerator("http
 export default UpdateTechniqueForm;
 function UpdateTechniqueForm(props) {
   const [videos, setVideos] = useState([
-    {
-      canadianUrl: props.video && props.video[0].canadian_version,
-      britishUrl: props.video && props.video[0].british_version,
-    },
+    { 
+      canadianUrl: "",
+      britishUrl: ""
+    }
+    //{
+      // canadianUrl: props.video?.length ? props.video[0].canadian_version : "",
+      // britishUrl: props.video?.length ? props.video[0].uk_version : "",
+    //},
+    // props.video?.length ? props.video : ""
   ]);
+  console.log("This is what we're using for the videos there", props.video?.length ? props.video : "")
   let truncatedVideos = JSON.stringify(videos)
     .split(":")
     .join(" : ")
@@ -116,9 +142,18 @@ function UpdateTechniqueForm(props) {
   let britishVideo = truncatedVideos.substr(truncatedVideos.indexOf("b"));
 
   // console.log("These are the videos", props);
+  // console.log("Test the videos object", videos)
+
+  // Drill deeper!
+  // console.log("Test the British videos object", videos[0].britishUrl.split("start"))
+  // console.log("Test the Canadian videos object", videos[0].canadianUrl.split("start"))
+
+
 
   // console.log("These are the props", props);
   // Try to make these videos display on new lines for e.g. half width page, and correctly output for multiple entries
+
+
 
   // handle input change
   const handleInputChange = (e, index) => {
@@ -126,19 +161,72 @@ function UpdateTechniqueForm(props) {
     const list = [...videos];
     list[index][name] = value;
     setVideos(list);
-    console.log(props.technique);
+    // Perhaps add listener for when we edit, if an existing video changes, to see if what it's replaced by is edited, or if it's a new one
+
+    // console.log(props);
+    // console.log(props.technique);
   };
+
+
+  // handle input change for the case of start times changing in the form
+  const handleInputChangeStartTimeCanadian = (e, index) => {
+    // console.log("This is the Canadian URL", videos[index].canadianUrl);
+    const url = videos[index].canadianUrl.split("start");
+    const endTime = videos[index].canadianUrl.split("end=");
+    const formattedUrl = url[0] + "start=" + e.target.value + "&end=" + endTime[1];
+    let oldArray = [...videos]
+    oldArray[index] = {canadianUrl: formattedUrl}
+    setVideos(oldArray)
+    // https://www.youtube.com/watch?v=L202EJPSeYM?start=3&end=38
+  };
+
+    // handle input change for the case of start times changing in the form
+    const handleInputChangeStartTimeBritish = (e, index) => {
+      // console.log("This is the British URL", videos[index].britishUrl);
+      const url = videos[index].britishUrl.split("start");
+      const endTime = videos[index].britishUrl.split("end=");
+      const formattedUrl = url[0] + "start=" + e.target.value + "&end=" + endTime[1];
+      let oldArray = [...videos]
+      oldArray[index] = {britishUrl: formattedUrl}
+      setVideos(oldArray)
+      // https://www.youtube.com/watch?v=L202EJPSeYM?start=3&end=38
+    };
+
+    // handle input change for the case of start/end times changing in the form
+    const handleInputChangeEndTimeCanadian = (e, index) => {
+      // console.log("This is the Canadian URL", videos[index].canadianUrl);
+      const url = videos[index].canadianUrl.split("end=");
+      const startTime = videos[index].canadianUrl.split("start=");
+      const formattedUrl = url[0] + "end=" + e.target.value;
+      let oldArray = [...videos]
+      oldArray[index] = {canadianUrl: formattedUrl}
+      setVideos(oldArray)
+    };
+
+    // handle input change for the case of start/end times changing in the form
+    const handleInputChangeEndTimeBritish = (e, index) => {
+      // console.log("This is the Canadian URL", videos[index].canadianUrl);
+      const url = videos[index].britishUrl.split("end=");
+      const startTime = videos[index].britishUrl.split("start=");
+      const formattedUrl = url[0] + "end=" + e.target.value;
+      let oldArray = [...videos]
+      oldArray[index] = {britishUrl: formattedUrl}
+      setVideos(oldArray)
+    };    
 
   // handle click event of the Remove button
   const handleRemoveClick = (index) => {
     const list = [...videos];
-    list.splice(index, 1);
+    if (index > -1) {
+     list.splice(index, 1);
+    }
     setVideos(list);
   };
 
   // handle click event of the Add button
   const handleAddClick = () => {
-    setVideos([...videos, { canadianUrl: "", britishURL: "" }]);
+    videos.push({ canadianUrl: "", canadianStartTime: "", canadianEndTime: "",  britishURL: "", britishStartTime: "", britishEndTime: "" })
+    setVideos([...videos]);
   };
 
   // When should we use this one?
@@ -154,43 +242,57 @@ function UpdateTechniqueForm(props) {
     const { currentTarget } = event;
     const formData = new FormData(currentTarget);
 
-    videos[0]["canadianUrl"] = urlStringGenerator(urlStartEndizer(
-      (props.video && props.video[0].canadian_version),
-      formData.get("canadianStartTime"),
-      formData.get("canadianEndTime")
-    ));
-    videos[0]["britishUrl"] = urlStringGenerator(urlStartEndizer(
-      (props.video && props.video[0].british_version),
+    // console.log(videos);
+    // console.log(typeof(props.video?.length) !== undefined ? props.video[0].canadian_version : "");
+    // Apply (null, [array]) is similar to the spread operator i.e (...array) but is said to have guaranteed support for Internet Explorer
+
+    // video conversion
+    if (videos?.length && videos[0].canadianUrl) {
+        videos[0]["canadianUrl"] = urlStartEndizer.apply(videos[0]["canadianUrl"], urlStringGenerator(urlStartEndizer(
+        videos?.length ? videos[0]["canadianUrl"] : "",
+        formData.get("canadianStartTime"),
+        formData.get("canadianEndTime")
+      )));
+    }
+
+    if (videos?.length && videos[0].britishUrl) {
+    // console.log(props.video && props.video[0].british_version);
+    videos[0]["britishUrl"] = urlStartEndizer.apply(videos[0]["britishUrl"], urlStringGenerator(urlStartEndizer(
+      videos?.length ? videos[0]["britishUrl"] : "",
       formData.get("britishStartTime"),
       formData.get("britishEndTime")
-    ));
+    )));
+    }
 
-    console.log("Here's what the generator spits out", urlStringGenerator(urlStartEndizer(
-      (props.video && props.video[0].british_version),
-      formData.get("britishStartTime"),
-      formData.get("britishEndTime"))));
+    // if (videos?.length && videos[0].canadianUrl) {
+    // console.log("Here's what the startendizer spits out", urlStartEndizer.apply(null, urlStringGenerator(urlStartEndizer(
+    //   (props.video?.length ? props.video[0].canadian_version : ""),
+    //   formData.get("canadianStartTime"),
+    //   formData.get("canadianEndTime")))));
+    // }
+    //end
 
-    console.log("Here's what we're feeding into the generator", urlStartEndizer(
-      (props.video && props.video[0].british_version),
-      formData.get("britishStartTime"),
-      formData.get("britishEndTime")
-    ));
+    // console.log("Here's what we're feeding into the generator", urlStartEndizer(
+    //   (props.video && props.video[0].british_version),
+    //   formData.get("britishStartTime"),
+    //   formData.get("britishEndTime")
+    // ));
 
-    console.log("Here's what we're feeding into the startendizer", (props.video && props.video[0].british_version),
-    formData.get("britishStartTime"),
-    formData.get("britishEndTime"))
+    // console.log("Here's what we're feeding into the startendizer", (props.video && props.video[0].british_version),
+    // formData.get("britishStartTime"),
+    // formData.get("britishEndTime"))
 
     console.log("Here are the videos to be submitted", videos);
-    // props.onSubmit({
-    //   syllabus: formData.get("country").toLowerCase(),
-    //   belt: parseInt(formData.get("belt")),
-    //   summary: formData.get("summary"),
-    //   category: formData.get("category"),
-    //   sub_category: formData.get("sub_category"),
-    //   videos: videos,
-    //   is_different: formData.get("is_different") === "No" ? false : true,
-    //   difference_content: formData.get("difference_content"),
-    // });
+    props.onSubmit({
+      syllabus: formData.get("country").toLowerCase(),
+      belt: parseInt(formData.get("belt")),
+      summary: formData.get("summary"),
+      category: formData.get("category"),
+      sub_category: formData.get("sub_category"),
+      videos: videos,
+      is_different: formData.get("is_different") === "No" ? false : true,
+      difference_content: formData.get("difference_content"),
+    });
 
     //     console.log("######## here's the props", props);
 
@@ -201,14 +303,14 @@ function UpdateTechniqueForm(props) {
   }
   const { errors } = props;
 
-  console.log("These are the props", props);
+  // console.log("These are the props", props);
 
-  console.log(
-    "Let's grab that start time",
-    props.video && urlStringGenerator(props.video[0].canadian_version)[1]
-  );
+  // console.log(
+  //   "Let's grab that start time",
+  //   props.video && urlStringGenerator(props.video[0].canadian_version)[1]
+  // );
 
-  console.log("What is the British URL?", props.video[0].british_version)
+  // console.log("What is the British URL?", props.video[0].british_version)
 
   return (
     // Page loading function isn't working so ask a TA
@@ -245,7 +347,7 @@ function UpdateTechniqueForm(props) {
         <Form.Label>Name of the technique </Form.Label>
         <Form.Control
           defaultValue={props.technique.summary}
-          placeHolder={props.technique.summary}
+          placeholder={props.technique.summary}
           name="summary"
           type="text"
           required={true}
@@ -342,13 +444,15 @@ function UpdateTechniqueForm(props) {
         <Form.Control
           name="sub_category"
           type="sub_category"
-          placeHolder="Can be blank if none comes to mind."
+          placeholder="Can be blank if none comes to mind."
           defaultValue={props.technique_type.sub_category}
         />
       </Form.Group>
       <Form.Group controlId="formBasicVideos">
+        {console.log("These are the videos before mapping", videos)}
         {videos.map((x, i) => {
-          console.log("This is the Canadian Video value", x);
+          console.log("This is the x we are mapping with", x)
+          console.log("This is the Canadian Video value", x.canadianUrl);
           return (
             <>
               <Form.Label>
@@ -363,9 +467,9 @@ function UpdateTechniqueForm(props) {
                 name="canadianUrl"
                 // value = {props.technique}
                 value={x.canadianUrl}
-                defaultValue={props.video && props.video[0].canadian_version}
+                defaultValue={props.video?.length ? props.video[0].canadian_version : ""}
                 type="primary_video"
-                placeHolder={props.technique.videos}
+                placeholder={props.technique.videos}
                 onChange={(e) => handleInputChange(e, i)}
               />
               <br />
@@ -376,12 +480,12 @@ function UpdateTechniqueForm(props) {
                 name="canadianStartTime"
                 value={x.canadianStartTime}
                 defaultValue={
-                  props.video &&
-                  urlStringGenerator(props.video[0].canadian_version)[1]
+                  props.video?.length ?
+                  urlStringGenerator(props.video[0].canadian_version)[1] : ""
                 }
                 type="primary_video_start_time"
                 placeholder="E.g. 0:23, or 72"
-                onChange={(e) => handleInputChange(e, i)}
+                onChange={(e) => handleInputChangeStartTimeCanadian(e, i)}
               />
               <br />
               <Form.Label>
@@ -391,12 +495,12 @@ function UpdateTechniqueForm(props) {
                 name="canadianEndTime"
                 value={x.canadianEndTime}
                 defaultValue={
-                  props.video &&
-                  urlStringGenerator(props.video[0].canadian_version)[2]
+                  props.video?.length ?
+                  urlStringGenerator(props.video[0].canadian_version)[2] : ""
                 }
                 type="primary_video_End_time"
                 placeholder="E.g. 2:52, or 210"
-                onChange={(e) => handleInputChange(e, i)}
+                onChange={(e) => handleInputChangeEndTimeCanadian(e, i)}
               />
 
               <br />
@@ -407,9 +511,9 @@ function UpdateTechniqueForm(props) {
               <Form.Control
                 name="britishUrl"
                 value={x.britishUrl}
-                defaultValue={props.video && props.video[0].british_version}
+                defaultValue={props.video?.length ? props.video[0].uk_version : ""}
                 type="secondary_video"
-                placeHolder="Try to source this from YouTube if possible."
+                placeholder="Try to source this from YouTube if possible."
                 onChange={(e) => handleInputChange(e, i)}
               />
               <br />
@@ -420,12 +524,12 @@ function UpdateTechniqueForm(props) {
                 name="britishStartTime"
                 value={x.britishStartTime}
                 defaultValue={
-                  props.video &&
-                  urlStringGenerator(props.video[0].british_version)[1]
+                  props.video?.length ?
+                  urlStringGenerator(props.video[0].uk_version)[1] : ""
                 }
                 type="primary_video_start_time"
                 placeholder="E.g. 0:31, or 46"
-                onChange={(e) => handleInputChange(e, i)}
+                onChange={(e) => handleInputChangeStartTimeBritish(e, i)}
               />
               <br />
               <Form.Label>
@@ -435,12 +539,12 @@ function UpdateTechniqueForm(props) {
                 name="britishEndTime"
                 value={x.britishEndTime}
                 defaultValue={
-                  props.video &&
-                  urlStringGenerator(props.video[0].british_version)[2]
+                  props.video?.length ?
+                  urlStringGenerator(props.video[0].uk_version)[2] : ""
                 }
                 type="primary_video_End_time"
                 placeholder="E.g. 7:02, or 307"
-                onChange={(e) => handleInputChange(e, i)}
+                onChange={(e) => handleInputChangeEndTimeBritish(e, i)}
               />
                 <br />
               <div className="btn-box">
@@ -486,7 +590,7 @@ function UpdateTechniqueForm(props) {
         <Form.Control
           name="difference_content"
           type="difference_content"
-          placeHolder={props.technique.difference_content}
+          placeholder={props.technique.difference_content}
           defaultValue={props.technique.difference_content}
         />
       </Form.Group>

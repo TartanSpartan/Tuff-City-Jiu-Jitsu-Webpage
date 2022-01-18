@@ -25,6 +25,8 @@ export default class TechniqueUpdatePage extends React.Component {
       isLoading: true,
       errors: false,
     };
+    console.log("These are the state values for the technique update", this.state.technique);
+
   }
 
   componentDidMount() {

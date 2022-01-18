@@ -10,6 +10,9 @@ import moment from "moment";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
+import { useSelector, useDispatch, connect } from 'react-redux'
+import { userSlice, setUser } from '../slices/userSlice';
+
 
 import "../App.scss";
 
@@ -75,8 +78,6 @@ class TechniqueShowPage extends Component {
       technique_type: {},
       belt: {},
       video: [],
-      currentUser: null,
-      isAdmin: false,
       isLoading: true,
       error: false,
     };
@@ -101,12 +102,13 @@ class TechniqueShowPage extends Component {
           technique_type: technique_type,
           belt: belt,
           video: video,
+          // user: user,
         });
         return technique_type;
       })
       .then((response) => {
         console.log("This is the response", response);
-        console.log("This is the user", getUser);
+        // console.log("This is the user", getUser());
       });
 
     // The following handler probably isn't required so can remove the commented block
@@ -167,8 +169,11 @@ class TechniqueShowPage extends Component {
 
   render() {
     const { isLoading } = this.state;
-    const currentUser = this.props.user;
-    const isAdmin = this.props.user.is_admin;
+    const currentUser = this.props.currentUser;
+    const isAdmin = currentUser.is_admin;
+    console.log("The current user is", currentUser);
+    console.log("Are they an admin?", isAdmin);
+
     if (isLoading) {
       return <div />;
     }
@@ -176,10 +181,6 @@ class TechniqueShowPage extends Component {
     console.log("This is the state", this.state);
     // console.log("Do we have access to the technique?", this.state.technique);
     // console.log("Do we have access to the technique type?", this.state.technique_type);
-
-    if (!this.state.video || this.state.video.length === 0) {
-      return <div></div>;
-    }
 
     const returnBeltBar = () => {
       // const belt.id = this.state.belt.id
@@ -261,7 +262,7 @@ class TechniqueShowPage extends Component {
 
     // asyncHandler(renderVideo);
     // console.log("This is the video", renderVideo);
-    // console.log("This is the state's video", this.state.video);
+    console.log("This is the state's video", this.state.video);
 
     return (
       <main className="TechniqueShowPage">
@@ -290,6 +291,10 @@ class TechniqueShowPage extends Component {
 
           <br />
           <br />
+          {/* Note: the following block is required in case of no videos, but having it further up the code meant only this would render in case of zero videos; so, need to implement it here in a more proper fashion */}
+          {/* if (!this.state.video || this.state.video.length === 0) {
+             return <div>Video not found</div>;
+           } */}
           {this.state.video?.map((video) => {
             return (
               <>
@@ -444,4 +449,8 @@ class TechniqueShowPage extends Component {
   // </main>
 }
 
-export default TechniqueShowPage;
+const mapStateToProps = (state) => ({
+  currentUser: state.user.user
+});
+
+export default connect(mapStateToProps)(TechniqueShowPage);

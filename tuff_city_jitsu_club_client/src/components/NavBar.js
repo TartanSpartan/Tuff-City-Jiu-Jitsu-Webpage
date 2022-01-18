@@ -40,10 +40,19 @@ function NavBar(props) {
               {currentUser.is_admin ? (
                 <Nav.Link
                   className="nav-link"
-                  className="nav-link"
                   href="/technique/new"
                 >
                   Add Techniques To Syllabus
+                </Nav.Link>
+              ) : (
+                <></>
+              )}
+              {currentUser.is_admin ? (
+                <Nav.Link
+                  className="nav-link"
+                  href="/videos(????)"
+                >
+                  Remove Surplus Videos
                 </Nav.Link>
               ) : (
                 <></>
