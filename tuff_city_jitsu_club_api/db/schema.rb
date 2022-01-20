@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_03_012404) do
+ActiveRecord::Schema.define(version: 2022_01_19_004532) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,15 +93,6 @@ ActiveRecord::Schema.define(version: 2021_11_03_012404) do
     t.index ["user_id"], name: "index_training_bubbles_on_user_id"
   end
 
-  create_table "urls", force: :cascade do |t|
-    t.bigint "technique_id", null: false
-    t.bigint "video_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["technique_id"], name: "index_urls_on_technique_id"
-    t.index ["video_id"], name: "index_urls_on_video_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -141,7 +132,5 @@ ActiveRecord::Schema.define(version: 2021_11_03_012404) do
   add_foreign_key "techniques", "belts"
   add_foreign_key "techniques", "technique_types"
   add_foreign_key "training_bubbles", "users"
-  add_foreign_key "urls", "techniques"
-  add_foreign_key "urls", "videos"
   add_foreign_key "videos", "techniques"
 end

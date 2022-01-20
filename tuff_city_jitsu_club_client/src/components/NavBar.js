@@ -47,16 +47,6 @@ function NavBar(props) {
               ) : (
                 <></>
               )}
-              {currentUser.is_admin ? (
-                <Nav.Link
-                  className="nav-link"
-                  href="/videos(????)"
-                >
-                  Remove Surplus Videos
-                </Nav.Link>
-              ) : (
-                <></>
-              )}
               <Nav.Link href="/syllabus/mindmap">Mindmap For Syllabus</Nav.Link>
               {/* <Nav.Link href="/events">Events</Nav.Link> */}
               <Nav.Link className="nav-link" href="/" onClick={onSignOut}>

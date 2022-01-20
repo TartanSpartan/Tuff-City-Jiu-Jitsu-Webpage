@@ -27,9 +27,21 @@ function urlStartEndizer (url, startTime, endTime) {
   // console.log("This is the url, start time and end time", url, startTime, endTime)
   let outputUrl = "";
 
-  let startSubStr = "?start=" + secondConverter(String(startTime));
-  let endSubStr = "&end=" + + secondConverter(String(endTime));
+  let startFlag = "?start=";
+  let endFlag = "&end=";
+
+  let startSubStr = startFlag + secondConverter(String(startTime));
+  let endSubStr = endFlag + + secondConverter(String(endTime));
   if (url === "") {
+    return outputUrl;
+  } else if (url.includes(startFlag) && url.includes(endFlag)) {
+    outputUrl = url;
+    return outputUrl;
+  } else if (url.includes(startFlag)) {
+    outputUrl = url;
+    return outputUrl;
+  } else if (url.includes(endFlag)) {
+    outputUrl = url;
     return outputUrl;
   } else {
     outputUrl = url + startSubStr + endSubStr;
@@ -37,7 +49,8 @@ function urlStartEndizer (url, startTime, endTime) {
   }
 }
 
-console.log("Test for urlStartEndizer", urlStartEndizer("https://www.youtube.com/watch?v=tLeu22wenlg", 12, 20))
+// Handy example of an embedded url: https://www.youtube.com/embed/7wUL_tSqdP0?start=20&end=120
+console.log("Test for urlStartEndizer", urlStartEndizer("https://www.youtube.com/watch?v=L202EJPSeYM?start=4", "", ""))
 
 function NewTechniqueForm(props) {
     const [videos, setVideos] = useState([{canadianUrl: "", britishUrl: ""}]);

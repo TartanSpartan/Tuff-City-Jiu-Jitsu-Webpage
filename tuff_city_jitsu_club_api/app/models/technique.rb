@@ -5,7 +5,6 @@ class Technique < ApplicationRecord
     belongs_to :belt_grade, optional: true # Think about whether this is needed e.g. for users only seeing certain amount of syllabus
     # belongs_to :syllabus
     belongs_to :technique_type # , optional: true
-    has_many :urls, dependent: :destroy
     # has_many :videos, through: :urls, dependent: :destroy
     
 

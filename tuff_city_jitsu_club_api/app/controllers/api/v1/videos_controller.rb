@@ -29,31 +29,39 @@ class Api::V1::VideosController < Api::ApplicationController
     end
 
     def show
-        # puts "Here are the video params", params["id"]
-        # video = Video.find params["id"]
-        # puts video
-        # if video
-        #     puts "Here is the video", video
-        #     render(
-        #         json: video
-        #             )
-        # else
-        #     render(json: {error: "Video Not Found"})
-        # end
-        puts "These are the search parameters", params["id"]
+        puts "These are the video params", params["id"]
         # technique_id = Technique.where("video_ids = ?", Video.ids).first.id
-        video = Video.where("technique_id = ?", params["id"]) 
+        video = Video.find params["id"] 
 
-        puts "################# here are the videos", video
+        puts "About to enter the if loop"
+        if video
+            puts "Inside the if loop"
 
-        render(
-            json: video.as_json
-        )
+            puts "################# here are the videos", video
+
+            render(
+                json: video
+            )
+        else
+                render(json: {error: "Video Not Found"})
+        end
 
     end
 
     def destroy
+        puts "Trying to delete a video"
+        puts "This is the video we're deleting", @video
+        # Find technique id
+        technique_id = @video.technique_id
+        puts "This is the associated technique id", technique_id
         @video.destroy
+        # Need to remove this id from the videourls column in the technique table
+        technique = Technique.find technique_id
+        puts "This technique needs the video id deleted", technique
+        filtered_videourls = technique.videourls.filter { |video| video != @video.id }
+        puts "This is the filtered array", filtered_videourls
+        technique.videourls = filtered_videourls
+        technique.save!
         render(json: { status: 200 }, status: 200)
     end
 
@@ -81,6 +89,16 @@ class Api::V1::VideosController < Api::ApplicationController
 
         render(
             json: video.as_json
+        )
+    end
+
+    def group
+        puts "This is the id we're searching with", params["id"]
+        videos = Video.where(:technique_id =>params["id"])
+        puts "Are multiple videos being returned?", videos
+
+        render(
+            json: videos.as_json
         )
     end
 

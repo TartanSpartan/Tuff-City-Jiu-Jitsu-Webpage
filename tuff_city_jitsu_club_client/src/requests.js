@@ -41,10 +41,28 @@ export const Video = {
     return fetch(`${process.env.REACT_APP_BASE_URL}/videos/${id}`, {
       credentials: "include",
     }).then((res) => {
-      console.log("This is the video response", res);
+      console.log("This is the find video response", res);
       return res.json();
     });
   },
+
+  group(id) { // Search based on the technique_id
+    return fetch (`${process.env.REACT_APP_BASE_URL}/techniques/${id}/videos`, {
+      credentials: "include",
+    }).then((res) => {
+      console.log("This is the group search video response", res);
+      return res.json();
+    });
+  },
+
+  // Destroy a video
+  destroy(id) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/videos/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    }).then((res) => res.json());
+  },
+
 };
 
 export const Belt = {
@@ -181,6 +199,7 @@ export const Session = {
       body: JSON.stringify(params),
     }).then((res) => res.json());
   },
+
   destroy() {
     return fetch(`${process.env.REACT_APP_BASE_URL}/session`, {
       method: "DELETE",

@@ -52,8 +52,8 @@ export default class TechniqueUpdatePage extends React.Component {
       .then((technique) => 
         Promise.all([
           technique,
+          Video.group(technique.id),
           TechniqueType.find(technique.technique_type_id),
-          Video.find(technique.id),
         ])
         // this.setState({
         //   technique: technique,
@@ -63,13 +63,15 @@ export default class TechniqueUpdatePage extends React.Component {
         // console.log("Is the videourl inside the technique?", technique)
         // console.log("What are the props?", this.props)
         // return technique;
-      ).then(([technique, technique_type, video]) => {
+      ).then(([technique, video, technique_type]) => { //
+        console.log(video);
         this.setState({
           isLoading: false,
           technique: technique,
           technique_type: technique_type,
           video: video,
         });
+        console.log("Check the video", video)
         return technique;
       })
       // .then((technique) => TechniqueType.find(technique.technique_type_id))
@@ -172,7 +174,7 @@ export default class TechniqueUpdatePage extends React.Component {
         <UpdateTechniqueForm
           technique={this.state.technique}
           technique_type={this.state.technique_type}
-          video={this.state.video}
+          videos={this.state.video}
           key={this.state.id}
           onSubmit={this.updatePostRequest}
           onCancel={this.props.handleCancelClick}

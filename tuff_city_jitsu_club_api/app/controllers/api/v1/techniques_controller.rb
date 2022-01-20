@@ -133,14 +133,16 @@ class Api::V1::TechniquesController < Api::ApplicationController
 
         technique = Technique.find params["id"]
         # puts technique
+        puts "The technique controller can't find the record"
         if technique
-            # puts "Here is the technique", technique
+            puts "Here is the technique", technique.inspect
             # puts "Here are the technique params", technique.videourls
             #puts "these are the params (to test videourls):", "summary: ", params["technique"]["summary"], "is it different?: ", params["technique"]["is_different"], "if so what is the difference? ", params["difference_content"], "technique type id: ", technique_type_id, "belt id: ", params["belt"].to_i, "videourls: ", params["videourls"].to_s
 
             render(
                 json: technique
                     )
+            
         else
             render(json: {error: "Technique Not Found"})
         end
@@ -202,24 +204,24 @@ class Api::V1::TechniquesController < Api::ApplicationController
             # check if the url provided exists in the video table
             # if it does then update the video with the new url info
             # else then create a new video (including url)
-            if (video["canadianUrl"])
-                f_search = video["canadianUrl"].split("start")[0]
+            if (video["canadian_version"])
+                f_search = video["canadian_version"].split("start")[0]
                 puts "Check the first condition", f_search
             end
-            if (video["britishUrl"])
-                s_search = video["britishUrl"].split("start")[0]
+            if (video["british_version"])
+                s_search = video["british_version"].split("start")[0]
                 puts "Check the second condition", s_search
             end
             existing_video = Video.where("canadian_version ILIKE :first_search AND uk_version ILIKE :second_search AND technique_id = :id", first_search: "%#{f_search}%", second_search: "%#{s_search}%", id:technique.id)
             puts "Check the search condition", existing_video.length
             if (existing_video && existing_video.length > 0)
                 puts "Inside if..."
-                update_existing_video = existing_video.update(canadian_version: video["canadianUrl"], uk_version: video["britishUrl"], technique_id: technique.id)
+                update_existing_video = existing_video.update(canadian_version: video["canadian_version"], uk_version: video["british_version"], technique_id: technique.id)
                 puts "Did the update work?", update_existing_video
                 update_video = update_existing_video[0]
             else
                 puts "Inside else..."
-                update_video = Video.create!(canadian_version: video["canadianUrl"], uk_version: video["britishUrl"], technique_id: technique.id)
+                update_video = Video.create!(canadian_version: video["canadian_version"], uk_version: video["british_version"], technique_id: technique.id)
                 
                 # update_video = Video.new
                 # update_video.canadian_version = params["videos"]["canadianUrl"]
