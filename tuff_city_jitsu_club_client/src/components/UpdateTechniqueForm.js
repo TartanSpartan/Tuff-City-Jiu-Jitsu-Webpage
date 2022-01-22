@@ -31,16 +31,41 @@ function secondConverter(time) {
 // console.log("secondConverter test", secondConverter("5:30"))
 // If this returns 330 then it works great
 
-function urlStartEndizer(url, startTime, endTime) {
+function startTimeIncludeCheck(startTime) {
+  let startFlag = "?start=";
+  let startSubStr = "";
+  if (startTime === "" || startTime === null || startTime === undefined){
+    return startSubStr;
+  } else {
+    startSubStr = startFlag + secondConverter(String(startTime));
+    return startSubStr;
+  }
+}
 
+function endTimeIncludeCheck(endTime) {
+  let endFlag = "&end=";
+  let endSubStr = "";
+  if (endTime === "" || endTime === null || endTime === undefined){
+    console.log("There is no endSubStr");
+    return endSubStr;
+  } else {
+    endSubStr = endFlag + secondConverter(String(endTime));
+    return endSubStr;
+  }
+}
+
+function urlStartEndizer(url, startTime, endTime) {
   // console.log("This is the url, start time and end time", url, startTime, endTime)
   let outputUrl = "";
 
   let startFlag = "?start=";
   let endFlag = "&end=";
+  let endOnlyStr = "?end="
 
-  let startSubStr = startFlag + secondConverter(String(startTime));
-  let endSubStr = endFlag + + secondConverter(String(endTime));
+  let startSubStr = startTimeIncludeCheck(startTime);
+  let endSubStr = endTimeIncludeCheck(endTime);
+
+  console.log("This is the type of the start and end times", typeof(startTime), typeof(endTime));
   if (url === "") {
     return outputUrl;
   } else if (url.includes(startFlag) && url.includes(endFlag)) {
@@ -51,6 +76,12 @@ function urlStartEndizer(url, startTime, endTime) {
     return outputUrl;
   } else if (url.includes(endFlag)) {
     outputUrl = url;
+    return outputUrl;
+  } else if (startTime === "") {
+    outputUrl = url + endOnlyStr + secondConverter(String(endTime));
+    return outputUrl;
+  } else if (endTime === "") {
+    outputUrl = url + startSubStr;
     return outputUrl;
   } else {
     outputUrl = url + startSubStr + endSubStr;
@@ -93,7 +124,7 @@ function urlStringGenerator(url) {
   }
 }
 
-let test_array = ["https://www.youtube.com/watch?v=tLeu22wenlg", 3, 8];
+// let test_array = ["https://www.youtube.com/watch?v=tLeu22wenlg", "", 8];
 
 // console.log(
 //   "Array test for urlStartEndizer",
@@ -129,7 +160,7 @@ let test_array = ["https://www.youtube.com/watch?v=tLeu22wenlg", 3, 8];
 
 export default UpdateTechniqueForm;
 function UpdateTechniqueForm(props) {
-  const [videos, setVideos] = useState([{ canadian_version: "", britishUrl: "" }]);
+  const [videos, setVideos] = useState([{ canadian_version: "", uk_version: "" }]);
   useEffect(() => { // This is to monitor props.videos so that every time it changes, the component will rerender
     if (props.videos.length) {
       const urls = props.videos.map((each) => ({
@@ -171,15 +202,12 @@ function UpdateTechniqueForm(props) {
     list[index][name] = value;
     setVideos(list);
     // Perhaps add listener for when we edit, if an existing video changes, to see if what it's replaced by is edited, or if it's a new one
-
-    // console.log(props);
-    // console.log(props.technique);
   };
 
   // handle input change for the case of start times changing in the form
   const handleInputChangeStartTimeCanadian = (e, index) => {
     // console.log("This is the Canadian URL", videos[index].canadian_version);
-    const url = videos[index].canadian_version.split("start");
+    const url = videos[index].canadian_version.split("?start");
     const endTime = videos[index].canadian_version.split("end=");
     const formattedUrl =
       url[0] + "?start=" + e.target.value + "&end=" + endTime[1];
@@ -240,7 +268,7 @@ function UpdateTechniqueForm(props) {
       canadianStartTime: "",
       canadianEndTime: "",
       // canadianUrl: "",
-      britishURL: "",
+      // britishUrl: "",
       britishStartTime: "",
       britishEndTime: "",
       uk_version: ""
@@ -266,25 +294,20 @@ function UpdateTechniqueForm(props) {
     return "";
   }
 
-  function checkErrorsBritishVersion(data) {
+  function checkErrorsUkVersion(data) {
     if(typeof data != 'undefined'){
-      if(typeof data.british_version != 'undefined'){
-        return data.british_version
+      if(typeof data.uk_version != 'undefined'){
+        return data.uk_version
       }
     }
     return "";
   }
-
 
   // function to handle the submission for an event
   function handleSubmit(event) {
     event.preventDefault();
     const { currentTarget } = event;
     const formData = new FormData(currentTarget);
-
-    // console.log(videos);
-    // console.log(typeof(props.video?.length) !== undefined ? props.video[0].canadian_version : "");
-    // Apply (null, [array]) is similar to the spread operator i.e (...array) but is said to have guaranteed support for Internet Explorer
 
     // video conversion
     videos.map((item, index) => {
@@ -314,24 +337,6 @@ function UpdateTechniqueForm(props) {
         );
       }
     })
-
-    // if (videos?.length && videos[0].canadian_version) {
-    // console.log("Here's what the startendizer spits out", urlStartEndizer.apply(null, urlStringGenerator(urlStartEndizer(
-    //   (props.video?.length ? props.video[0].canadian_version : ""),
-    //   formData.get("canadianStartTime"),
-    //   formData.get("canadianEndTime")))));
-    // }
-    //end
-
-    // console.log("Here's what we're feeding into the generator", urlStartEndizer(
-    //   (props.video && props.video[0].british_version),
-    //   formData.get("britishStartTime"),
-    //   formData.get("britishEndTime")
-    // ));
-
-    // console.log("Here's what we're feeding into the startendizer", (props.video && props.video[0].british_version),
-    // formData.get("britishStartTime"),
-    // formData.get("britishEndTime"))
 
     console.log("Here are the videos to be submitted", videos);
     props.onSubmit({
@@ -506,7 +511,7 @@ function UpdateTechniqueForm(props) {
           // console.log("This is the x we are mapping with", x)
           // console.log("This is the Canadian Video value", x.canadian_version);
           const urlCanada = x.canadian_version;
-          const urlBritain = x.britishUrl;
+          const urlBritain = x.uk_version;
           console.log("What is that url?", urlCanada);
           console.log("Check for the props", props)
           console.log("Check for the Canadian start time", props.videos?.length
@@ -572,10 +577,10 @@ function UpdateTechniqueForm(props) {
                 available)
               </Form.Label>
               <Form.Control
-                name="britishUrl"
-                value={x.britishUrl}
+                name="uk_version"
+                value={urlBritain}
                 defaultValue={
-                  props.videos?.length ? checkErrorsBritishVersion(videos[i]) : ""
+                  props.videos?.length ? checkErrorsUkVersion(videos[i]) : ""
                 }
                 type="secondary_video"
                 placeholder="Try to source this from YouTube if possible."
@@ -590,7 +595,7 @@ function UpdateTechniqueForm(props) {
                 value={x.britishStartTime}
                 defaultValue={
                   props.video?.length
-                  ? urlStringGenerator(checkErrorsBritishVersion(videos[i]))[1]
+                  ? urlStringGenerator(checkErrorsUkVersion(videos[i]))[1]
                   : ""
                 }
                 type="primary_video_start_time"
@@ -606,7 +611,7 @@ function UpdateTechniqueForm(props) {
                 value={x.britishEndTime}
                 defaultValue={
                   props.video?.length
-                  ? urlStringGenerator(checkErrorsBritishVersion(videos[i]))[2]
+                  ? urlStringGenerator(checkErrorsUkVersion(videos[i]))[2]
                   : ""
                 }
                 type="primary_video_End_time"

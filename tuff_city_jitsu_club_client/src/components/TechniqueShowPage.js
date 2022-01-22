@@ -16,7 +16,7 @@ import { userSlice, setUser } from "../slices/userSlice";
 import "../App.scss";
 
 function urlHandler(url) {
-  console.log("This is the url", url);
+  // console.log("This is the url", url);
   // This function is to parse YouTube URLs to be easy to embed (but be advised, not all URLs are set to permit this) and hence be compatible to show off in this page
   let watch = "watch?v=";
   let playlist = "&list=";
@@ -328,10 +328,10 @@ class TechniqueShowPage extends Component {
                 <div class="container-fluid">
                   <div className="wideView" class="row wideView">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                      <div class="row">
+                      <div class="row videoRow">
                         <div
                           className="iframeAndCaption"
-                          class="col-xs-4 col-sm-4 col-md-4 col-lg-4"
+                          class="col-xs-6 col-sm-6 col-md-6 col-lg-6"
                         >
                           <iframe
                             className="iframe"
@@ -353,19 +353,23 @@ class TechniqueShowPage extends Component {
                           </div>
                           <div>
                             <br/>
-                            <Button
-                              variant="danger"
-                              type="danger"
-                              onClick={(id) =>
-                                this.deleteVideo(video.id)
-                              }
-                            >
-                              Delete Video
-                            </Button>
+                            {isAdmin ? (
+                              <Button
+                                variant="danger"
+                                type="danger"
+                                onClick={(id) =>
+                                  this.deleteVideo(video.id)
+                                }
+                              >
+                                Delete Video
+                              </Button>
+                            ) : ""
+                            }
                           </div>
                         </div>
                         {isAdmin ? (
-                          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                          <>
+                          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                             <iframe
                               className="iframe"
                               src={
@@ -383,7 +387,23 @@ class TechniqueShowPage extends Component {
                             <div className="ukTitle">
                               {video.uk_version ? "British Version" : ""}
                             </div>
+                            <div>
+                            <br/>
+                            {isAdmin ? (
+                              <Button
+                                variant="danger"
+                                type="danger"
+                                onClick={(id) =>
+                                  this.deleteVideo(video.id)
+                                }
+                              >
+                                Delete Video
+                              </Button>
+                            ) : ""
+                            }
                           </div>
+                          </div>
+                          </>
                         ) : (
                           <></>
                         )}

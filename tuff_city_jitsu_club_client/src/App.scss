@@ -191,6 +191,10 @@
   text-align: center;
 }
 
+.videoRow {
+  align-items: center;
+}
+
 .whatIsLink { // this isn't taking...? When it does work, offload from inline into here
   padding-left: 10rem !important;
 }
@@ -200,7 +204,7 @@
 }
 
 .wideView {
-  padding-left: 20rem !important;
+  // padding-left: 20rem !important;
   // border: 1px solid black;
 }
 

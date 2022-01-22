@@ -23,15 +23,46 @@ function secondConverter(time) {
 // console.log("secondConverter test", secondConverter("5:30"))
 // If this returns 330 then it works great
 
-function urlStartEndizer (url, startTime, endTime) {
+function startTimeIncludeCheck(startTime) {
+  let startFlag = "?start=";
+  let startSubStr = "";
+  if (startTime === "" || startTime === null || startTime === undefined){
+    return startSubStr;
+  } else {
+    startSubStr = startFlag + secondConverter(String(startTime));
+    return startSubStr;
+  }
+}
+
+function endTimeIncludeCheck(endTime) {
+  let endFlag = "&end=";
+  let endSubStr = "";
+  if (endTime === "" || endTime === null || endTime === undefined){
+    console.log("There is no endSubStr");
+    return endSubStr;
+  } else {
+    endSubStr = endFlag + secondConverter(String(endTime));
+    return endSubStr;
+  }
+}
+
+console.log("Test for startTimeIncludeCheck", startTimeIncludeCheck(4));
+
+function urlStartEndizer(url, startTime, endTime) {
   // console.log("This is the url, start time and end time", url, startTime, endTime)
   let outputUrl = "";
 
   let startFlag = "?start=";
   let endFlag = "&end=";
+  let endOnlyStr = "?end="
 
-  let startSubStr = startFlag + secondConverter(String(startTime));
-  let endSubStr = endFlag + + secondConverter(String(endTime));
+  let startSubStr = startTimeIncludeCheck(startTime);
+  let endSubStr = endTimeIncludeCheck(endTime);
+
+  console.log("This is the type of the start and end times", typeof(startTime), typeof(endTime));
+  console.log("This is the start and end times", startTime, endTime);
+  console.log("This is the url", url)
+
   if (url === "") {
     return outputUrl;
   } else if (url.includes(startFlag) && url.includes(endFlag)) {
@@ -43,6 +74,12 @@ function urlStartEndizer (url, startTime, endTime) {
   } else if (url.includes(endFlag)) {
     outputUrl = url;
     return outputUrl;
+  } else if (startTime === "") {
+    outputUrl = url + endOnlyStr + secondConverter(String(endTime));
+    return outputUrl;
+  } else if (endTime === "") {
+    outputUrl = url + startSubStr;
+    return outputUrl;
   } else {
     outputUrl = url + startSubStr + endSubStr;
     return outputUrl;
@@ -50,14 +87,27 @@ function urlStartEndizer (url, startTime, endTime) {
 }
 
 // Handy example of an embedded url: https://www.youtube.com/embed/7wUL_tSqdP0?start=20&end=120
-console.log("Test for urlStartEndizer", urlStartEndizer("https://www.youtube.com/watch?v=L202EJPSeYM?start=4", "", ""))
+// Likewise, but for one with only an end time: https://www.youtube.com/embed/L202EJPSeYM?end=8
+// console.log("Test for urlStartEndizer", urlStartEndizer("https://www.youtube.com/watch?v=L202EJPSeYM?start=4", "", ""))
+
+console.log("Test for the particular number condition", !!(Number.isInteger("")))
+let test_array = ["https://www.youtube.com/watch?v=tLeu22wenlg", 3, ""];
+
+console.log(
+  "Array test for urlStartEndizer",
+  urlStartEndizer.apply(null, test_array)
+);
+// THIS WORKS! A successful approach to taking in an array as an argument
+
+
 
 function NewTechniqueForm(props) {
-    const [videos, setVideos] = useState([{canadianUrl: "", britishUrl: ""}]);
+    const [videos, setVideos] = useState([{canadian_version: "", uk_version: ""}]);
     let truncatedVideos = JSON.stringify(videos).split(":").join(" : ").split(",").join(" , ").split('l"').join("l ").slice(3, -2);
     let canadianVideo = truncatedVideos.substr(0, truncatedVideos.indexOf(","))
     let britishVideo = truncatedVideos.substr(truncatedVideos.indexOf("b"))    // Try to make these videos display on new lines for e.g. half width page, and correctly output for multiple entries
         
+    console.log("These are the props", props);
     // handle input change
     const handleInputChange = (e, index) => {
       const { name, value } = e.target;
@@ -68,17 +118,30 @@ function NewTechniqueForm(props) {
       console.log("This is the video list", list)
     };
 
-    // handle click event of the Remove button
-    const handleRemoveClick = index => {
-      const list = [...videos];
+  // handle click event of the Remove button
+  const handleRemoveClick = (index) => {
+    const list = [...videos];
+    if (index > -1) {
       list.splice(index, 1);
-      setVideos(list);
-    };
+    }
+    setVideos(list);
+  };
 
-    // handle click event of the Add button
-    const handleAddClick = () => {
-      setVideos([...videos, { canadianUrl: "", britishURL: "" }]);
-    };
+  // handle click event of the Add button
+  const handleAddClick = () => {
+    videos.push({
+      canadian_version: "",
+      canadianStartTime: "",
+      canadianEndTime: "",
+      // canadianUrl: "",
+      // britishUrl: "",
+      britishStartTime: "",
+      britishEndTime: "",
+      uk_version: ""
+    });
+
+    setVideos([...videos]);
+  };
 
     // function to handle the submission for an event
     function handleSubmit(event) {
@@ -86,9 +149,25 @@ function NewTechniqueForm(props) {
         const { currentTarget } = event;
         const formData = new FormData(currentTarget);
 
-      console.log("Here are the videos to be submitted", videos)
-      videos[0]["canadianUrl"] = urlStartEndizer(videos[0]["canadianUrl"], formData.get("canadianStartTime"), formData.get("canadianEndTime"));
-      videos[0]["britishUrl"] = urlStartEndizer(videos[0]["britishUrl"], formData.get("britishStartTime"), formData.get("britishEndTime"));
+          // video conversion
+    videos.map((item, index) => {
+      console.log("This is the item", item)
+      item.canadian_version = urlStartEndizer(
+              item.canadian_version,
+              formData.get("canadianStartTime"),
+              formData.get("canadianEndTime")
+            );
+            item.uk_version = urlStartEndizer(
+              item.uk_version,
+              formData.get("britishStartTime"),
+              formData.get("britishEndTime")
+            );
+            
+    })
+
+      // console.log("Here are the videos to be submitted", videos)
+      // videos[0]["canadianUrl"] = urlStartEndizer(videos[0]["canadianUrl"], formData.get("canadianStartTime"), formData.get("canadianEndTime"));
+      // videos[0]["britishUrl"] = urlStartEndizer(videos[0]["britishUrl"], formData.get("britishStartTime"), formData.get("britishEndTime"));
         props.onSubmit({
             syllabus: formData.get("country").toLowerCase(),
             belt: formData.get("belt"),
@@ -101,9 +180,7 @@ function NewTechniqueForm(props) {
         });
 
         console.log("######## here's the props", props);
-
         console.log("Here's the video we're passing in", formData.get("videos"))
-
         currentTarget.reset();
            
     }
@@ -164,14 +241,16 @@ function NewTechniqueForm(props) {
         </Form.Group>
         <Form.Group controlId="formBasicVideos">
         {videos.map((x, i) => {
+          const urlCanada = x.canadian_version;
+          const urlBritain = x.uk_version;
           return (
             <>
               <Form.Label>Note: if you just want to show a segment of a video, you can optionally include the start and end time for that segment.</Form.Label>
               {/* Eventually need some sophisticated url-time-duration checking to prevent bad/trolling input! For now just test with sensible inputs */}
               <br/>
               <Form.Label>Provide the Canadian video URL (if available)</Form.Label>
-              <Form.Control name = "canadianUrl"
-              value = {x.canadianUrl}
+              <Form.Control name = "canadian_version"
+              value = {urlCanada}
               type="primary_video"
               placeholder="Try to source this from YouTube if possible."
               onChange={e =>handleInputChange(e, i)}/>
@@ -194,9 +273,9 @@ function NewTechniqueForm(props) {
               {/* {urlStartEndizer(x.canadianURL, x.canadianStartTime, x.canadianEndTime)} */}
               <br />
               <Form.Label>If the UK technique is different, provide the UK video URL (if available)</Form.Label>
-              <Form.Control name = "britishUrl" 
+              <Form.Control name = "uk_version" 
               
-              value = {x.britishUrl}
+              value = {urlBritain}
               type="secondary_video"
               placeholder="Try to source this from YouTube if possible."
               onChange={e =>handleInputChange(e, i)}/>

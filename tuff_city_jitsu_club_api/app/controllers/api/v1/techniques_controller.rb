@@ -116,7 +116,9 @@ class Api::V1::TechniquesController < Api::ApplicationController
         # do video.create
         params["videos"].each do |video|
             # puts "This is the video loop", video
-            new_video = Video.create! canadian_version: video["canadianUrl"], uk_version: video["britishUrl"], technique_id: technique.id
+            new_video = Video.create! canadian_version: video["canadian_version"], uk_version: video["uk_version"], technique_id: technique.id
+            puts "This is the new video", new_video
+            puts "These are the video params", 
             video_array.push(new_video.id)
         end
         #byebug
@@ -208,20 +210,20 @@ class Api::V1::TechniquesController < Api::ApplicationController
                 f_search = video["canadian_version"].split("start")[0]
                 puts "Check the first condition", f_search
             end
-            if (video["british_version"])
-                s_search = video["british_version"].split("start")[0]
+            if (video["uk_version"])
+                s_search = video["uk_version"].split("start")[0]
                 puts "Check the second condition", s_search
             end
             existing_video = Video.where("canadian_version ILIKE :first_search AND uk_version ILIKE :second_search AND technique_id = :id", first_search: "%#{f_search}%", second_search: "%#{s_search}%", id:technique.id)
             puts "Check the search condition", existing_video.length
             if (existing_video && existing_video.length > 0)
                 puts "Inside if..."
-                update_existing_video = existing_video.update(canadian_version: video["canadian_version"], uk_version: video["british_version"], technique_id: technique.id)
+                update_existing_video = existing_video.update(canadian_version: video["canadian_version"], uk_version: video["uk_version"], technique_id: technique.id)
                 puts "Did the update work?", update_existing_video
                 update_video = update_existing_video[0]
             else
                 puts "Inside else..."
-                update_video = Video.create!(canadian_version: video["canadian_version"], uk_version: video["british_version"], technique_id: technique.id)
+                update_video = Video.create!(canadian_version: video["canadian_version"], uk_version: video["uk_version"], technique_id: technique.id)
                 
                 # update_video = Video.new
                 # update_video.canadian_version = params["videos"]["canadianUrl"]
