@@ -174,7 +174,7 @@ function NewTechniqueForm(props) {
             category: formData.get("category"),
             sub_category: formData.get("sub_category"),
             videos: videos, // This is an ID so need a different way to share e.g. YouTube URLs?
-            is_different: formData.get("is_different") ==="No"?false:true,
+            is_different: formData.get("is_different"),
             difference_content: formData.get("difference_content")
         });
 
@@ -324,10 +324,10 @@ function NewTechniqueForm(props) {
         </Form.Group>
         <Form.Group controlId="formBasicDifferenceCheck">
           <Form.Label>Is this technique different, or separate, from the UK syllabus?</Form.Label>
-          <Form.Control name = "is_different" type="is_different" as="select" defaultValue="Please select.">
-                <option>Please select </option>
-                <option>No </option>
-                <option>Yes </option>
+          <Form.Control name = "is_different" type="is_different" as="select">
+                <option value={false}>Please select </option>
+                <option value={false}>No </option>
+                <option value={true}>Yes </option>
             </Form.Control>        
         </Form.Group>
         <Form.Group controlId="formBasicDifferenceContent">

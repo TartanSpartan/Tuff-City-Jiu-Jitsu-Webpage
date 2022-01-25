@@ -34,7 +34,7 @@ function secondConverter(time) {
 function startTimeIncludeCheck(startTime) {
   let startFlag = "?start=";
   let startSubStr = "";
-  if (startTime === "" || startTime === null || startTime === undefined){
+  if (startTime === "" || startTime === null || startTime === undefined) {
     return startSubStr;
   } else {
     startSubStr = startFlag + secondConverter(String(startTime));
@@ -45,7 +45,7 @@ function startTimeIncludeCheck(startTime) {
 function endTimeIncludeCheck(endTime) {
   let endFlag = "&end=";
   let endSubStr = "";
-  if (endTime === "" || endTime === null || endTime === undefined){
+  if (endTime === "" || endTime === null || endTime === undefined) {
     console.log("There is no endSubStr");
     return endSubStr;
   } else {
@@ -60,12 +60,16 @@ function urlStartEndizer(url, startTime, endTime) {
 
   let startFlag = "?start=";
   let endFlag = "&end=";
-  let endOnlyStr = "?end="
+  let endOnlyStr = "?end=";
 
   let startSubStr = startTimeIncludeCheck(startTime);
   let endSubStr = endTimeIncludeCheck(endTime);
 
-  console.log("This is the type of the start and end times", typeof(startTime), typeof(endTime));
+  console.log(
+    "This is the type of the start and end times",
+    typeof startTime,
+    typeof endTime
+  );
   if (url === "") {
     return outputUrl;
   } else if (url.includes(startFlag) && url.includes(endFlag)) {
@@ -103,17 +107,17 @@ function urlStringGenerator(url) {
   } else {
     if (url?.includes(startCheck) && url?.includes(endCheck)) {
       rootUrl = url.substring(url.indexOf("h"), url.indexOf(startCheck));
-      console.log("The root URL is", rootUrl)
+      console.log("The root URL is", rootUrl);
       startTime = url.substring(
         url.lastIndexOf("=", url.lastIndexOf("=") - 1) + 1,
         url.lastIndexOf("&")
       );
-      console.log("The start time is", startTime)
+      console.log("The start time is", startTime);
       endTime = url.substring(
         url.lastIndexOf("=") + 1,
         url.lastIndexOf(url.charAt(url.length))
       );
-      console.log("The end time is", endTime)
+      console.log("The end time is", endTime);
       let stringArray = [rootUrl, startTime, endTime];
       return stringArray;
     } else {
@@ -160,14 +164,17 @@ function urlStringGenerator(url) {
 
 export default UpdateTechniqueForm;
 function UpdateTechniqueForm(props) {
-  const [videos, setVideos] = useState([{ canadian_version: "", uk_version: "" }]); //canadianStartTime: ""
-  useEffect(() => { // This is to monitor props.videos so that every time it changes, the component will rerender
+  const [videos, setVideos] = useState([
+    { canadian_version: "", uk_version: "" },
+  ]); //canadianStartTime: ""
+  useEffect(() => {
+    // This is to monitor props.videos so that every time it changes, the component will rerender
     if (props.videos.length) {
       const urls = props.videos.map((each) => ({
         canadian_version: each.canadian_version || "",
         uk_version: each.uk_version || "",
         // canadianStartTime: each.canadianStartTime || ""
-      }))
+      }));
       setVideos(urls);
     }
   }, [props.videos]);
@@ -202,7 +209,7 @@ function UpdateTechniqueForm(props) {
     const list = [...videos];
     list[index][name] = value;
     setVideos(list);
-    console.log("This is the video list", list)
+    console.log("This is the video list", list);
     // Perhaps add listener for when we edit, if an existing video changes, to see if what it's replaced by is edited, or if it's a new one
   };
 
@@ -273,7 +280,7 @@ function UpdateTechniqueForm(props) {
       // britishUrl: "",
       britishStartTime: "",
       britishEndTime: "",
-      uk_version: ""
+      uk_version: "",
     });
 
     setVideos([...videos]);
@@ -288,21 +295,21 @@ function UpdateTechniqueForm(props) {
 
   // functions to check for undefined or null values for video properties
   function checkErrorsCanadianVersion(data) {
-    if(typeof data != 'undefined'){
-      if(typeof data.canadian_version != 'undefined'){
-        return data.canadian_version
+    if (typeof data != "undefined") {
+      if (typeof data.canadian_version != "undefined") {
+        return data.canadian_version;
       }
     }
     return "";
   }
 
   function checkErrorsUkVersion(data) {
-    if(typeof data != 'undefined'){
-      if(typeof data.uk_version != 'undefined'){
-        return data.uk_version
+    if (typeof data != "undefined") {
+      if (typeof data.uk_version != "undefined") {
+        return data.uk_version;
       }
     }
-      return "";
+    return "";
   }
 
   // function to handle the submission for an event
@@ -338,7 +345,7 @@ function UpdateTechniqueForm(props) {
           )
         );
       }
-    })
+    });
 
     console.log("Here are the videos to be submitted", videos);
     props.onSubmit({
@@ -348,7 +355,7 @@ function UpdateTechniqueForm(props) {
       category: formData.get("category"),
       sub_category: formData.get("sub_category"),
       videos: videos,
-      is_different: formData.get("is_different") === "No" ? false : true,
+      is_different: formData.get("is_different"),
       difference_content: formData.get("difference_content"),
     });
 
@@ -514,14 +521,26 @@ function UpdateTechniqueForm(props) {
           const urlCanada = x.canadian_version;
           const urlBritain = x.uk_version;
           console.log("What is x?", x);
-          console.log("What is the Canadian time value (non-default)?", x.canadianStartTime);
+          console.log(
+            "What is the Canadian time value (non-default)?",
+            x.canadianStartTime
+          );
           console.log("What is that url?", urlCanada);
-          console.log("Check for the props", props)
-          console.log("Check for the Canadian start time", props.videos?.length
-          ? urlStringGenerator(checkErrorsCanadianVersion(videos[i]))[1]
-          : "")
-          console.log("What is that Canadian error check?", props.videos?.length ? checkErrorsCanadianVersion(videos[i]) : "")
-          console.log("What is that British error check?", props.videos?.length ? checkErrorsUkVersion(videos[i]) : "")
+          console.log("Check for the props", props);
+          console.log(
+            "Check for the Canadian start time",
+            props.videos?.length
+              ? urlStringGenerator(checkErrorsCanadianVersion(videos[i]))[1]
+              : ""
+          );
+          console.log(
+            "What is that Canadian error check?",
+            props.videos?.length ? checkErrorsCanadianVersion(videos[i]) : ""
+          );
+          console.log(
+            "What is that British error check?",
+            props.videos?.length ? checkErrorsUkVersion(videos[i]) : ""
+          );
 
           return (
             <>
@@ -537,7 +556,9 @@ function UpdateTechniqueForm(props) {
                 name="canadian_version"
                 value={urlCanada}
                 defaultValue={
-                  props.videos?.length ? checkErrorsCanadianVersion(videos[i]) : ""
+                  props.videos?.length
+                    ? checkErrorsCanadianVersion(videos[i])
+                    : ""
                 }
                 type="primary_video"
                 placeholder={props.technique.videos}
@@ -549,12 +570,18 @@ function UpdateTechniqueForm(props) {
               </Form.Label>
               <Form.Control
                 name="canadianStartTime"
-                value={x.canadianStartTime}
-                defaultValue={
+                value={
                   props.videos?.length
-                    ? urlStringGenerator(checkErrorsCanadianVersion(videos[i]))[1]
+                    ? urlStringGenerator(
+                        checkErrorsCanadianVersion(videos[i])
+                      )[1]
                     : ""
                 }
+                // defaultValue={
+                //   props.videos?.length
+                //     ? urlStringGenerator(checkErrorsCanadianVersion(videos[i]))[1]
+                //     : ""
+                // }
                 type="primary_video_start_time"
                 placeholder="E.g. 0:23, or 72"
                 onChange={(e) => handleInputChangeStartTimeCanadian(e, i)}
@@ -565,12 +592,18 @@ function UpdateTechniqueForm(props) {
               </Form.Label>
               <Form.Control
                 name="canadianEndTime"
-                value={x.canadianEndTime}
-                defaultValue={
+                value={
                   props.videos?.length
-                    ? urlStringGenerator(checkErrorsCanadianVersion(videos[i]))[2]
+                    ? urlStringGenerator(
+                        checkErrorsCanadianVersion(videos[i])
+                      )[2]
                     : ""
                 }
+                // defaultValue={
+                //   props.videos?.length
+                //     ? urlStringGenerator(checkErrorsCanadianVersion(videos[i]))[2]
+                //     : ""
+                // }
                 type="primary_video_End_time"
                 placeholder="E.g. 2:52, or 210"
                 onChange={(e) => handleInputChangeEndTimeCanadian(e, i)}
@@ -597,12 +630,16 @@ function UpdateTechniqueForm(props) {
               </Form.Label>
               <Form.Control
                 name="britishStartTime"
-                value={x.britishStartTime}
-                defaultValue={
+                value={
                   props.video?.length
-                  ? urlStringGenerator(checkErrorsUkVersion(videos[i]))[1]
-                  : ""
+                    ? urlStringGenerator(checkErrorsUkVersion(videos[i]))[1]
+                    : ""
                 }
+                // defaultValue={
+                // props.video?.length
+                // ? urlStringGenerator(checkErrorsUkVersion(videos[i]))[1]
+                // : ""
+                // }
                 type="primary_video_start_time"
                 placeholder="E.g. 0:31, or 46"
                 onChange={(e) => handleInputChangeStartTimeBritish(e, i)}
@@ -613,12 +650,16 @@ function UpdateTechniqueForm(props) {
               </Form.Label>
               <Form.Control
                 name="britishEndTime"
-                value={x.britishEndTime}
-                defaultValue={
+                value={
                   props.video?.length
-                  ? urlStringGenerator(checkErrorsUkVersion(videos[i]))[2]
-                  : ""
+                    ? urlStringGenerator(checkErrorsUkVersion(videos[i]))[2]
+                    : ""
                 }
+                // defaultValue={
+                //   props.video?.length
+                //   ? urlStringGenerator(checkErrorsUkVersion(videos[i]))[2]
+                //   : ""
+                // }
                 type="primary_video_End_time"
                 placeholder="E.g. 7:02, or 307"
                 onChange={(e) => handleInputChangeEndTimeBritish(e, i)}
