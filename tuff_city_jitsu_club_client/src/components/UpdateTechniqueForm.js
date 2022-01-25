@@ -103,17 +103,17 @@ function urlStringGenerator(url) {
   } else {
     if (url?.includes(startCheck) && url?.includes(endCheck)) {
       rootUrl = url.substring(url.indexOf("h"), url.indexOf(startCheck));
-      // console.log("The root URL is", rootUrl)
+      console.log("The root URL is", rootUrl)
       startTime = url.substring(
         url.lastIndexOf("=", url.lastIndexOf("=") - 1) + 1,
         url.lastIndexOf("&")
       );
-      // console.log("The start time is", startTime)
+      console.log("The start time is", startTime)
       endTime = url.substring(
         url.lastIndexOf("=") + 1,
         url.lastIndexOf(url.charAt(url.length))
       );
-      // console.log("The end time is", endTime)
+      console.log("The end time is", endTime)
       let stringArray = [rootUrl, startTime, endTime];
       return stringArray;
     } else {
@@ -160,14 +160,15 @@ function urlStringGenerator(url) {
 
 export default UpdateTechniqueForm;
 function UpdateTechniqueForm(props) {
-  const [videos, setVideos] = useState([{ canadian_version: "", uk_version: "" }]);
+  const [videos, setVideos] = useState([{ canadian_version: "", uk_version: "" }]); //canadianStartTime: ""
   useEffect(() => { // This is to monitor props.videos so that every time it changes, the component will rerender
     if (props.videos.length) {
       const urls = props.videos.map((each) => ({
         canadian_version: each.canadian_version || "",
-        britishUrl: each.uk_version || "",
+        uk_version: each.uk_version || "",
+        // canadianStartTime: each.canadianStartTime || ""
       }))
-      setVideos(urls)
+      setVideos(urls);
     }
   }, [props.videos]);
   console.log(
@@ -201,6 +202,7 @@ function UpdateTechniqueForm(props) {
     const list = [...videos];
     list[index][name] = value;
     setVideos(list);
+    console.log("This is the video list", list)
     // Perhaps add listener for when we edit, if an existing video changes, to see if what it's replaced by is edited, or if it's a new one
   };
 
@@ -220,17 +222,17 @@ function UpdateTechniqueForm(props) {
   // handle input change for the case of start times changing in the form
   const handleInputChangeStartTimeBritish = (e, index) => {
     // console.log("This is the British URL", videos[index].britishUrl);
-    const url = videos[index].britishUrl.split("start");
-    const endTime = videos[index].britishUrl.split("end=");
+    const url = videos[index].uk_version.split("start");
+    const endTime = videos[index].uk_version.split("end=");
     const formattedUrl =
       url[0] + "?start=" + e.target.value + "&end=" + endTime[1];
     let oldArray = [...videos];
-    oldArray[index] = { britishUrl: formattedUrl };
+    oldArray[index] = { uk_version: formattedUrl };
     setVideos(oldArray);
     // https://www.youtube.com/watch?v=L202EJPSeYM?start=3&end=38
   };
 
-  // handle input change for the case of start/end times changing in the form
+  // handle input change for the case of end times changing in the form
   const handleInputChangeEndTimeCanadian = (e, index) => {
     // console.log("This is the Canadian URL", videos[index].canadian_version);
     const url = videos[index].canadian_version.split("end=");
@@ -244,11 +246,11 @@ function UpdateTechniqueForm(props) {
   // handle input change for the case of start/end times changing in the form
   const handleInputChangeEndTimeBritish = (e, index) => {
     // console.log("This is the Canadian URL", videos[index].canadian_version);
-    const url = videos[index].britishUrl.split("end=");
-    const startTime = videos[index].britishUrl.split("start=");
+    const url = videos[index].uk_version.split("end=");
+    const startTime = videos[index].uk_version.split("start=");
     const formattedUrl = url[0] + "end=" + e.target.value;
     let oldArray = [...videos];
-    oldArray[index] = { britishUrl: formattedUrl };
+    oldArray[index] = { uk_version: formattedUrl };
     setVideos(oldArray);
   };
 
@@ -300,7 +302,7 @@ function UpdateTechniqueForm(props) {
         return data.uk_version
       }
     }
-    return "";
+      return "";
   }
 
   // function to handle the submission for an event
@@ -323,13 +325,13 @@ function UpdateTechniqueForm(props) {
           )
         );
       }
-      if (videos?.length && item.britishUrl) {
+      if (videos?.length && item.uk_version) {
         // console.log(props.video && props.video[0].british_version);
-        item.britishUrl = urlStartEndizer.apply(
-          item.britishUrl,
+        item.uk_version = urlStartEndizer.apply(
+          item.uk_version,
           urlStringGenerator(
             urlStartEndizer(
-              videos?.length ? item.britishUrl : "",
+              videos?.length ? item.uk_version : "",
               formData.get("britishStartTime"),
               formData.get("britishEndTime")
             )
@@ -508,15 +510,18 @@ function UpdateTechniqueForm(props) {
       <Form.Group controlId="formBasicVideos">
         {/* {console.log("These are the videos before mapping", videos)} */}
         {videos.map((x, i) => {
-          // console.log("This is the x we are mapping with", x)
           // console.log("This is the Canadian Video value", x.canadian_version);
           const urlCanada = x.canadian_version;
           const urlBritain = x.uk_version;
+          console.log("What is x?", x);
+          console.log("What is the Canadian time value (non-default)?", x.canadianStartTime);
           console.log("What is that url?", urlCanada);
           console.log("Check for the props", props)
           console.log("Check for the Canadian start time", props.videos?.length
           ? urlStringGenerator(checkErrorsCanadianVersion(videos[i]))[1]
           : "")
+          console.log("What is that Canadian error check?", props.videos?.length ? checkErrorsCanadianVersion(videos[i]) : "")
+          console.log("What is that British error check?", props.videos?.length ? checkErrorsUkVersion(videos[i]) : "")
 
           return (
             <>

@@ -112,7 +112,6 @@ function NewTechniqueForm(props) {
     const handleInputChange = (e, index) => {
       const { name, value } = e.target;
       const list = [...videos];
-      // console.log(urlStartEndizer(videos["canadianUrl"], formData.get("canadianStartTime"), formData.get("canadianEndTime")));
       list[index][name] = value;
       setVideos(list);
       console.log("This is the video list", list)

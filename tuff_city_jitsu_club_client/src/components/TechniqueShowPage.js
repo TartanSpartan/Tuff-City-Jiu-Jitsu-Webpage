@@ -99,9 +99,7 @@ class TechniqueShowPage extends Component {
           technique,
           TechniqueType.find(technique.technique_type_id),
           Belt.find(technique.belt_id),
-          ...technique.videourls.map(each => 
-            Video.find(each)
-          ),
+          ...technique.videourls.map((each) => Video.find(each)),
         ])
       )
 
@@ -165,10 +163,10 @@ class TechniqueShowPage extends Component {
   deleteVideo(id) {
     Video.destroy(id).then((data) => {
       if (data.status === 200) {
-        this.setState(state => {
+        this.setState((state) => {
           return {
-            video:state.video.filter(videoItem => videoItem.id !== id)
-          }
+            video: state.video.filter((videoItem) => videoItem.id !== id),
+          };
         });
       } else {
         this.setState((state) => {
@@ -352,23 +350,21 @@ class TechniqueShowPage extends Component {
                             {video.canadian_version ? "Canadian Version" : ""}
                           </div>
                           <div>
-                            <br/>
+                            <br />
                             {isAdmin ? (
                               <Button
                                 variant="danger"
                                 type="danger"
-                                onClick={(id) =>
-                                  this.deleteVideo(video.id)
-                                }
+                                onClick={(id) => this.deleteVideo(video.id)}
                               >
                                 Delete Video
                               </Button>
-                            ) : ""
-                            }
+                            ) : (
+                              ""
+                            )}
                           </div>
                         </div>
-                        {isAdmin ? (
-                          <>
+                        {video.uk_version && isAdmin && (
                           <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                             <iframe
                               className="iframe"
@@ -388,24 +384,20 @@ class TechniqueShowPage extends Component {
                               {video.uk_version ? "British Version" : ""}
                             </div>
                             <div>
-                            <br/>
-                            {isAdmin ? (
-                              <Button
-                                variant="danger"
-                                type="danger"
-                                onClick={(id) =>
-                                  this.deleteVideo(video.id)
-                                }
-                              >
-                                Delete Video
-                              </Button>
-                            ) : ""
-                            }
+                              <br />
+                              {isAdmin ? (
+                                <Button
+                                  variant="danger"
+                                  type="danger"
+                                  onClick={(id) => this.deleteVideo(video.id)}
+                                >
+                                  Delete Video
+                                </Button>
+                              ) : (
+                                ""
+                              )}
+                            </div>
                           </div>
-                          </div>
-                          </>
-                        ) : (
-                          <></>
                         )}
                       </div>
                     </div>
@@ -420,8 +412,6 @@ class TechniqueShowPage extends Component {
           })}
 
           <br />
-
-          {/*{this.state.technique.videos_id}*/}
           <br />
           {isAdmin ? (
             <>
