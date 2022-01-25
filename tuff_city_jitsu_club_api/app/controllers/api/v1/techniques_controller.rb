@@ -116,10 +116,14 @@ class Api::V1::TechniquesController < Api::ApplicationController
         # do video.create
         params["videos"].each do |video|
             # puts "This is the video loop", video
-            new_video = Video.create! canadian_version: video["canadian_version"], uk_version: video["uk_version"], technique_id: technique.id
-            puts "This is the new video", new_video
-            puts "These are the video params", 
-            video_array.push(new_video.id)
+            if (video["canadian_version"] === "" && video["uk_version"] === "")
+                # Do nothing- do not generate a video based on empty strings!
+            else
+                new_video = Video.create! canadian_version: video["canadian_version"], uk_version: video["uk_version"], technique_id: technique.id
+                puts "This is the new video", new_video
+                puts "These are the video params", 
+                video_array.push(new_video.id)
+            end
         end
         #byebug
         technique.videourls = video_array
@@ -223,15 +227,18 @@ class Api::V1::TechniquesController < Api::ApplicationController
                 update_video = update_existing_video[0]
             else
                 puts "Inside else..."
-                update_video = Video.create!(canadian_version: video["canadian_version"], uk_version: video["uk_version"], technique_id: technique.id)
-                
-                # update_video = Video.new
-                # update_video.canadian_version = params["videos"]["canadianUrl"]
-                # update_video.uk_version = params["videos"]["canadianUrl"]
-                # update_video.technique_id = params["id"]
-                puts "This is the video id", update_video.id
-                puts "Did the update work?", update_video
-
+                if (video["canadian_version"] === "" && video["uk_version"] === "")
+                    # Do nothing- do not generate a video based on empty strings!
+                else
+                    update_video = Video.create!(canadian_version: video["canadian_version"], uk_version: video["uk_version"], technique_id: technique.id)
+                    
+                    # update_video = Video.new
+                    # update_video.canadian_version = params["videos"]["canadianUrl"]
+                    # update_video.uk_version = params["videos"]["canadianUrl"]
+                    # update_video.technique_id = params["id"]
+                    puts "This is the video id", update_video.id
+                    puts "Did the update work?", update_video
+                end
             end
             # puts "This is the video id", update_video.id
             # puts "Here is the updated video", update_video
