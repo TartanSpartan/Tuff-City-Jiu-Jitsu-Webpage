@@ -234,10 +234,25 @@ function UpdateTechniqueForm(props) {
   // handle input change for the case of start times changing in the form
   const handleInputChangeStartTimeBritish = (e, index) => {
     // console.log("This is the British URL", videos[index].britishUrl);
-    const url = videos[index].uk_version.split("start");
+    let url = "";
+    if (videos[index].uk_version.includes("?start")){
+      url = videos[index].uk_version.split("?start");
+    } else if (videos[index].uk_version.includes("?end")){
+      url = videos[index].uk_version.split("?end");
+    }
+
     const endTime = videos[index].uk_version.split("end=");
-    const formattedUrl =
+    let formattedUrl = "";
+    if (e.target.value?.length && endTime[1]?.length) {
+    formattedUrl =
       url[0] + "?start=" + e.target.value + "&end=" + endTime[1];
+    } else if (e.target.value?.length && !endTime[1]?.length) {
+      formattedUrl =
+      url[0] + "?start=" + e.target.value;
+    } else if (!e.target.value?.length && endTime[1]?.length) {
+      formattedUrl =
+      url[0] + "?end=" + endTime[1];
+    }
     let oldArray = [...videos];
     oldArray[index] = { uk_version: formattedUrl };
     setVideos(oldArray);
@@ -257,7 +272,7 @@ function UpdateTechniqueForm(props) {
     console.log("Is the url getting split?", url);
 
     const partialSplit = videos[index].canadian_version.split("start=");
-    console.log("🚀 ~ file: UpdateTechniqueForm.js ~ line 260 ~ handleInputChangeEndTimeCanadian ~ partialSplit", partialSplit)
+    // console.log("🚀 ~ file: UpdateTechniqueForm.js ~ line 260 ~ handleInputChangeEndTimeCanadian ~ partialSplit", partialSplit)
     const startTime = partialSplit[1].split("&");
     console.log("This is the start time from the url split", startTime);
     let formattedUrl = "";
@@ -281,12 +296,35 @@ function UpdateTechniqueForm(props) {
   // handle input change for the case of start/end times changing in the form
   const handleInputChangeEndTimeBritish = (e, index) => {
     // console.log("This is the Canadian URL", videos[index].canadian_version);
-    const url = videos[index].uk_version.split("end=");
-    const startTime = videos[index].uk_version.split("start=");
-    const formattedUrl = url[0] + "end=" + e.target.value;
+    let url = "";
+    if (videos[index].uk_version.includes("?start")){
+      url = videos[index].uk_version.split("?start");
+    } else if (videos[index].uk_version.includes("?end")){
+      url = videos[index].uk_version.split("?end");
+    }
+    console.log("Is the url getting split?", url);
+
+    const partialSplit = videos[index].uk_version.split("start=");
+    // console.log("🚀 ~ file: UpdateTechniqueForm.js ~ line 260 ~ handleInputChangeEndTimeCanadian ~ partialSplit", partialSplit)
+    const startTime = partialSplit[1].split("&");
+    console.log("This is the start time from the url split", startTime);
+    let formattedUrl = "";
+    
+    if (e.target.value?.length && startTime[0]?.length) {
+      formattedUrl =
+        url[0] + "?start=" + startTime[0] + "&end=" + e.target.value;
+      } else if (e.target.value?.length && !startTime[0]?.length) {
+        formattedUrl =
+        url[0] + "?end=" + e.target.value;
+      } else if (!e.target.value?.length && startTime[0]?.length) {
+        formattedUrl =
+        url[0] + "?start=" + startTime[0];
+      }
+
     let oldArray = [...videos];
     oldArray[index] = { uk_version: formattedUrl };
     setVideos(oldArray);
+  };
   };
 
   // handle click event of the Remove button
