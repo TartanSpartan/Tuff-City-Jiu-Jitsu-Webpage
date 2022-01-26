@@ -325,7 +325,6 @@ function UpdateTechniqueForm(props) {
     oldArray[index] = { uk_version: formattedUrl };
     setVideos(oldArray);
   };
-  };
 
   // handle click event of the Remove button
   const handleRemoveClick = (index) => {
