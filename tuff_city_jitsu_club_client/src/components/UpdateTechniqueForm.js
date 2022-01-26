@@ -65,11 +65,11 @@ function urlStartEndizer(url, startTime, endTime) {
     return url;
   } 
 
-  if (startTime.length && endTime.length) {
+  if (startTime?.length && endTime?.length) {
     url += startFlag + startTime + endFlag + endTime;
-  } else if (startTime.length && !endTime.length){ 
+  } else if (startTime?.length && !endTime?.length){ 
     url += startFlag + startTime;
-  } else if (!startTime.length && endTime.length){ 
+  } else if (!startTime?.length && endTime?.length){ 
     url += endOnlyStr + endTime;
   }
   console.log(url);
