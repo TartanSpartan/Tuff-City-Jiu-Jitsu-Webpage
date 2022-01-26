@@ -50,45 +50,29 @@ console.log("Test for startTimeIncludeCheck", startTimeIncludeCheck(4));
 
 function urlStartEndizer(url, startTime, endTime) {
   // console.log("This is the url, start time and end time", url, startTime, endTime)
-  let outputUrl = "";
 
   let startFlag = "?start=";
   let endFlag = "&end=";
   let endOnlyStr = "?end="
 
-  let startSubStr = startTimeIncludeCheck(startTime);
-  let endSubStr = endTimeIncludeCheck(endTime);
+  if ((url.includes(startFlag) && url.includes(endFlag)) || url.includes(startFlag) || url.includes(endOnlyStr)){
+    return url;
+  } 
 
-  console.log("This is the type of the start and end times", typeof(startTime), typeof(endTime));
-  console.log("This is the start and end times", startTime, endTime);
-  console.log("This is the url", url)
-
-  if (url === "") {
-    return outputUrl;
-  } else if (url.includes(startFlag) && url.includes(endFlag)) {
-    outputUrl = url;
-    return outputUrl;
-  } else if (url.includes(startFlag)) {
-    outputUrl = url;
-    return outputUrl;
-  } else if (url.includes(endFlag)) {
-    outputUrl = url;
-    return outputUrl;
-  } else if (startTime === "") {
-    outputUrl = url + endOnlyStr + secondConverter(String(endTime));
-    return outputUrl;
-  } else if (endTime === "") {
-    outputUrl = url + startSubStr;
-    return outputUrl;
-  } else {
-    outputUrl = url + startSubStr + endSubStr;
-    return outputUrl;
+  if (startTime.length && endTime.length) {
+    url += startFlag + startTime + endFlag + endTime;
+  } else if (startTime.length && !endTime.length){ 
+    url += startFlag + startTime;
+  } else if (!startTime.length && endTime.length){ 
+    url += endOnlyStr + endTime;
   }
+  console.log(url);
+  return url; 
 }
 
 // Handy example of an embedded url: https://www.youtube.com/embed/7wUL_tSqdP0?start=20&end=120
 // Likewise, but for one with only an end time: https://www.youtube.com/embed/L202EJPSeYM?end=8
-// console.log("Test for urlStartEndizer", urlStartEndizer("https://www.youtube.com/watch?v=L202EJPSeYM?start=4", "", ""))
+console.log("Test for urlStartEndizer", urlStartEndizer("https://www.youtube.com/watch?v=L202EJPSeYM?end=12", "", ""))
 
 console.log("Test for the particular number condition", !!(Number.isInteger("")))
 let test_array = ["https://www.youtube.com/watch?v=tLeu22wenlg", 3, ""];

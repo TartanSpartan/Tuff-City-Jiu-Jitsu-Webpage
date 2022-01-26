@@ -56,41 +56,24 @@ function endTimeIncludeCheck(endTime) {
 
 function urlStartEndizer(url, startTime, endTime) {
   // console.log("This is the url, start time and end time", url, startTime, endTime)
-  let outputUrl = "";
 
   let startFlag = "?start=";
   let endFlag = "&end=";
-  let endOnlyStr = "?end=";
+  let endOnlyStr = "?end="
 
-  let startSubStr = startTimeIncludeCheck(startTime);
-  let endSubStr = endTimeIncludeCheck(endTime);
+  if ((url.includes(startFlag) && url.includes(endFlag)) || url.includes(startFlag) || url.includes(endOnlyStr)){
+    return url;
+  } 
 
-  console.log(
-    "This is the type of the start and end times",
-    typeof startTime,
-    typeof endTime
-  );
-  if (url === "") {
-    return outputUrl;
-  } else if (url.includes(startFlag) && url.includes(endFlag)) {
-    outputUrl = url;
-    return outputUrl;
-  } else if (url.includes(startFlag)) {
-    outputUrl = url;
-    return outputUrl;
-  } else if (url.includes(endFlag)) {
-    outputUrl = url;
-    return outputUrl;
-  } else if (startTime === "") {
-    outputUrl = url + endOnlyStr + secondConverter(String(endTime));
-    return outputUrl;
-  } else if (endTime === "") {
-    outputUrl = url + startSubStr;
-    return outputUrl;
-  } else {
-    outputUrl = url + startSubStr + endSubStr;
-    return outputUrl;
+  if (startTime.length && endTime.length) {
+    url += startFlag + startTime + endFlag + endTime;
+  } else if (startTime.length && !endTime.length){ 
+    url += startFlag + startTime;
+  } else if (!startTime.length && endTime.length){ 
+    url += endOnlyStr + endTime;
   }
+  console.log(url);
+  return url; 
 }
 
 function urlStringGenerator(url) {
@@ -99,6 +82,11 @@ function urlStringGenerator(url) {
   let startCheck = "?start=";
   let endTime = "";
   let endCheck = "&end=";
+  let partialSplit = url.split(startCheck);
+  let start = partialSplit[1]?.split(endCheck);
+  let end = url.split("end=");
+
+  return [url, start?.length? start[0] : "", end?.length? end[1] : ""];
 
   // console.log("Line 47 in urlStringGenerator" + url);
   if (url === "" || url === undefined) {
@@ -127,6 +115,8 @@ function urlStringGenerator(url) {
     }
   }
 }
+
+console.log("Test the URL string generator", urlStringGenerator("https://www.youtube.com/watch?v=tLeu22wenlg?start=5&end=12"))
 
 // let test_array = ["https://www.youtube.com/watch?v=tLeu22wenlg", "", 8];
 
@@ -216,10 +206,25 @@ function UpdateTechniqueForm(props) {
   // handle input change for the case of start times changing in the form
   const handleInputChangeStartTimeCanadian = (e, index) => {
     // console.log("This is the Canadian URL", videos[index].canadian_version);
-    const url = videos[index].canadian_version.split("?start");
+    let url = "";
+    if (videos[index].canadian_version.includes("?start")){
+      url = videos[index].canadian_version.split("?start");
+    } else if (videos[index].canadian_version.includes("?end")){
+      url = videos[index].canadian_version.split("?end");
+    }
+
     const endTime = videos[index].canadian_version.split("end=");
-    const formattedUrl =
+    let formattedUrl = "";
+    if (e.target.value?.length && endTime[1]?.length) {
+    formattedUrl =
       url[0] + "?start=" + e.target.value + "&end=" + endTime[1];
+    } else if (e.target.value?.length && !endTime[1]?.length) {
+      formattedUrl =
+      url[0] + "?start=" + e.target.value;
+    } else if (!e.target.value?.length && endTime[1]?.length) {
+      formattedUrl =
+      url[0] + "?end=" + endTime[1];
+    }
     let oldArray = [...videos];
     oldArray[index] = { canadian_version: formattedUrl };
     setVideos(oldArray);
@@ -242,9 +247,32 @@ function UpdateTechniqueForm(props) {
   // handle input change for the case of end times changing in the form
   const handleInputChangeEndTimeCanadian = (e, index) => {
     // console.log("This is the Canadian URL", videos[index].canadian_version);
-    const url = videos[index].canadian_version.split("end=");
-    const startTime = videos[index].canadian_version.split("start=");
-    const formattedUrl = url[0] + "end=" + e.target.value;
+
+    let url = "";
+    if (videos[index].canadian_version.includes("?start")){
+      url = videos[index].canadian_version.split("?start");
+    } else if (videos[index].canadian_version.includes("?end")){
+      url = videos[index].canadian_version.split("?end");
+    }
+    console.log("Is the url getting split?", url);
+
+    const partialSplit = videos[index].canadian_version.split("start=");
+    console.log("🚀 ~ file: UpdateTechniqueForm.js ~ line 260 ~ handleInputChangeEndTimeCanadian ~ partialSplit", partialSplit)
+    const startTime = partialSplit[1].split("&");
+    console.log("This is the start time from the url split", startTime);
+    let formattedUrl = "";
+    
+    if (e.target.value?.length && startTime[0]?.length) {
+      formattedUrl =
+        url[0] + "?start=" + startTime[0] + "&end=" + e.target.value;
+      } else if (e.target.value?.length && !startTime[0]?.length) {
+        formattedUrl =
+        url[0] + "?end=" + e.target.value;
+      } else if (!e.target.value?.length && startTime[0]?.length) {
+        formattedUrl =
+        url[0] + "?start=" + startTime[0];
+      }
+
     let oldArray = [...videos];
     oldArray[index] = { canadian_version: formattedUrl };
     setVideos(oldArray);
