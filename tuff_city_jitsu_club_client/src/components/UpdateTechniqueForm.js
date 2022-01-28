@@ -6,6 +6,7 @@ import Alert from "react-bootstrap/Alert";
 import isLoading from "./TechniqueUpdatePage";
 import "../App.scss";
 import { map } from "lodash";
+import TechniqueGenerationEngine from "./TechniqueGenerationEngine";
 
 // decouple props and state so that they can edit a url if it's there as a string but if it isn't then they can use the default prop value
 // think about flattening state so that urls are easily accessible without having to use nested code
@@ -795,3 +796,11 @@ function UpdateTechniqueForm(props) {
     // }</div>
   );
 }
+
+
+{/* <TechniqueGenerationEngine
+key={this.state.id}
+onSubmit={this.createTechnique}
+onCancel={this.props.handleCancelClick}
+errors={this.state.errors}
+/> */}

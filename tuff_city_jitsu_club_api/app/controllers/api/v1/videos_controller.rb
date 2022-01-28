@@ -69,15 +69,34 @@ class Api::V1::VideosController < Api::ApplicationController
     end
 
     def update
-        @video = Video.find_by id: params["video_id"] # Comment this out if it causes problems
-        if @video.update video_params
-            render json: { id: @video.id }
-        else
-            render(
-                json: { errors: video.errors },
-                status: 422 # Unprocessable Entity
-            )
-        end
+        puts "These are the incoming params", params
+        puts "Trying to delete a country's video url"
+        puts "This is the video we're changing", @video
+        puts "These are the video params", @video.inspect
+        # Find technique id
+        technique_id = @video.technique_id
+        puts "This is the associated technique id", technique_id
+        @video.update(uk_version: params["uk_version"], canadian_version: params["canadian_version"])
+
+        # @video.destroy
+        # # Need to remove this id from the videourls column in the technique table
+        # technique = Technique.find technique_id
+        # puts "This technique needs the video id deleted", technique
+        # filtered_videourls = technique.videourls.filter { |video| video != @video.id }
+        # puts "This is the filtered array", filtered_videourls
+        # technique.videourls = filtered_videourls
+        # technique.save!
+        # render(json: { status: 200 }, status: 200)
+
+        # @video = Video.find_by id: params["video_id"] # Comment this out if it causes problems
+        # if @video.update video_params
+        #     render json: { id: @video.id }
+        # else
+        #     render(
+        #         json: { errors: video.errors },
+        #         status: 422 # Unprocessable Entity
+        #     )
+        # end
     end
 
     def find

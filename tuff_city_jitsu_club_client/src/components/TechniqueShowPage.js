@@ -15,6 +15,13 @@ import { userSlice, setUser } from "../slices/userSlice";
 
 import "../App.scss";
 
+const defaultData = {
+  id: 0,
+  canadian_version: '',
+  uk_version: '',
+  technique_id: 0
+}
+
 function urlHandler(url) {
   // console.log("This is the url", url);
   // This function is to parse YouTube URLs to be easy to embed (but be advised, not all URLs are set to permit this) and hence be compatible to show off in this page
@@ -115,35 +122,8 @@ class TechniqueShowPage extends Component {
       })
       .then((response) => {
         console.log("This is the response", response);
-        // console.log("This is the user", getUser());
       });
 
-    // The following handler probably isn't required so can remove the commented block
-
-    // Syllabus.one(2).then(syllabus => { // This is hardcoded for Canada in this version of the database, fine as it is the only syllabus we are showing
-    //     console.log(syllabus)
-    //     this.setState({
-    //     technique_type: syllabus.technique_types,
-    //     isLoading: false
-    //     });
-    // });
-    // console.log(
-    //   "Does the videourls array have a length?",
-    //   this.state.technique
-    // );
-    // console.log(
-    //   "Does it actually?",
-    //   this.state.technique && this.state.technique.videourls?.length
-    // );
-
-    // Likewise this block can probably be removed
-    //   Video.find(2).then(video => {
-    //     this.setState({
-    //       video: video,
-    //     });
-    //     console.log("This is the video", video)
-    //     console.log("This is the props", this.props.match)
-    // });
   }
 
   deleteTechnique(id) {
@@ -160,6 +140,29 @@ class TechniqueShowPage extends Component {
     });
   }
 
+
+  updateVideo(id, country) {
+    let arr = this.state.video.map((item) => {
+      if(Object.keys(item).includes(country)){ //["uk_version", "id", "canadian_version"].includes("uk_version").includes("uk_version") .. will give true
+        item[`${country}`] = '';
+      }
+      return item;
+    });
+    console.log(arr);
+    Video.update(id, arr[0]);
+    this.forceUpdate();
+
+    // Video.update(id, data)
+    // .then((video) => {
+    //   console.log(video);
+    //   if (video.errors) {
+    //     this.setState({ errors: video.errors });
+    //   } else {
+    //   }
+    // });
+  }
+
+  // If you wish to delete both country URLs, you can still use this block
   deleteVideo(id) {
     Video.destroy(id).then((data) => {
       if (data.status === 200) {
@@ -191,6 +194,7 @@ class TechniqueShowPage extends Component {
   // });
   // }
   // const technique = this.state.technique;
+
 
   render() {
     const { isLoading } = this.state;
@@ -324,46 +328,58 @@ class TechniqueShowPage extends Component {
             return (
               <>
                 <div class="container-fluid">
-                  <div className="wideView" class="row wideView">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                      <div class="row videoRow">
-                        <div
-                          className="iframeAndCaption"
-                          class="col-xs-6 col-sm-6 col-md-6 col-lg-6"
-                        >
-                          <iframe
-                            className="iframe"
-                            src={
-                              video.canadian_version
-                                ? urlHandler(video.canadian_version)
-                                : ""
-                            }
-                            height="200rem"
-                            width="100%"
-                            frameBorder="0"
-                            allow="autoplay; encrypted-media"
-                            allowFullScreen
-                            title="video"
-                          />
-
-                          <div className="caTitle">
-                            {video.canadian_version ? "Canadian Version" : ""}
-                          </div>
-                          <div>
-                            <br />
-                            {isAdmin ? (
-                              <Button
+                  {isAdmin ? (<div>
+                    {video.canadian_version ? (<div>
+                      {video.uk_version ? (<div>
+                        <Button
                                 variant="danger"
                                 type="danger"
                                 onClick={(id) => this.deleteVideo(video.id)}
                               >
-                                Delete Video
+                                Delete Both Country's Videos For This Row
                               </Button>
-                            ) : (
-                              ""
-                            )}
+                      </div>) : ("")}
+                    </div>) : ("")}
+                  </div>) : ("")}
+                  <br />
+                  <div className="wideView" class="row wideView">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                      <div class="row videoRow">
+                        {video.canadian_version && isAdmin && (
+                          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <iframe
+                              className="iframe"
+                              src={
+                                video.canadian_version
+                                  ? urlHandler(video.canadian_version)
+                                  : ""
+                              }
+                              height="200rem"
+                              width="100%"
+                              frameBorder="0"
+                              allow="autoplay; encrypted-media"
+                              allowFullScreen
+                              title="video"
+                            />
+                            <div className="canadianTitle">
+                              {video.canadian_version ? "Canadian Version" : ""}
+                            </div>
+                            <div>
+                              <br />
+                              {isAdmin ? (
+                                <Button
+                                  variant="danger"
+                                  type="danger"
+                                  onClick={(id) => this.updateVideo(video.id, "canadian_version")}
+                                >
+                                  Delete Video
+                                </Button>
+                              ) : (
+                                ""
+                              )}
+                            </div>
                           </div>
-                        </div>
+                        )}
                         {video.uk_version && isAdmin && (
                           <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                             <iframe
@@ -389,7 +405,7 @@ class TechniqueShowPage extends Component {
                                 <Button
                                   variant="danger"
                                   type="danger"
-                                  onClick={(id) => this.deleteVideo(video.id)}
+                                  onClick={(id) => this.updateVideo(video.id, "uk_version")}
                                 >
                                   Delete Video
                                 </Button>

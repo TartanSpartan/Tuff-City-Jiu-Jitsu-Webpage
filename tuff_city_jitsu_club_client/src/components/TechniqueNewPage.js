@@ -32,7 +32,6 @@ export default class TechniqueNewPage extends Component {
           onSubmit={this.createTechnique}
           onCancel={this.props.handleCancelClick}
           errors={this.state.errors}
-          
         />
       </main>
     );

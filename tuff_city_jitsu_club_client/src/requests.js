@@ -63,6 +63,20 @@ export const Video = {
     }).then((res) => res.json());
   },
 
+  // Update a video- really to delete one country rather than the other's URL
+  update(id, data){
+    return fetch(`${process.env.REACT_APP_BASE_URL}/videos/${id}`, {
+      credentials: "include",
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).then((res) => {
+      console.log("Are we hitting this for the video update?");
+      return res.json();
+    });
+
+  },
+
 };
 
 export const Belt = {

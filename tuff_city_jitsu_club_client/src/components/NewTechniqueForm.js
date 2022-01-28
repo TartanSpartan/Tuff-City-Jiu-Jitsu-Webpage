@@ -46,7 +46,7 @@ function endTimeIncludeCheck(endTime) {
   }
 }
 
-console.log("Test for startTimeIncludeCheck", startTimeIncludeCheck(4));
+// console.log("Test for startTimeIncludeCheck", startTimeIncludeCheck(4));
 
 function urlStartEndizer(url, startTime, endTime) {
   // console.log("This is the url, start time and end time", url, startTime, endTime)
