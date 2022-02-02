@@ -37,21 +37,25 @@ function NavBar(props) {
               <Nav.Link className="nav-link" href="/syllabus">
                 Syllabus
               </Nav.Link>
-              {currentUser.is_admin ? (
-                <Nav.Link
-                  className="nav-link"
-                  href="/technique/new"
-                >
+              {currentUser?.is_admin ? (
+                <Nav.Link className="nav-link" href="/technique/new">
                   Add Techniques To Syllabus
                 </Nav.Link>
               ) : (
-                <></>
+                <div></div>
               )}
               <Nav.Link href="/syllabus/mindmap">Mindmap For Syllabus</Nav.Link>
               {/* <Nav.Link href="/events">Events</Nav.Link> */}
               <Nav.Link className="nav-link" href="/" onClick={onSignOut}>
                 Sign Out
               </Nav.Link>
+              {currentUser.is_admin ? (
+                <>
+                  <Nav.Link href="/admin">Admin Page</Nav.Link>
+                </>
+              ) : (
+                <div></div>
+              )}
               <Nav.Link
                 className="nav-link"
                 className="item"
@@ -70,13 +74,6 @@ function NavBar(props) {
               </Nav.Link>
             </React.Fragment>
           )}
-          {/* {currentUser.is_admin ? (
-      <>
-      <Nav.Link href="/admin">Admin Page</Nav.Link>
-      </>
-      ) : (
-        <div></div>
-      )} */}
         </Nav>
       </Container>
     </Navbar>

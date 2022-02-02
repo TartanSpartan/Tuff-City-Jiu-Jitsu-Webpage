@@ -5,6 +5,9 @@ import Button from "react-bootstrap/Button"
 // import styled from "styled-components"
 import "../App.scss";
 
+// Use Ouath to sign up with Gmail and possibly other services such as Facebook
+// Also, have admin set most of the user characteristics such as their belt and qualifications from the user admin form
+
 export function SignUpPage(props) {
   const { onSignUp } = props;
 

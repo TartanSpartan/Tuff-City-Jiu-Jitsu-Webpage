@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :belt_grades
       get "/belt_grades_find", {to: "belt_grades#find"}
-      resources :instructorqualifications
+      resources :instructor_qualifications
       resources :syllabi do
         get "/syllabi_full", {to: "syllabi#find_all_belts"}
         resources :belts do

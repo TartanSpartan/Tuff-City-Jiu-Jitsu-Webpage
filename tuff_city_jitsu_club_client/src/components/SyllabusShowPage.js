@@ -89,7 +89,7 @@ function groupedTechniqueTypes(technique_types) {
 export class SyllabusShowPage extends React.Component {
   constructor(props) {
     super(props);
-    console.log("These are the props", props);
+    // console.log("These are the props", props);
     this.state = {
       // Populate the list of techniques through fetching them from the server and allow the page to load
       syllabus: [],
@@ -105,8 +105,6 @@ export class SyllabusShowPage extends React.Component {
       isLoading: true,
     };
   }
-
-  // Had to lift the following wholesale from App.js; find a more elegant way to import it.
 
   componentDidMount() {
     Syllabus.all({ id: 1 }).then((syllabus) => {

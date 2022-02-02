@@ -105,7 +105,7 @@ export const Belt = {
 };
 
 export const TechniqueType = {
-  // Fetch all techniques from the server
+  // Fetch all technique types from the server
   all() {
     return fetch(`${process.env.REACT_APP_BASE_URL}/technique_types`, {
       credentials: "include",
@@ -171,7 +171,7 @@ export const Technique = {
 
   // Try to debug this
   update(id, params) {
-    console.log("this is from request js and the params", params);
+    console.log("this is from request js and the technique params", params);
     return fetch(`${process.env.REACT_APP_BASE_URL}/techniques/${id}`, {
       credentials: "include",
       method: "PATCH",
@@ -223,6 +223,16 @@ export const Session = {
 };
 
 export const User = {
+  // Fetch all users from the server
+  all() {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/users`, {
+      credentials: "include",
+    }).then((res) => {
+      console.log(res);
+      return res.json();
+    });
+  },
+
   // Current user
   current() {
     return fetch(`${process.env.REACT_APP_BASE_URL}/users/current`, {
@@ -241,6 +251,75 @@ export const User = {
       },
       body: JSON.stringify({ user: params }),
     }).then((res) => res.json());
+  },
+
+  // Destroy a user
+  destroy(id) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/users/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    }).then((res) => res.json());
+  },
+
+  // Update a user
+  update(id, params) {
+    console.log("this is from request js and the user params", params);
+    return fetch(`${process.env.REACT_APP_BASE_URL}/users/${id}`, {
+      credentials: "include",
+      method: "PATCH",
+      body: JSON.stringify(params),
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
+      return res.json();
+    });
+  },
+
+};
+
+export const InstructorQualification = {
+
+  // Create an instructor qualification
+  create(params) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/instructor_qualifications`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ instructor_qualification: params }),
+    }).then((res) => res.json());
+  },
+
+  // Fetch all technique types from the server
+  all() {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/instructor_qualifications`, {
+      credentials: "include",
+    }).then((res) => {
+      console.log(res);
+      return res.json();
+    });
+  },
+
+  find(id) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/instructor_qualifications/${id}`, {
+      credentials: "include",
+    }).then((res) => {
+      console.log(res);
+      return res.json();
+    });
+  },
+
+  // Update an instructor qualification
+  update(id, params) {
+    console.log("this is from request js and the instructor qualification params", params);
+    return fetch(`${process.env.REACT_APP_BASE_URL}/instructor_qualifications/${id}`, {
+      credentials: "include",
+      method: "PATCH",
+      body: JSON.stringify(params),
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
+      return res.json();
+    });
   },
 };
 

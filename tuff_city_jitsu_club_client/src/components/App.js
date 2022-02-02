@@ -17,7 +17,7 @@ import { WhatIsJiuJitsu } from "./WhatIsJiuJitsu";
 import { WhoAreWe } from "./WhoAreWe";
 import TechniqueUpdatePage from "./TechniqueUpdatePage";
 // import TechniqueGenerationEngine from "./TechniqueGenerationEngine";
-// import { AdminPage } from "./AdminPage";
+import { AdminPage } from "./AdminPage";
 import '../App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -87,6 +87,11 @@ class App extends React.Component {
                             isAuthenticated={currentUser}
                             path="/techniques/:id/edit"
                             component={TechniqueUpdatePage}
+                            />
+                           <AuthRoute
+                            isAuthenticated={currentUser}
+                            path="/admin"
+                            component={AdminPage}
                             />
                             {/* <AuthRoute
                             isAuthenticated={currentUser}

@@ -229,7 +229,7 @@ puts beltgrades
             achieved_at = nil
         end
     end
-    # White and yellow belts aka belt.id = 7 and belt.id = 8 are not instructors so they are not accounted for in the above conditionals
+    # White and yellow belts aka belt.id = 8 and belt.id = 7 are not instructors so they are not accounted for in the above conditionals
     puts "Generating instructor qualifications", user.id, qualification_id
 
     if qualification_id != nil && achieved_at != nil
