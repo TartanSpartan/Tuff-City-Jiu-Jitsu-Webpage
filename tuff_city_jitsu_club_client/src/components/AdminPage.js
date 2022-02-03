@@ -10,6 +10,20 @@ import "../App.scss";
 import AdminForm from "./AdminForm";
 
 
+// We use this function to create a dynamic drop down list based on, for example, the users!
+function createSelectItems() {
+    let items = [];         
+    for (let i = 0; i <= this.props.maxValue; i++) {             
+         items.push(<option key={i} value={i}>{i}</option>);   
+
+    }
+    return items;
+}
+
+function onDropdownSelected(e) {
+   console.log("Selected dropdown value", e.target.value);
+}
+
 // function AdminPage(props) {
 export class AdminPage extends React.Component {
     constructor(props) {
@@ -27,6 +41,8 @@ export class AdminPage extends React.Component {
             instructor_qualification_achievement_date: "",
             currentUser: null,
             isAdmin: false,
+            createSelectItems: [],
+            onDropdownSelected: ""
         };
     }
 
@@ -77,6 +93,8 @@ export class AdminPage extends React.Component {
                     users={this.state.user}
                     errors={this.state.errors}
                     key={this.state.id}
+                    onDropdownSelected={this.onDropdownSelected}
+                    createSelectItems={this.createSelectItems}
                     />
                 )
                     

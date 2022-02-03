@@ -23,12 +23,12 @@ class Api::V1::UsersController < Api::ApplicationController
         user.save!
         user.inspect
 
-        # Next, we need to create a belt grade for the user, setting the belt id to 8/white, and the admin can update it later
+        # Next, we need to create a belt grade for the user, setting the belt id to 8/white (by default we assume new students are white belts, but also they may be joining with a higher belt on their waist), and the admin can update it later
         belt_grade = BeltGrade.new user_id: user.id, belt_id: "8"
         belt_grade.save!
 
-        # And an instructor qualification (likewise, null for now)
-        instructor_qualification = InstructorQualification.new user_id: user.id, belt_grade_id: belt_grade.id, belt_id: "8", qualification_id: "1" # May have to change this last number, after database reset
+        # And an instructor qualification (likewise, a meaningless "unqualified" qualification for now, to be updated if and when the user gets new qualifications)
+        instructor_qualification = InstructorQualification.new user_id: user.id, belt_grade_id: belt_grade.id, belt_id: "8", qualification_id: "1"
         instructor_qualification.save!
 
         if user.save
