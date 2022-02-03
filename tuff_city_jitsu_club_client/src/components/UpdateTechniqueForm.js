@@ -88,33 +88,6 @@ function urlStringGenerator(url) {
   let end = url.split("end=");
 
   return [url, start?.length? start[0] : "", end?.length? end[1] : ""];
-
-  // console.log("Line 47 in urlStringGenerator" + url);
-  if (url === "" || url === undefined) {
-    let stringArray = ["", "", ""];
-    return stringArray;
-  } else {
-    if (url?.includes(startCheck) && url?.includes(endCheck)) {
-      rootUrl = url.substring(url.indexOf("h"), url.indexOf(startCheck));
-      console.log("The root URL is", rootUrl);
-      startTime = url.substring(
-        url.lastIndexOf("=", url.lastIndexOf("=") - 1) + 1,
-        url.lastIndexOf("&")
-      );
-      console.log("The start time is", startTime);
-      endTime = url.substring(
-        url.lastIndexOf("=") + 1,
-        url.lastIndexOf(url.charAt(url.length))
-      );
-      console.log("The end time is", endTime);
-      let stringArray = [rootUrl, startTime, endTime];
-      return stringArray;
-    } else {
-      rootUrl = url;
-      let stringArray = [rootUrl, "", ""];
-      return stringArray;
-    }
-  }
 }
 
 console.log("Test the URL string generator", urlStringGenerator("https://www.youtube.com/watch?v=tLeu22wenlg?start=5&end=12"))

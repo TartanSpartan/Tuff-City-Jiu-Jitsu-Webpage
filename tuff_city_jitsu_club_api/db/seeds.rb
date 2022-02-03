@@ -162,6 +162,13 @@ instructor_qualification_array = ["Assistant Instructor", "Instructor", "Club In
 
 belts_requiring_instructor_qualifications_array = [5,3,1] # Here this denotes for which grades a user requires an instructor qualification to be able to grade to the next one up: green, light blue and brown.
 
+# Create a dummy qualification for white belts just so this can be instantiated on user sign up
+Qualification.create!({
+    belt_id: 8,
+    level: "Unqualified!"
+})
+
+
 instructor_qualification_array.size.times do |y|
     belt = belts_requiring_instructor_qualifications_array[y]
     qualification = instructor_qualification_array[y]

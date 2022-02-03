@@ -1,5 +1,5 @@
 class Api::V1::UsersController < Api::ApplicationController
-    before_action :authenticate_user!, except: [:index, :show, :create]
+    before_action :authenticate_user!, only: [:current]
     before_action :find_user, only: [:show, :update, :destroy]
 
     rescue_from(ActiveRecord:: RecordNotFound, with: :record_not_found)
@@ -15,7 +15,22 @@ class Api::V1::UsersController < Api::ApplicationController
     end
 
     def create
+        user_params = params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
         user = User.new user_params
+
+        # user = User.new first_name: params["first_name"], last_name: params["last_name"], email: params["email"]
+
+        user.save!
+        user.inspect
+
+        # Next, we need to create a belt grade for the user, setting the belt id to 8/white, and the admin can update it later
+        belt_grade = BeltGrade.new user_id: user.id, belt_id: "8"
+        belt_grade.save!
+
+        # And an instructor qualification (likewise, null for now)
+        instructor_qualification = InstructorQualification.new user_id: user.id, belt_grade_id: belt_grade.id, belt_id: "8", qualification_id: "1" # May have to change this last number, after database reset
+        instructor_qualification.save!
+
         if user.save
             session[:user_id] = user.id
             render json: {id: user.id}

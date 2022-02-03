@@ -290,7 +290,7 @@ export const InstructorQualification = {
     }).then((res) => res.json());
   },
 
-  // Fetch all technique types from the server
+  // Fetch all instructor qualifications from the server
   all() {
     return fetch(`${process.env.REACT_APP_BASE_URL}/instructor_qualifications`, {
       credentials: "include",
@@ -313,6 +313,53 @@ export const InstructorQualification = {
   update(id, params) {
     console.log("this is from request js and the instructor qualification params", params);
     return fetch(`${process.env.REACT_APP_BASE_URL}/instructor_qualifications/${id}`, {
+      credentials: "include",
+      method: "PATCH",
+      body: JSON.stringify(params),
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
+      return res.json();
+    });
+  },
+};
+
+export const BeltGrade = {
+
+  // Create a belt_grade
+  create(params) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/belt_grades`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ belt_grade: params }),
+    }).then((res) => res.json());
+  },
+
+  // Fetch all belt_grades from the server
+  all() {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/belt_grades`, {
+      credentials: "include",
+    }).then((res) => {
+      console.log(res);
+      return res.json();
+    });
+  },
+
+  find(id) {
+    return fetch(`${process.env.REACT_APP_BASE_URL}/belt_grades/${id}`, {
+      credentials: "include",
+    }).then((res) => {
+      console.log(res);
+      return res.json();
+    });
+  },
+
+  // Update an instructor qualification
+  update(id, params) {
+    console.log("this is from request js and the belt_grade params", params);
+    return fetch(`${process.env.REACT_APP_BASE_URL}/belt_grades/${id}`, {
       credentials: "include",
       method: "PATCH",
       body: JSON.stringify(params),
