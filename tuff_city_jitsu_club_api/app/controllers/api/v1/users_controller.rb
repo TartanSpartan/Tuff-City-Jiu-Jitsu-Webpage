@@ -11,6 +11,7 @@ class Api::V1::UsersController < Api::ApplicationController
 
     def index
         users = User.order(created_at: :desc)
+        puts "These are the users", users
         render(json: users)
     end
 

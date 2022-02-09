@@ -51,6 +51,8 @@ instructor_user = User.create(
     # training_bubble_id: "Seumas Finlayson" # The other instructor, a brown belt new to the region
 )
 
+puts "This is the first user", admin_user.id
+
 s = Syllabus.create(country:"canada", user_id:1)
 s.save!
 
@@ -119,7 +121,7 @@ BeltGrade.create({user_id:2,belt_id:4}) # Likewise for David the 4th Kyu aka pur
         first_aid_achievement_date = nil
         first_aid_expiry_date = nil
     end
-    User.create(
+    u = User.create(
     first_name: first_name,
     last_name: last_name,
     email: "#{first_name.downcase}.#{last_name.downcase}@usermail.com",
@@ -132,23 +134,31 @@ BeltGrade.create({user_id:2,belt_id:4}) # Likewise for David the 4th Kyu aka pur
     # instructor_qualification_id: instatiate this
     # training_bubble_id: "random"
     )
-
+    belts = Belt.all
+    puts "Are they valid?", u.valid?
+    if u.valid?    
+        puts "Entering the Belt Grade loop"
+        BeltGrade.create({
+            user_id: u.id,
+            belt_id: belts.sample.id # Might not need .all
+        })
+    end
 end
 
 users = User.all
 belts = Belt.all
 # beltgrades = BeltGrade.all
 
-20.times do
-    user = users.sample
-    belt = belts.sample
-    puts "Generating belt grades", users.sample, belts.sample
-    BeltGrade.create({
-        user_id: user.id,
-        belt_id: belt.id
-    })
-    puts "Belt grades are", BeltGrade.all
-end
+# 120.times do
+#     user = users.sample
+#     belt = belts.sample
+#     puts "Generating belt grades", users.sample, belts.sample
+#     BeltGrade.create({
+#         user_id: user.id,
+#         belt_id: belt.id
+#     })
+#     puts "Belt grades are", BeltGrade.all
+# end
 
 first_aid_qualifications = "First Aid & CPR" # Here we assume that a member will qualify for both First Aid and CPR simultaneously; therefore no need for an array, a string is sufficient
 instructor_qualification_array = ["Assistant Instructor", "Instructor", "Club Instructor"] # A member can only have one of these at a time, and each successive one supplants the last

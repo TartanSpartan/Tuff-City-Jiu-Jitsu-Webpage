@@ -18,6 +18,7 @@ import { WhoAreWe } from "./WhoAreWe";
 import TechniqueUpdatePage from "./TechniqueUpdatePage";
 // import TechniqueGenerationEngine from "./TechniqueGenerationEngine";
 import { AdminPage } from "./AdminPage";
+import "react-datetime/css/react-datetime.css";
 import '../App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';

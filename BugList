@@ -55,3 +55,13 @@ Fixed. I think. Check!
 Both:
 
 15. Code cleanup, remove redundant print statements and commented out blocks which will never be used
+
+
+
+Add new feature:
+
+Make each component in it's own folder, this looks good for potential employers
+
+Instead of doing BeltGrade request in front end, instead get all the users and belt_grades and return them as one object, using the models with belongs_to etc
+
+More secure to do stuff in the back end

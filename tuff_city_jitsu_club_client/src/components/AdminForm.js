@@ -3,10 +3,14 @@ import { User } from "../requests";
 import { Form } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
+import Datetime from 'react-datetime';
 import "../App.scss";
+
 
 export default AdminForm;
 function AdminForm(props) {
+  console.log("These are the props for the admin form", props);
+
   function handleSubmit(event) {
     event.preventDefault();
     const { currentTarget } = event;
@@ -28,6 +32,8 @@ function AdminForm(props) {
   }
   const { errors } = props;
 
+  console.log("This is what we're trying to use for the menu", props.createSelectItems)
+  // console.log("These are the belt grades", this.state.belt_grades);
   return (
     <Form onSubmit={handleSubmit}>
       {/* {errors.length > 0 ? (
@@ -52,10 +58,77 @@ function AdminForm(props) {
           as="select"
           defaultValue="Please select"
         >
-          {/* <option id={1}>David </option> */}
-          {/* <option type="select" onChange={this.onDropdownSelected} label="Please Select">
-              {this.createSelectItems()}
-          </option> */}
+          <option type="select" onChange={props.onDropdownSelected} label="Please Select">
+          </option>
+          {props.createSelectItems}
+        </Form.Control>
+      </Form.Group>
+      <Form.Group controlId="formBasicGrade">
+        <Form.Label>What is their Jitsu grade?</Form.Label>
+        <Form.Control
+          className="color-belt"
+          name="belt"
+          type="belt"
+          as="select"
+          value={props.users}
+          onChange={props.changeSelectColorHandler}
+        >
+                    <option
+            className="gradecoloroption"
+            style={{ backgroundColor: "white" }}
+            value={8}
+          >
+            White{" "}
+          </option>
+          <option
+            className="gradecoloroption"
+            style={{ backgroundColor: "yellow" }}
+            value={7}
+          >
+            Yellow{" "}
+          </option>
+          <option
+            className="gradecoloroption"
+            style={{ backgroundColor: "orange" }}
+            value={6}
+          >
+            Orange
+          </option>
+          <option
+            className="gradecoloroption"
+            style={{ backgroundColor: "green" }}
+            value={5}
+          >
+            Green
+          </option>
+          <option
+            className="gradecoloroption"
+            style={{ backgroundColor: "purple" }}
+            value={4}
+          >
+            Purple
+          </option>
+          <option
+            className="gradecoloroption"
+            style={{ backgroundColor: "#add8e6", color: "black" }}
+            value={3}
+          >
+            Light Blue
+          </option>
+          <option
+            className="gradecoloroption"
+            style={{ backgroundColor: "#00008b" }}
+            value={2}
+          >
+            Dark Blue{" "}
+          </option>
+          <option
+            className="gradecoloroption"
+            style={{ backgroundColor: "#b5651d" }}
+            value={1}
+          >
+            Brown
+          </option>
         </Form.Control>
       </Form.Group>
       <Form.Group controlId="formBasicGi">
@@ -68,8 +141,7 @@ function AdminForm(props) {
         //   onChange={props.changeSelectColorHandler}
         >
                 <option value={false}>Please select </option>
-                <option value={false}>No </option>
-                <option value={false}>No (but we've ordered one for them) </option>
+                <option value={false}>Not yet </option>
                 <option value={true}>Yes </option>
         </Form.Control>
       </Form.Group>
@@ -88,6 +160,57 @@ function AdminForm(props) {
                 <option value={true}>Yes, it's recent and active </option>
         </Form.Control>
       </Form.Group>
+      <Form.Group controlId="formBasicFirstAidDate">
+        <Form.Label>If so, when did they achieve the first aid qualification?</Form.Label>
+        {/* <Form.Control
+          className="first-aid-date"
+          type="first-aid-date"
+          // as="select"
+          // required={true}
+        //   onChange={props.changeSelectColorHandler}
+        > */}
+          <Datetime
+          required={true}
+          className="qualification-date"
+          />
+
+
+        {/* </Form.Control> */}
+      </Form.Group>
+      <Form.Group controlId="formBasicInstructorQualification">
+        <Form.Label>Do they have an instructor qualification?</Form.Label>
+        <Form.Control
+          className="instructor-qualification"
+          type="instructor-qualification"
+          as="select"
+          required={true}
+        //   onChange={props.changeSelectColorHandler}
+        >
+                <option>Please select </option>
+                <option value={0}>No qualifications </option>
+                <option value={1}>Assistant Instructor </option>
+                <option value={2}>Instructor </option>
+                <option value={2}>Club Instructor </option>
+        </Form.Control>
+      </Form.Group>
+      <Form.Group controlId="formBasicInstructorQualification">
+        <Form.Label>If so, when did they achieve the most recent instructor qualification?</Form.Label>
+        {/* <Form.Control
+          className="first-aid-date"
+          type="first-aid-date"
+          // as="select"
+          // required={true}
+        //   onChange={props.changeSelectColorHandler}
+        > */}
+          <Datetime
+          className="qualification-date"
+          required={true}
+          />
+        {/* </Form.Control> */}
+      </Form.Group> 
+      <Button variant="primary" type="submit">
+        Update
+      </Button>     
     </Form>
   );
 }

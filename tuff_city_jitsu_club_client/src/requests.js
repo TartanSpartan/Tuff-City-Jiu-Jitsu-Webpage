@@ -338,7 +338,7 @@ export const BeltGrade = {
   },
 
   // Fetch all belt_grades from the server
-  all() {
+  getAll() {
     return fetch(`${process.env.REACT_APP_BASE_URL}/belt_grades`, {
       credentials: "include",
     }).then((res) => {
@@ -349,14 +349,13 @@ export const BeltGrade = {
 
   find(id) {
     return fetch(`${process.env.REACT_APP_BASE_URL}/belt_grades/${id}`, {
-      credentials: "include",
     }).then((res) => {
       console.log(res);
       return res.json();
     });
   },
 
-  // Update an instructor qualification
+  // Update a belt grade
   update(id, params) {
     console.log("this is from request js and the belt_grade params", params);
     return fetch(`${process.env.REACT_APP_BASE_URL}/belt_grades/${id}`, {
