@@ -14,7 +14,7 @@ class UserSerializer < ActiveModel::Serializer
   # :updated_at
 )
 has_many :belt_grades
-has_many :instructor_qualifications
+has_one :instructor_qualification
 # belongs_to :belt_grades, key :user_id
   class BeltGradesSerializer < ActiveModel::Serializer
     attributes(

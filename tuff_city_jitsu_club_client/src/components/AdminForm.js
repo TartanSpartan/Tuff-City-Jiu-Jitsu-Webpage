@@ -4,6 +4,7 @@ import { Form } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 import Datetime from 'react-datetime';
+import moment from "moment";
 import "../App.scss";
 
 
@@ -13,6 +14,7 @@ function AdminForm(props) {
 
   const [isUserSelected, setUserSelection] = useState(false);
   const [userInformation, setUserInformation] = useState(null);
+  console.log("This is userInformation", userInformation && userInformation.instructor_qualification);
 
   function twoCalls(event) {
     
@@ -65,6 +67,9 @@ function AdminForm(props) {
 
   console.log("This is what we're trying to use for the menu", props.createSelectItems)
   // console.log("These are the belt grades", this.state.belt_grades);
+  
+  console.log("This is the achievement date", userInformation != null ? userInformation.instructor_qualification.achieved_at : 0)
+
   return (
     <Form onSubmit={handleSubmit}>
       {/* {errors.length > 0 ? (
@@ -102,7 +107,7 @@ function AdminForm(props) {
           name="belt"
           type="select"
           as="select"
-          // disabled={!isUserSelected}
+          disabled={!isUserSelected}
           value={userInformation != null ? Number(userInformation.belt_grades[0].belt_id) : 0}
           // defaultValue={props.users[i].belt_grades[0].belt_id}
           onChange={props.changeSelectColorHandler}
@@ -174,6 +179,8 @@ function AdminForm(props) {
           name="owns_gi"
           as="select"
           required={true}
+          value={userInformation != null ? userInformation.owns_gi : 0}
+
           // defaultValue={props.selectedUser.owns_gi}
           // // defaultValue={props.users[i].owns_gi}
           // onChange={props.changeSelectColorHandler}
@@ -192,7 +199,7 @@ function AdminForm(props) {
           type="first-aid"
           as="select"
           required={true}
-        // defaultValue={props.users[i].has_first_aid_qualification}
+          value={userInformation != null ? userInformation.has_first_aid_qualification : 0}
         //   onChange={props.changeSelectColorHandler}
         >
                 <option value={false}>Please select </option>
@@ -215,6 +222,13 @@ function AdminForm(props) {
             required={true}
             className="qualification-date"
             name="first_aid_achievement_date"
+            // value="11/22/2020 4:00 PM"
+            value={userInformation != null ? new Date(userInformation.first_aid_achievement_date).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0}
+            
+            // value={new Date('2020-11-22T00:00:00.000Z').toLocaleDateString()}
+            // value={userInformation != null ? moment().toDate(userInformation.first_aid_achievement_date) : 0}
+            // For some reason that's returning today's date instead of the one we intend!
+            
           // defaultValue={props.users[i].first_aid_achievement_date}
 
           />
@@ -231,14 +245,15 @@ function AdminForm(props) {
           type="instructor-qualification"
           as="select"
           required={true}
+          value={userInformation != null ? userInformation.instructor_qualification.qualification_id : 0}
         // defaultValue={props.users[i].instructor_qualifications[0].qualification_id}
         //   onChange={props.changeSelectColorHandler}
         >
                 <option>Please select </option>
-                <option value={0}>No qualifications </option>
-                <option value={1}>Assistant Instructor </option>
-                <option value={2}>Instructor </option>
-                <option value={2}>Club Instructor </option>
+                <option value={1}>No qualifications </option>
+                <option value={2}>Assistant Instructor </option>
+                <option value={3}>Instructor </option>
+                <option value={4}>Club Instructor </option>
         </Form.Control>
       </Form.Group>
       <Form.Group controlId="formBasicInstructorQualification">
@@ -255,8 +270,16 @@ function AdminForm(props) {
           className="qualification-date"
           required={true}
           name="instructor_qualification_achievement_date"
+          // value={userInformation != null ? moment().toDate(userInformation.instructor_qualifications[0].achieved_at) : 0}
+          // value={userInformation != null ? new Date(userInformation.first_aid_achievement_date).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0}
+
+          value={userInformation != null ? new Date(userInformation && userInformation.instructor_qualification.achieved_at).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0}
+          // This one is a struggle to populate!
+
           // defaultValue={props.users[i].instructor_qualifications[0].achieved_at}
-          />
+          >
+            {/* {console.log("Probing userInformation", userInformation && userInformation.instructor_qualifications.achieved_at)} */}
+            </Datetime>
         {/* </Form.Control> */}
       </Form.Group> 
       <Button disabled={!isUserSelected} variant="primary" type="submit">

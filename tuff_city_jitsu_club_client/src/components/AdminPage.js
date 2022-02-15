@@ -25,6 +25,8 @@ function createSelectItems(users) {
   return items;
 }
 
+// Change instructor_qualifications from an array into an object, on the Rails side
+
 // function AdminPage(props) {
 export class AdminPage extends React.Component {
   constructor(props) {
@@ -63,6 +65,7 @@ export class AdminPage extends React.Component {
   }
 
   onDropdownSelected(e, users) {
+    console.log("This is the selected user", users[e.target.value]);
     return users[e.target.value];
   }
 

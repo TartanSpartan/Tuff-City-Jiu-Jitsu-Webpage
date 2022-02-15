@@ -3,7 +3,7 @@ class User < ApplicationRecord
     # has_many :posts, dependent: :nullify # note: uncomment when posts are added to the website
     # has_many :comments, dependent: :nullify # note: uncomment when comments are added to the website
     has_one :syllabus # note: uncomment when syllabus is added to the website
-    has_many :instructor_qualifications
+    has_one :instructor_qualification
     has_many :belt_grades
     has_secure_password
 
