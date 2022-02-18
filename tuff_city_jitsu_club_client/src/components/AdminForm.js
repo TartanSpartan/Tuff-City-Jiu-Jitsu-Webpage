@@ -7,7 +7,6 @@ import Datetime from 'react-datetime';
 import moment from "moment";
 import "../App.scss";
 
-
 export default AdminForm;
 
 function howRecentlyAchieved(achievementDate, expiryDate){
@@ -229,8 +228,8 @@ function AdminForm(props) {
           as="select"
           required={true}
           // value={userInformation != null ? (userInformation.has_first_aid_qualification != null ? (howRecentlyAchieved(userInformation.first_aid_achievement_date, new Date().toLocaleString("en-US").replace(',', '').replace(':00 ', ' '))[0] != true ? "Yes, but they need to renew it" : "Yes, it's recent and active" ) : "No") : 0}
-          value={userInformation != null ? (userInformation.first_aid_achievement_date != null ? (howRecentlyAchieved(userInformation.first_aid_achievement_date, new Date().toLocaleString("en-US").replace(',', '').replace(':00 ', ' '))[0]) : 0) : 0 }
-
+          value={isUserSelected ? userInformation.first_aid_achievement_date != null ? true : false : false }
+        //(userInformation.first_aid_achievement_date != null ? (howRecentlyAchieved(userInformation.first_aid_achievement_date, new Date().toLocaleString("en-US").replace(',', '').replace(':00 ', ' '))[0]) : 0) : 0 
         //   onChange={props.changeSelectColorHandler}
         >
                 <option>Please select </option>
@@ -248,13 +247,20 @@ function AdminForm(props) {
         //   onChange={props.changeSelectColorHandler}
         > */}
         {console.log("Testing values for the first aid achievement date", userInformation != null ? (userInformation.first_aid_achievement_date != null ? new Date(userInformation.first_aid_achievement_date).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0) : 0)}
+          {isUserSelected ? 
           <Datetime
             inputProps={{disabled: !isUserSelected}}
             required={true}
             className="qualification-date"
             name="first_aid_achievement_date"
+            value={isUserSelected ? userInformation.first_aid_achievement_date != null ? new Date(userInformation.first_aid_achievement_date) : 'Please select a date' : ''}
+            // initialValue={isUserSelected ? moment(userInformation.first_aid_achievement_date).utc().format("MM/DD/YYYY") : 'Please select a date'}
+            dateFormat="MM/DD/YYYY"
+            // initialValue={isUserSelected ? new Date(userInformation.first_aid_achievement_date) : 'Please select a date'}
             // value="11/22/2020 4:00 PM"
-            value={userInformation != null ? (userInformation.first_aid_achievement_date != null ? new Date(userInformation.first_aid_achievement_date).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0) : 0}
+            // value={userInformation != null ? userInformation.first_aid_achievement_date != null ? moment(userInformation.first_aid_achievement_date).utc().format('DD MM, YYYY') : 0 : 0}
+            // userInformation != null ? (userInformation.first_aid_achievement_date != null ? new Date(userInformation.first_aid_achievement_date) : 0) : 0
+            // value={userInformation != null ? (userInformation.first_aid_achievement_date != null ? new Date(userInformation.first_aid_achievement_date).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0) : 0}
             
             // value={new Date('2020-11-22T00:00:00.000Z').toLocaleDateString()}
             // value={userInformation != null ? moment().toDate(userInformation.first_aid_achievement_date) : 0}
@@ -262,8 +268,7 @@ function AdminForm(props) {
             
           // defaultValue={props.users[i].first_aid_achievement_date}
 
-          />
-
+          /> : ""}
 
         {/* </Form.Control> */}
       </Form.Group>
@@ -276,7 +281,8 @@ function AdminForm(props) {
           type="instructor-qualification"
           as="select"
           required={true}
-          value={userInformation != null ? (userInformation.instructor_qualification != null ? userInformation.instructor_qualification.qualification_id : 0) : 0}
+          value={isUserSelected ? userInformation.instructor_qualification != null ? userInformation.instructor_qualification.qualification_id : 1 : 0}
+          //(userInformation.instructor_qualification != null ? userInformation.instructor_qualification.qualification_id : 0) : 0
         // defaultValue={props.users[i].instructor_qualifications[0].qualification_id}
         //   onChange={props.changeSelectColorHandler}
         >
@@ -288,25 +294,31 @@ function AdminForm(props) {
         </Form.Control>
       </Form.Group>
       <Form.Group controlId="formBasicInstructorQualification">
+        {/* {isUserSelected != null ? userInformation.instructor_qualification : 0} */}
         <Form.Label>If so, when did they achieve the most recent instructor qualification?</Form.Label>
         {console.log("Testing values for the instructor qualification achievement date", userInformation != null ? (userInformation.instructor_qualification != null ? (userInformation.instructor_qualification.qualification_id !== 1 ? new Date(userInformation && userInformation.instructor_qualification.achieved_at).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : "") : 0) : 0)}
-
-          <Datetime
+          {isUserSelected ? <Datetime
           inputProps={{disabled: !isUserSelected}}
           className="qualification-date"
           required={true}
           name="instructor_qualification_achievement_date"
+          dateFormat="MM/DD/YYYY"
+          value={isUserSelected ? userInformation.instructor_qualification != null ? userInformation.instructor_qualification.qualification_id != 1 ? new Date(userInformation.instructor_qualification.achieved_at) : 'Please select a date' : 'Please select a date' : 'Please select a date'}
+          // initialValue={isUserSelected ? moment(userInformation.instructor_qualification.achieved_at).format("MM/DD/YYYY HH:mm A") : 'Please select a date'}
           // value={userInformation != null ? moment().toDate(userInformation.instructor_qualifications[0].achieved_at) : 0}
           // value={userInformation != null ? new Date(userInformation.first_aid_achievement_date).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0}
 
           // Intentionally do not render the "achievement date" if a user has not, in fact, achieved a qualification!
-          value={userInformation != null ? (userInformation.instructor_qualification != null ? (userInformation.instructor_qualification.qualification_id !== 1 ? new Date(userInformation && userInformation.instructor_qualification.achieved_at).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : "") : 0) : 0}
+          
+          // value={userInformation != null ? (userInformation.instructor_qualification != null ? (userInformation.instructor_qualification.qualification_id !== 1 ? new Date(userInformation && userInformation.instructor_qualification.achieved_at).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : "") : 0) : 0}
           // This one is a struggle to populate!
 
           // defaultValue={props.users[i].instructor_qualifications[0].achieved_at}
           >
             {/* {console.log("Probing userInformation", userInformation && userInformation.instructor_qualifications.achieved_at)} */}
-            </Datetime>
+            </Datetime> 
+            : ""}
+          
         {/* </Form.Control> */}
       </Form.Group> 
       <Button disabled={!isUserSelected} variant="primary" type="submit">
