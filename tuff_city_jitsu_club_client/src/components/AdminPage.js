@@ -25,13 +25,16 @@ function createSelectItems(users) {
   return items;
 }
 
+
 // Change instructor_qualifications from an array into an object, on the Rails side
 
 // function AdminPage(props) {
 export class AdminPage extends React.Component {
   constructor(props) {
     super(props);
+    // this.onDropdownSelected = this.onDropdownSelected.bind(this);
     this.state = {
+      // user:null,
       users: [],
       dues_paid: false,
       owns_gi: false,
@@ -48,10 +51,12 @@ export class AdminPage extends React.Component {
       onDropdownSelected: "",
     };
   }
+  
 
   componentDidMount() {
     User.all().then((users) => {
       this.setState({
+        user:null,
         users: users,
         dues_paid: users.dues_paid,
         owns_gi: users.owns_gi,
@@ -66,6 +71,10 @@ export class AdminPage extends React.Component {
 
   onDropdownSelected(e, users) {
     console.log("This is the selected user", users[e.target.value]);
+    // this.setState({
+    //   user: users[e.target.value]
+    // });
+    // this.state.user = users[e.target.value];
     return users[e.target.value];
   }
 
@@ -76,6 +85,84 @@ export class AdminPage extends React.Component {
       });
     });
   }
+
+  // Need to find a way to use the current user id in functions like this!
+  updateColorBox = (event) => {
+    console.log("This is the event", event.target.value);
+    let user_id = this.state.user.id;
+
+    console.log("This s the user ID", user_id);
+    this.setState( (state) => {
+      if(state.users.length != 0){
+        if(state.users[user_id].belt_grades.length != 0){
+          state.users[user_id].belt_grades[0].belt_id = event.target.value;
+        }
+      }
+    });
+    // this.state.users[user_id].belt_grades[0].belt_id = event.target.value;
+    this.forceUpdate();
+  };
+
+  updateGiBox = (event) => {
+    let user_id = this.onDropdownSelected;
+    this.setState((state) => {
+      // state.users[user_id].owns_gi = event.target.value;
+    });
+    this.forceUpdate();
+  };
+
+  updateFirstAidBox = (event) => {
+    let user_id = this.onDropdownSelected;
+    this.setState((state) => {
+      // state.users[user_id].has_first_aid_qualification = event.target.value;
+    });
+    this.forceUpdate();
+  };
+
+  // updateFirstAidDate??? = (event) => {
+  //   let user_id = this.onDropdownSelected;
+  //   this.setState((state) => {
+  //     // state.users[user_id].first_aid_achievement_date = event.target.value;
+  //   });
+  //   this.forceUpdate();
+  // };
+
+  updateInstructorQualificationBox = (event) => {
+    let user_id = this.onDropdownSelected;
+    this.setState((state) => {
+      // state.users[user_id].instructor_qualification.qualification_id = event.target.value;
+    });
+    this.forceUpdate();
+  };
+
+  // updateInstructorQualificationsDate??? = (event) => {
+  //   let user_id = this.onDropdownSelected;
+  //   this.setState((state) => {
+  //     // state.users[user_id].instructor_qualification.achieved_at = event.target.value;
+  //   });
+  //   this.forceUpdate();
+  // };
+
+
+  handleInputChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+  simpleStringify = (object) => {
+    var simpleObject = {};
+    for (var prop in object) {
+      if (!object.hasOwnProperty(prop)) {
+        continue;
+      }
+      if (typeof object[prop] == "object") {
+        continue;
+      }
+      if (typeof object[prop] == "function") {
+        continue;
+      }
+      simpleObject[prop] = object[prop];
+    }
+    return JSON.stringify(simpleObject); // returns cleaned up JSON
+  };
 
   updatePostRequest = (data) => {
     User.update(this.state.user.id, data).then((user) => {
@@ -91,7 +178,8 @@ export class AdminPage extends React.Component {
   };
 
   render() {
-    console.log("state user ", this.state.users);
+    console.log("admin's state", this.state);
+    console.log("This!", this);
     return (
       <main>
         <div className="central">
@@ -103,8 +191,10 @@ export class AdminPage extends React.Component {
             users={this.state.users}
             errors={this.state.errors}
             key={this.state.id}
+            onSubmit={this.updatePostRequest}
             onDropdownSelected={this.onDropdownSelected}
             createSelectItems={this.state.createSelectItems}
+            changeSelectColorHandler={this.updateColorBox.bind(this)}
           />
         }
       </main>
