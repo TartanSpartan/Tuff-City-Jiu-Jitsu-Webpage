@@ -164,8 +164,9 @@ export class AdminPage extends React.Component {
     return JSON.stringify(simpleObject); // returns cleaned up JSON
   };
 
-  updatePostRequest = (data) => {
-    User.update(this.state.user.id, data).then((user) => {
+  updatePostRequest = (data, id) => {
+    console.log("data is at admin page ", data);
+    User.update(id, data).then((user) => {
       console.log(user);
       this.props.history.push(`/admin#/`); // Expect this to refresh the page, test that
       if (user.errors) {

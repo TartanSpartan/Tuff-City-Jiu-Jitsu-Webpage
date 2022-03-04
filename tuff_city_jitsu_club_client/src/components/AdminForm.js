@@ -3,40 +3,41 @@ import { User } from "../requests";
 import { Form } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
-import Datetime from 'react-datetime';
+import Datetime from "react-datetime";
 import moment from "moment";
 import "../App.scss";
 
 export default AdminForm;
 
-function howRecentlyAchieved(achievementDate, expiryDate){
+function howRecentlyAchieved(achievementDate, expiryDate) {
   let results = [];
   let maxYears = 3;
   let recentAchievement = true;
   let achievementDay = new Date(achievementDate);
   let expiryDay = new Date(expiryDate);
-  let difference = (expiryDay.getTime() - achievementDay.getTime())/(24 * 60 * 60 * 365 * 1000); // Convert to years by dividing by 24 hours, 3600 seconds in an hour, 1000ms in a 
+  let difference =
+    (expiryDay.getTime() - achievementDay.getTime()) /
+    (24 * 60 * 60 * 365 * 1000); // Convert to years by dividing by 24 hours, 3600 seconds in an hour, 1000ms in a
   if (difference < maxYears) {
     console.log("No need to refresh yet!");
-    results = [recentAchievement, difference]
+    results = [recentAchievement, difference];
     return results;
-  } else if (achievementDate === null ) {
-    console.log("They haven't achieved it yet!")
+  } else if (achievementDate === null) {
+    console.log("They haven't achieved it yet!");
     recentAchievement = false;
-    results = [recentAchievement, 0] // In all likelihood this condition won't be met by the render due to other checks but if it does, this is "forced" code which can be debugged if necessary
+    results = [recentAchievement, 0]; // In all likelihood this condition won't be met by the render due to other checks but if it does, this is "forced" code which can be debugged if necessary
   } else {
     console.log("Time to refresh!");
     recentAchievement = false;
-    results = [recentAchievement, difference]
+    results = [recentAchievement, difference];
     return results;
   }
 }
 
-
 // console.log("Test of howRecentlyAchieved", howRecentlyAchieved("2020-11-22T00:00:00.000Z", "2023-12-22T00:00:00.000Z"));
 
 function AdminForm(props) {
-  const forceUpdate = React.useState()[1].bind(null, {})  // see NOTE above
+  const forceUpdate = React.useState()[1].bind(null, {}); // see NOTE above
 
   console.log("These are the props for the admin form", props);
 
@@ -47,31 +48,32 @@ function AdminForm(props) {
   const [firstAid, setFirstAid] = useState(null);
   const [firstAidDate, setFirstAidDate] = useState(null);
   const [instructorQualification, setInstructorQualification] = useState(null);
-  const [instructorQualificationDate, setInstructorQualificationDate] = useState(null);
+  const [instructorQualificationDate, setInstructorQualificationDate] =
+    useState(null);
 
   useEffect(() => {
-    
     if (userInformation?.instructor_qualification?.achieved_at) {
-      setInstructorQualificationDate(new Date(moment(userInformation.instructor_qualification.achieved_at).format("MM/DD/YYYY hh:mm")))
+      setInstructorQualificationDate(
+        new Date(
+          moment(userInformation.instructor_qualification.achieved_at).format(
+            "MM/DD/YYYY hh:mm"
+          )
+        )
+      );
     }
   }, [userInformation]);
 
   // Use a function to add to the userInformation object
-  console.log("This is userInformation", userInformation && userInformation.instructor_qualification);
+  console.log(
+    "This is userInformation",
+    userInformation && userInformation.instructor_qualification
+  );
 
   // Use the following function (actually do it inside of handleSubmit) to validate the form and check that the admin has actually made changes to the user and if so then update the information on the back end
   function twoCalls(event) {
-    // let object = {}
-    // if(userInformation.belt_id != grade){
-    //   object.belt_id = grade;
-    // } else {
-    //   delete object.belt_id;
-    // }
-
     // console.log(event);
 
     // console.log("user informations", userInformation);
-
 
     // let userValue = Number(props.onDropdownSelected(event, users)) + 1;
     // console.log(userValue);
@@ -90,11 +92,11 @@ function AdminForm(props) {
     setUserSelection(true);
   }
 
-  function updateColorBox(event){
-    setGrade(event.target.value)
-  };
+  function updateColorBox(event) {
+    setGrade(event.target.value);
+  }
 
-  function updateGiBox(event){
+  function updateGiBox(event) {
     setGi(event.target.value);
     console.log("GI when we set", gi);
     console.log("Event target value GI", event.target.value);
@@ -102,30 +104,29 @@ function AdminForm(props) {
     // forceUpdate();
   }
 
-  function updateFirstAidBox(event){
+  function updateFirstAidBox(event) {
     setFirstAid(event.target.value);
   }
 
-  function updateFirstAidDate(event){
+  function updateFirstAidDate(event) {
     console.log("This is the event", new Date(event).toLocaleString());
     setFirstAidDate(new Date(event).toLocaleString());
   }
 
-  function updateInstructorQualificationBox(event){
+  function updateInstructorQualificationBox(event) {
     setInstructorQualification(event.target.value);
   }
 
-  function updateInstructorQualificationDate(event){
+  function updateInstructorQualificationDate(event) {
     setInstructorQualificationDate(new Date(event).toLocaleString());
   }
 
-
   function handleSubmit(event) {
-    event.preventDefault();
-    const { currentTarget } = event;
-    const formData = new FormData(currentTarget);
+    // event.preventDefault();
+    // const { currentTarget } = event;
+    // const formData = new FormData(currentTarget);
 
-    // props.onSubmit({
+    // const data = {
     //   dues_paid: formData.get("dues_paid"),
     //   owns_gi: formData.get("owns_gi"),
     //   has_first_aid_qualification: formData.get("has_first_aid_qualification"),
@@ -136,32 +137,93 @@ function AdminForm(props) {
     //   instructor_qualification_achievement_date: formData.get(
     //     "instructor_qualification_achievement_date"
     //   ),
-    // });
+    // }
+    // console.log("This is handleSubmit", data)
+    // currentTarget.reset();
 
-    const data = {
-      dues_paid: formData.get("dues_paid"),
-      owns_gi: formData.get("owns_gi"),
-      has_first_aid_qualification: formData.get("has_first_aid_qualification"),
-      first_aid_achievement_date: formData.get("first_aid_achievement_date"),
-      first_aid_expiry_date: formData.get("first_aid_expiry_date"),
-      belt: formData.get("belt"),
-      instructor_qualification: formData.get("instructor_qualification"),
-      instructor_qualification_achievement_date: formData.get(
-        "instructor_qualification_achievement_date"
-      ),
+    // format the instructor_qualification_achieved_at using moment
+    console.log("This is the start of handleSubmit");
+    let object = {
+      belt_id: null,
+      owns_gi: null,
+      has_first_aid_qualification: null,
+      first_aid_achievement_date: null,
+      instructor_qualification: {
+        qualification_id: null,
+        achieved_at: null,
+      },
+    };
+    if (userInformation != null) {
+      if (userInformation.belt_id != grade) {
+        object.belt_id = grade;
+      } else {
+        delete object.belt_id;
+      }
+
+      if (userInformation.owns_gi != gi) {
+        object.owns_gi = gi;
+      } else {
+        delete object.owns_gi;
+      }
+
+      if (userInformation.has_first_aid_qualification != firstAid) {
+        object.has_first_aid_qualification = firstAid;
+      } else {
+        delete object.has_first_aid_qualification;
+      }
+
+      if (userInformation.first_aid_achievement_date != firstAidDate) {
+        object.first_aid_achievement_date = firstAidDate;
+      } else {
+        delete object.first_aid_achievement_date;
+      }
+
+      if (
+        userInformation.instructor_qualification.qualification_id !=
+        instructorQualification
+      ) {
+        object.instructor_qualification.qualification_id =
+          instructorQualification;
+      } else {
+        delete object.instructor_qualification.qualification_id;
+      }
+
+      if (
+        moment(userInformation.instructor_qualification.achieved_at).format(
+          "DD-MM-YYYY"
+        ) != moment(instructorQualificationDate).format("DD-MM-YYYY")
+      ) {
+        object.instructor_qualification.achieved_at =
+          instructorQualificationDate;
+      } else {
+        delete object.instructor_qualification.achieved_at;
+        console.log(Object.keys(object.instructor_qualification));
+        if (Object.keys(object.instructor_qualification).length == 0) {
+          delete object.instructor_qualification;
+        }
+      }
+      console.log("This is the object for checking against the server", object);
+
+      // CHECK FOR THAT IF ELSE SECTIONS, DOES IT WORK
+      if (Object.keys(object).length != 0) {
+        props.onSubmit(object, userInformation.id);
+      } else {
+        alert("You did not change anything!");
+      }
     }
-    console.log("This is handleSubmit", data)
-    currentTarget.reset();
   }
   const { errors } = props;
 
-  console.log("This is what we're trying to use for the menu", props.createSelectItems)
+  console.log(
+    "This is what we're trying to use for the menu",
+    props.createSelectItems
+  );
   // console.log("These are the belt grades", this.state.belt_grades);
-  
+
   // console.log("This is the achievement date", userInformation != null ? (userInformation.instructor_qualification.achieved_at != null ? userInformation.instructor_qualification.achieved_at : 0) : 0)
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form>
       {/* {errors.length > 0 ? (
         <div className="ui negative message FormErrors">
           <Alert variant="danger">
@@ -172,7 +234,9 @@ function AdminForm(props) {
       ) : null} */}
 
       <Form.Group controlId="formBasicAdmin">
-        <Form.Label id="top-label">Update user information regarding grade, qualifications etc</Form.Label>
+        <Form.Label id="top-label">
+          Update user information regarding grade, qualifications etc
+        </Form.Label>
         <br />
         <br />
         <Form.Label name="user-choice">
@@ -185,8 +249,7 @@ function AdminForm(props) {
           defaultValue="Please select"
           onChange={twoCalls}
         >
-          <option type="select" label="Please Select">
-          </option>
+          <option type="select" label="Please Select"></option>
           {props.createSelectItems}
         </Form.Control>
       </Form.Group>
@@ -272,14 +335,13 @@ function AdminForm(props) {
           value={userInformation != null ? gi : 0}
           onChange={updateGiBox}
 
-
           // defaultValue={props.selectedUser.owns_gi}
           // // defaultValue={props.users[i].owns_gi}
           // onChange={props.changeSelectColorHandler}
         >
-                <option value={0}>Please select </option>
-                <option value={false}>Not yet </option>
-                <option value={true}>Yes </option>
+          <option value={0}>Please select </option>
+          <option value={false}>Not yet </option>
+          <option value={true}>Yes </option>
         </Form.Control>
       </Form.Group>
       <Form.Group controlId="formBasicFirstAid">
@@ -297,16 +359,20 @@ function AdminForm(props) {
           value={userInformation != null ? firstAid : 0}
           // value={userInformation != null ? (userInformation.has_first_aid_qualification != null ? (howRecentlyAchieved(userInformation.first_aid_achievement_date, new Date().toLocaleString("en-US").replace(',', '').replace(':00 ', ' '))[0] != true ? "Yes, but they need to renew it" : "Yes, it's recent and active" ) : "No") : 0}
           // value={isUserSelected ? userInformation.first_aid_achievement_date != null ? true : false : false }
-        //(userInformation.first_aid_achievement_date != null ? (howRecentlyAchieved(userInformation.first_aid_achievement_date, new Date().toLocaleString("en-US").replace(',', '').replace(':00 ', ' '))[0]) : 0) : 0 
+          //(userInformation.first_aid_achievement_date != null ? (howRecentlyAchieved(userInformation.first_aid_achievement_date, new Date().toLocaleString("en-US").replace(',', '').replace(':00 ', ' '))[0]) : 0) : 0
           onChange={updateFirstAidBox}
         >
-                <option>Please select </option>
-                <option value={false}>No, or they do but they need to renew it</option>
-                <option value={true}>Yes, it's recent and active</option>
+          <option>Please select </option>
+          <option value={false}>
+            No, or they do but they need to renew it
+          </option>
+          <option value={true}>Yes, it's recent and active</option>
         </Form.Control>
       </Form.Group>
       <Form.Group controlId="formBasicFirstAidDate">
-        <Form.Label >If so, when did they achieve the first aid qualification?</Form.Label>
+        <Form.Label>
+          If so, when did they achieve the first aid qualification?
+        </Form.Label>
         {/* <Form.Control
           className="first-aid-date"
           type="first-aid-date"
@@ -314,14 +380,31 @@ function AdminForm(props) {
           // required={true}
         //   onChange={props.changeSelectColorHandler}
         > */}
-        {console.log("Testing values for the first aid achievement date", userInformation != null ? (userInformation.first_aid_achievement_date != null ? new Date(userInformation.first_aid_achievement_date).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0) : 0)}
-          {isUserSelected ? 
+        {console.log(
+          "Testing values for the first aid achievement date",
+          userInformation != null
+            ? userInformation.first_aid_achievement_date != null
+              ? new Date(userInformation.first_aid_achievement_date)
+                  .toLocaleString("en-US")
+                  .replace(",", "")
+                  .replace(":00 ", " ")
+              : 0
+            : 0
+        )}
+        {isUserSelected ? (
           <Datetime
-            inputProps={{disabled: !isUserSelected}}
+            inputProps={{ disabled: !isUserSelected }}
             required={true}
             className="qualification-date"
             name="first_aid_achievement_date"
-            value={userInformation != null ? new Date(firstAidDate).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0}
+            value={
+              userInformation != null
+                ? new Date(firstAidDate)
+                    .toLocaleString("en-US")
+                    .replace(",", "")
+                    .replace(":00 ", " ")
+                : 0
+            }
             // value={userInformation != null ? (userInformation.first_aid_achievement_date != null ? new Date(userInformation.first_aid_achievement_date).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0) : 0}
             // value={isUserSelected ? userInformation.first_aid_achievement_date != null ? new Date(userInformation.first_aid_achievement_date) : 'Please select a date' : ''}
             // initialValue={isUserSelected ? moment(userInformation.first_aid_achievement_date).utc().format("MM/DD/YYYY") : 'Please select a date'}
@@ -331,14 +414,16 @@ function AdminForm(props) {
             // value="11/22/2020 4:00 PM"
             // value={userInformation != null ? userInformation.first_aid_achievement_date != null ? moment(userInformation.first_aid_achievement_date).utc().format('DD MM, YYYY') : 0 : 0}
             // userInformation != null ? (userInformation.first_aid_achievement_date != null ? new Date(userInformation.first_aid_achievement_date) : 0) : 0
-            
+
             // value={new Date('2020-11-22T00:00:00.000Z').toLocaleDateString()}
             // value={userInformation != null ? moment().toDate(userInformation.first_aid_achievement_date) : 0}
             // For some reason that's returning today's date instead of the one we intend!
-            
-          // defaultValue={props.users[i].first_aid_achievement_date}
 
-          /> : ""}
+            // defaultValue={props.users[i].first_aid_achievement_date}
+          />
+        ) : (
+          ""
+        )}
 
         {/* </Form.Control> */}
       </Form.Group>
@@ -355,51 +440,62 @@ function AdminForm(props) {
           // value={isUserSelected ? userInformation.instructor_qualification != null ? userInformation.instructor_qualification.qualification_id : 1 : 0}
           onChange={updateInstructorQualificationBox}
           //(userInformation.instructor_qualification != null ? userInformation.instructor_qualification.qualification_id : 0) : 0
-        // defaultValue={props.users[i].instructor_qualifications[0].qualification_id}
-        //   onChange={props.changeSelectColorHandler}
+          // defaultValue={props.users[i].instructor_qualifications[0].qualification_id}
+          //   onChange={props.changeSelectColorHandler}
         >
-                <option>Please select </option>
-                <option value={1}>No qualifications </option>
-                <option value={2}>Assistant Instructor </option>
-                <option value={3}>Instructor </option>
-                <option value={4}>Club Instructor </option>
+          <option>Please select </option>
+          <option value={1}>No qualifications </option>
+          <option value={2}>Assistant Instructor </option>
+          <option value={3}>Instructor </option>
+          <option value={4}>Club Instructor </option>
         </Form.Control>
       </Form.Group>
       <Form.Group controlId="formBasicInstructorQualificationDate">
         {/* {isUserSelected != null ? userInformation.instructor_qualification : 0} */}
-        <Form.Label>If so, when did they achieve the most recent instructor qualification?</Form.Label>
+        <Form.Label>
+          If so, when did they achieve the most recent instructor qualification?
+        </Form.Label>
         {/* {console.log("Testing values for the instructor qualification achievement date", userInformation != null ? (userInformation.instructor_qualification != null ? (userInformation.instructor_qualification.qualification_id !== 1 ? new Date(userInformation && userInformation.instructor_qualification.achieved_at).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : "") : 0) : 0)} */}
-        {console.log("Testing values for the instructor qualification achievement date", userInformation != null ? userInformation : "")}
-        
-          {isUserSelected ?
+        {console.log(
+          "Testing values for the instructor qualification achievement date",
+          userInformation != null ? userInformation : ""
+        )}
+
+        {isUserSelected ? (
           <Datetime
-          inputProps={{disabled: !isUserSelected}}
-          required={true}
-          className="qualification-date"
-          name="instructor_qualification_achievement_date"
-          // value={userInformation != null ? new Date(instructorQualificationDate).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0}
-          value={instructorQualificationDate}
-          dateFormat="MM/DD/YYYY"
-          // value={isUserSelected ? userInformation.instructor_qualification != null ? userInformation.instructor_qualification.qualification_id != 1 ? new Date(userInformation.instructor_qualification.achieved_at) : 'Please select a date' : 'Please select a date' : 'Please select a date'}
-          onChange={updateInstructorQualificationDate}
-          // initialValue={isUserSelected ? moment(userInformation.instructor_qualification.achieved_at).format("MM/DD/YYYY HH:mm A") : 'Please select a date'}
-          // value={userInformation != null ? moment().toDate(userInformation.instructor_qualifications[0].achieved_at) : 0}
-          // value={userInformation != null ? new Date(userInformation.first_aid_achievement_date).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0}
+            inputProps={{ disabled: !isUserSelected }}
+            required={true}
+            className="qualification-date"
+            name="instructor_qualification_achievement_date"
+            // value={userInformation != null ? new Date(instructorQualificationDate).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0}
+            value={instructorQualificationDate}
+            dateFormat="MM/DD/YYYY"
+            // value={isUserSelected ? userInformation.instructor_qualification != null ? userInformation.instructor_qualification.qualification_id != 1 ? new Date(userInformation.instructor_qualification.achieved_at) : 'Please select a date' : 'Please select a date' : 'Please select a date'}
+            onChange={updateInstructorQualificationDate}
+            // initialValue={isUserSelected ? moment(userInformation.instructor_qualification.achieved_at).format("MM/DD/YYYY HH:mm A") : 'Please select a date'}
+            // value={userInformation != null ? moment().toDate(userInformation.instructor_qualifications[0].achieved_at) : 0}
+            // value={userInformation != null ? new Date(userInformation.first_aid_achievement_date).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0}
 
-          // Intentionally do not render the "achievement date" if a user has not, in fact, achieved a qualification!
-          
-          // value={userInformation != null ? (userInformation.instructor_qualification != null ? (userInformation.instructor_qualification.qualification_id !== 1 ? new Date(userInformation && userInformation.instructor_qualification.achieved_at).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : "") : 0) : 0}
-          // This one is a struggle to populate!
+            // Intentionally do not render the "achievement date" if a user has not, in fact, achieved a qualification!
 
-          // defaultValue={props.users[i].instructor_qualifications[0].achieved_at}
+            // value={userInformation != null ? (userInformation.instructor_qualification != null ? (userInformation.instructor_qualification.qualification_id !== 1 ? new Date(userInformation && userInformation.instructor_qualification.achieved_at).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : "") : 0) : 0}
+            // This one is a struggle to populate!
+
+            // defaultValue={props.users[i].instructor_qualifications[0].achieved_at}
           />
-            : ""}
-          
+        ) : (
+          ""
+        )}
+
         {/* </Form.Control> */}
-      </Form.Group> 
-      <Button disabled={!isUserSelected} variant="primary" type="submit">
+      </Form.Group>
+      <Button
+        disabled={!isUserSelected}
+        variant="primary"
+        onClick={handleSubmit}
+      >
         Update
-      </Button>     
+      </Button>
     </Form>
   );
 }

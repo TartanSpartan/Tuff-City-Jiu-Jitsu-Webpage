@@ -40,6 +40,10 @@ class Api::V1::UsersController < Api::ApplicationController
         end
     end
 
+    def update
+        
+    end
+
     # def show (check if needed)
     #     if @user
     #     render(
