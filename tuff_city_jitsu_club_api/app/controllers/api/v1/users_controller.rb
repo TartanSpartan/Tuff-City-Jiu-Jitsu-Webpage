@@ -1,5 +1,6 @@
 class Api::V1::UsersController < Api::ApplicationController
     before_action :authenticate_user!, only: [:current]
+    before_action :authorize_user!, except: [:read]
     before_action :find_user, only: [:show, :update, :destroy]
 
     rescue_from(ActiveRecord:: RecordNotFound, with: :record_not_found)
@@ -41,7 +42,43 @@ class Api::V1::UsersController < Api::ApplicationController
     end
 
     def update
-        
+        authorize_user!
+        user = User.find(params["id"])
+        # Don't think we need to do the existing belt grade approach ala technique types, because we are not creating a new belt grade, just updating an old one; have commented out the following line just in case it is useful
+        # existing_belt_grade = BeltGrade.Where(user_id: params["user_id"])[0]
+
+        # Ensure that changed params are not null/empty and if they are, don't bother to update them, using if/else statements to catch this
+        belt_grade = BeltGrade.find_by(user_id: user.id)
+        if params["belt_id"].to_i.present?
+            belt_grade.belt_id = params["belt_id"].to_i
+        else
+        end
+        belt_grade.save!
+        puts "These are the params", params
+        instructor_qualification = InstructorQualification.find_by(user_id: user.id)
+        if params.dig(:instructor_qualification, :qualification_id)
+        # if params["instructor_qualification"]["qualification_id"].to_i.present?
+            instructor_qualification.qualification_id = params["instructor_qualification"]["qualification_id"].to_i
+        else
+        end
+        if params.dig(:instructor_qualification, :achieved_at)
+            instructor_qualification.achieved_at = params["instructor_qualification"]["achieved_at"]
+        else
+        end
+        instructor_qualification.save!
+        if params["owns_gi"].present?
+            user.owns_gi = params["owns_gi"]
+        else    
+        end
+        if params["has_first_aid_qualification"].present?
+            user.has_first_aid_qualification = params["has_first_aid_qualification"]
+        else
+        end
+        if params["first_aid_achievement_date"].present?
+            user.first_aid_achievement_date = params["first_aid_achievement_date"]
+        else
+        end
+        user.save!
     end
 
     # def show (check if needed)
@@ -100,4 +137,16 @@ class Api::V1::UsersController < Api::ApplicationController
             json: { status: 422, errors:invalid_record }
         )
     end
+
+    def authorize_user!
+        # unless can? :create, @technique
+        if current_user.is_admin?
+            return
+        else
+            puts "Are you denied? Yes you are"
+            flash[:danger] = "Access Denied"
+        end
+        #   redirect_to root_path
+        # end
+    end 
 end

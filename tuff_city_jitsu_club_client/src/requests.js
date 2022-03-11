@@ -270,7 +270,8 @@ export const User = {
       body: JSON.stringify(params),
       headers: { "Content-Type": "application/json" },
     }).then((res) => {
-      return res.json();
+      // return res.json();
+      return JSON.stringify(res);
     });
   },
 

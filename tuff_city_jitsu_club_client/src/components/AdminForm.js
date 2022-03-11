@@ -79,6 +79,7 @@ function AdminForm(props) {
     // console.log(userValue);
     // console.log(event.target[userValue].getAttribute('data-set'));
     let user = props.onDropdownSelected(event, props.users);
+    console.log("This is the user in twoCalls function", user);
     // user.owns_gi = false;
     // user.has_first_aid_qualification = false;
     // user.instructor_qualification.qualification_id = false;
@@ -153,28 +154,33 @@ function AdminForm(props) {
         achieved_at: null,
       },
     };
+
     if (userInformation != null) {
       if (userInformation.belt_id != grade) {
         object.belt_id = grade;
-      } else {
+      } 
+      else {
         delete object.belt_id;
       }
 
       if (userInformation.owns_gi != gi) {
         object.owns_gi = gi;
-      } else {
+      } 
+      else {
         delete object.owns_gi;
       }
 
       if (userInformation.has_first_aid_qualification != firstAid) {
         object.has_first_aid_qualification = firstAid;
-      } else {
+      } 
+      else {
         delete object.has_first_aid_qualification;
       }
 
       if (userInformation.first_aid_achievement_date != firstAidDate) {
         object.first_aid_achievement_date = firstAidDate;
-      } else {
+      }
+      else {
         delete object.first_aid_achievement_date;
       }
 
@@ -184,7 +190,8 @@ function AdminForm(props) {
       ) {
         object.instructor_qualification.qualification_id =
           instructorQualification;
-      } else {
+      } 
+      else {
         delete object.instructor_qualification.qualification_id;
       }
 

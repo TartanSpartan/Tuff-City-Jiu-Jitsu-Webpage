@@ -35,7 +35,7 @@ Rails.application.routes.draw do
 
       resource :session, only: [:create, :destroy]
       # -> api/v1/users
-      resources :users, shallow: true, only: [:create, :new, :show, :index] do
+      resources :users, shallow: true, only: [:create, :new, :show, :index, :update] do
         # -> api/v1/users/current
         get :current, on: :collection 
         # -> /api/v1/user/:id/current
