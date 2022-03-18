@@ -13,12 +13,13 @@ class UserSerializer < ActiveModel::Serializer
   # :created_at,
   # :updated_at
 )
-has_many :belt_grades
+has_one :belt_grade
 has_one :instructor_qualification
 # belongs_to :belt_grades, key :user_id
   class BeltGradesSerializer < ActiveModel::Serializer
     attributes(
       :id,
+      :user_id,
       :belt_id
     )
   end

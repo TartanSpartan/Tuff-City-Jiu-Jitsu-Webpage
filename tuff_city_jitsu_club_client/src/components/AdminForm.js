@@ -61,6 +61,16 @@ function AdminForm(props) {
         )
       );
     }
+
+    if (userInformation?.first_aid_achievement_date) {
+      setFirstAidDate(
+        new Date(
+          moment(userInformation.first_aid_achievement_date).format(
+            "MM/DD/YYYY hh:mm"
+          )
+        )
+      );
+    }
   }, [userInformation]);
 
   // Use a function to add to the userInformation object
@@ -84,7 +94,7 @@ function AdminForm(props) {
     // user.has_first_aid_qualification = false;
     // user.instructor_qualification.qualification_id = false;
     setUserInformation(user);
-    setGrade(user.belt_grades[0].belt_id);
+    setGrade(user.belt_grade.belt_id);
     setGi(user.owns_gi);
     setFirstAid(user.has_first_aid_qualification);
     setFirstAidDate(user.first_aid_achievement_date);
@@ -371,7 +381,7 @@ function AdminForm(props) {
         >
           <option>Please select </option>
           <option value={false}>
-            No, or they do but they need to renew it
+            No, or they are but they need to renew it
           </option>
           <option value={true}>Yes, it's recent and active</option>
         </Form.Control>
@@ -404,14 +414,15 @@ function AdminForm(props) {
             required={true}
             className="qualification-date"
             name="first_aid_achievement_date"
-            value={
-              userInformation != null
-                ? new Date(firstAidDate)
-                    .toLocaleString("en-US")
-                    .replace(",", "")
-                    .replace(":00 ", " ")
-                : 0
-            }
+            value={firstAidDate}
+            // value={
+            //   userInformation != null
+            //     ? new Date(firstAidDate)
+            //         .toLocaleString("en-US")
+            //         .replace(",", "")
+            //         .replace(":00 ", " ")
+            //     : ""
+            // }
             // value={userInformation != null ? (userInformation.first_aid_achievement_date != null ? new Date(userInformation.first_aid_achievement_date).toLocaleString("en-US").replace(',', '').replace(':00 ', ' ') : 0) : 0}
             // value={isUserSelected ? userInformation.first_aid_achievement_date != null ? new Date(userInformation.first_aid_achievement_date) : 'Please select a date' : ''}
             // initialValue={isUserSelected ? moment(userInformation.first_aid_achievement_date).utc().format("MM/DD/YYYY") : 'Please select a date'}

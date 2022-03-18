@@ -60,7 +60,7 @@ class Api::V1::InstructorQualificationsController < Api::ApplicationController
     end
 
     def find_qualification
-        @qualification ||= InstructorQualification.find params[Id]
+        @qualification ||= InstructorQualification.find params[:id]
     end
 
     def record_not_found

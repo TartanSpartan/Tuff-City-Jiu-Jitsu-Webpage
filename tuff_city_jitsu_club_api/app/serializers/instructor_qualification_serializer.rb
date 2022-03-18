@@ -10,5 +10,5 @@ class InstructorQualificationSerializer < ActiveModel::Serializer
     :qualification_id
     )
 
-    belongs_to :user
+    # belongs_to :user
 end

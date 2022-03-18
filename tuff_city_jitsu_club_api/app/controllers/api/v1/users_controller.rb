@@ -56,7 +56,7 @@ class Api::V1::UsersController < Api::ApplicationController
         belt_grade.save!
         puts "These are the params", params
         instructor_qualification = InstructorQualification.find_by(user_id: user.id)
-        if params.dig(:instructor_qualification, :qualification_id)
+        if params.dig(:instructor_qualification, :qualification_id) # This is a useful way of checking for the presence of nested params
         # if params["instructor_qualification"]["qualification_id"].to_i.present?
             instructor_qualification.qualification_id = params["instructor_qualification"]["qualification_id"].to_i
         else

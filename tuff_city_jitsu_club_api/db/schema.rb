@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(version: 2022_01_19_004532) do
   enable_extension "plpgsql"
 
   create_table "belt_grades", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "belt_id", null: false
+    t.bigint "user_id"
+    t.bigint "belt_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["belt_id"], name: "index_belt_grades_on_belt_id"
@@ -34,9 +34,9 @@ ActiveRecord::Schema.define(version: 2022_01_19_004532) do
 
   create_table "instructor_qualifications", force: :cascade do |t|
     t.datetime "achieved_at"
-    t.bigint "user_id", null: false
-    t.bigint "belt_id", null: false
-    t.bigint "belt_grade_id", null: false
+    t.bigint "user_id"
+    t.bigint "belt_id"
+    t.bigint "belt_grade_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "qualification_id", null: false
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 2022_01_19_004532) do
 
   create_table "qualifications", force: :cascade do |t|
     t.string "level"
-    t.bigint "belt_id", null: false
+    t.bigint "belt_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["belt_id"], name: "index_qualifications_on_belt_id"
@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(version: 2022_01_19_004532) do
     t.string "country"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.index ["user_id"], name: "index_syllabi_on_user_id"
   end
 
@@ -81,9 +81,11 @@ ActiveRecord::Schema.define(version: 2022_01_19_004532) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "technique_type_id", null: false
     t.bigint "belt_id", null: false
+    t.bigint "video_id"
     t.integer "videourls", default: [], array: true
     t.index ["belt_id"], name: "index_techniques_on_belt_id"
     t.index ["technique_type_id"], name: "index_techniques_on_technique_type_id"
+    t.index ["video_id"], name: "index_techniques_on_video_id"
   end
 
   create_table "training_bubbles", force: :cascade do |t|
@@ -131,6 +133,7 @@ ActiveRecord::Schema.define(version: 2022_01_19_004532) do
   add_foreign_key "technique_types", "syllabi"
   add_foreign_key "techniques", "belts"
   add_foreign_key "techniques", "technique_types"
+  add_foreign_key "techniques", "videos"
   add_foreign_key "training_bubbles", "users"
   add_foreign_key "videos", "techniques"
 end
