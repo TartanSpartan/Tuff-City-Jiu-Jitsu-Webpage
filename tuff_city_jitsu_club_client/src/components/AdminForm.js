@@ -93,6 +93,12 @@ function AdminForm(props) {
     // user.owns_gi = false;
     // user.has_first_aid_qualification = false;
     // user.instructor_qualification.qualification_id = false;
+    // Use if/else to check for null data when setting these characteristics
+    // if (user.owns_gi) === null {
+      // setGi(null);
+    // } else {
+      // setGi(user.owns_gi)
+    // }
     setUserInformation(user);
     setGrade(user.belt_grade.belt_id);
     setGi(user.owns_gi);

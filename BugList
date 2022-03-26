@@ -52,6 +52,8 @@ Fixed. I think. Check!
 
 21. When the video database is corrupted, we wipe it clean and then go to edit the URLs back in. But now the props no longer have a video element, so we need a special case handling for this, so that they will just be populated in the form as blank.
 
+22. Google signup pop up includes "Tuff Citj" typo 
+
 Both:
 
 15. Code cleanup, remove redundant print statements and commented out blocks which will never be used

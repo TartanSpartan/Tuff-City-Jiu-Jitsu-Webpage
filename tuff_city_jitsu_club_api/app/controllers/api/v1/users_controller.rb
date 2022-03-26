@@ -1,6 +1,6 @@
 class Api::V1::UsersController < Api::ApplicationController
     before_action :authenticate_user!, only: [:current]
-    before_action :authorize_user!, except: [:read]
+    before_action :authorize_user!, except: [:create]
     before_action :find_user, only: [:show, :update, :destroy]
 
     rescue_from(ActiveRecord:: RecordNotFound, with: :record_not_found)

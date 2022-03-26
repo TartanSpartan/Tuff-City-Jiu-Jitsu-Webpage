@@ -1,7 +1,8 @@
 import React from "react";
 import { User } from "../requests";
-import Form from "react-bootstrap/Form"
-import Button from "react-bootstrap/Button"
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import { GoogleLogin } from "react-google-login";
 // import styled from "styled-components"
 import "../App.scss";
 
@@ -10,6 +11,35 @@ import "../App.scss";
 
 export function SignUpPage(props) {
   const { onSignUp } = props;
+
+  function handleSignUp(data){
+   console.log("This is the login data", data);
+
+  const signUpParams = {
+    first_name: data.Du.VX,
+    last_name: data.Du.iW,
+    email: data.Du.tv,
+    password: data.googleId
+   };
+
+  // let first_name = data.Du.VX;
+  // let last_name = data.Du.iW;
+  // let email = data.Du.tv;
+
+
+   console.log("This are the sign up params", signUpParams);
+
+   User.create(signUpParams).then(res => {
+    if (res.id) {
+      onSignUp();
+      props.history.push("/");
+    }
+  });
+}
+
+  const handleFailure = (data) => {
+    console.log("This is the failure data", data);
+   }
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -23,8 +53,8 @@ export function SignUpPage(props) {
       password: formData.get("password"),
       password_confirmation: formData.get("password_confirmation"),
       // New elements: check that these make sense
-      belt_grade_id: formData.get("belt_grade_id"),
-      owns_gi: formData.get("owns_gi")
+      // belt_grade_id: formData.get("belt_grade_id"),
+      // owns_gi: formData.get("owns_gi")
     };
 
     User.create(signUpParams).then(res => {
@@ -36,7 +66,19 @@ export function SignUpPage(props) {
   }
 
   return (
+    <div>
+    <GoogleLogin
+    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+    buttonText="Sign up with Google"
+    onSuccess={handleSignUp}
+    onFailure={handleFailure}
+    cookiePolicy={'single_host_origin'}
+  />
+  <br/>
+  
+
     <Form onSubmit={handleSubmit}>
+    <br/>   
     <Form.Label id="top-label">Sign up here</Form.Label>
     <Form.Group controlId="formBasicName">
       <Form.Label>First name</Form.Label>
@@ -65,6 +107,6 @@ export function SignUpPage(props) {
       Submit
     </Button>
   </Form>
-  
+  </div>
   );
 }

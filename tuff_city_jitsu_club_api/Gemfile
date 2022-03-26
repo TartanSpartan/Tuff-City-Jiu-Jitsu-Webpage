@@ -25,6 +25,8 @@ gem 'cancancan'
 gem 'rails_admin', '~> 2.0', '>= 2.0.2'
 gem 'rack-cors'
 gem 'active_model_serializers'
+gem 'omniauth-google-oauth2'
+
 
 gem 'rexml', '~> 3.2', '>= 3.2.4'
 

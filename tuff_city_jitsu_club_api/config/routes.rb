@@ -1,7 +1,13 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   # Because we are using the API ontrollers, we use namespace to interface them for routes
+  
+
+
   root :controller => 'static', :action => '/' 
+    # Routes for Google authentication
+  # get ‘auth/:provider/callback’, to: ‘sessions#googleAuth’
+  # get ‘auth/failure’, to: redirect(‘/’)
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :belt_grades
@@ -43,6 +49,8 @@ Rails.application.routes.draw do
     end
   end
 end
+
+
 
 # redirect_to root_path # redirect to /
 

@@ -17,7 +17,7 @@ class CreateUsers < ActiveRecord::Migration[6.1]
       t.datetime :first_aid_achievement_date
       t.datetime :first_aid_expiry_date
 
-
+      
       t.timestamps
     end
   end
