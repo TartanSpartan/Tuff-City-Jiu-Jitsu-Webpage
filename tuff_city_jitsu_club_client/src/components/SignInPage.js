@@ -19,6 +19,7 @@ class SignInPage extends React.Component {
 
 
     this.handleSignIn = this.handleSignIn.bind(this);
+    // this.handleGoogleSignIn = this.handleGoogleSignIn.bind(this);
     this.handleFailure = this.handleFailure.bind(this);
     this.createSession = this.createSession.bind(this);
   }
@@ -79,7 +80,6 @@ class SignInPage extends React.Component {
       cookiePolicy={'single_host_origin'}
     />
     <br/>   
-    {/* Line breaks aren't taking after this element; why not? */}
     
       <Form onSubmit={this.createSession}>
                   {errors.length > 0 ? (

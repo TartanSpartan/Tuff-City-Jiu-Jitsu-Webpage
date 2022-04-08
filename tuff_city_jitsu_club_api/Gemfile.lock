@@ -305,6 +305,7 @@ DEPENDENCIES
   faker
   hirb
   jbuilder (~> 2.7)
+  jwt
   listen (~> 3.3)
   omniauth-google-oauth2
   pg (>= 0.18, < 2.0)
