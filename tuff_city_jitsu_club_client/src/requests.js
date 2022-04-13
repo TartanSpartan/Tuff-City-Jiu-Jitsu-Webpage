@@ -1,5 +1,32 @@
 //const REACT_APP_BASE_URL = `http://localhost:3000/api/v1`;
 
+function getJwt(){
+  return localStorage.getItem("jwt");
+}
+
+// Determine whether to introduce authorisation in headers based on JWT
+
+export const Token = {
+  create (params) {
+    return fetch(
+      `${REACT_APP_BASE_URL}/api/v1/tokens`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(params)
+      }
+     ).then(res => {
+       if (res.status === 200) {
+         return res.json();
+       } else {
+         return {error: "Something went wrong!"};
+       }
+     });
+  }
+}
+
 // Handling fetch requests for sessions, users etc
 
 export const Syllabus = {

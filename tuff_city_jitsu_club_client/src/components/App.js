@@ -25,6 +25,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import 'bootstrap/dist/css/bootstrap.css';
 import { useSelector, useDispatch, connect } from 'react-redux'
 import { userSlice, setUser } from '../slices/userSlice';
+import jwtDecode from 'jwt-decode';
+import AuthRote from './AuthRoute';
 
 class App extends React.Component {
     constructor(props) {
@@ -33,6 +35,7 @@ class App extends React.Component {
         currentUser: null,
         loading: true
       };
+      this.signIn = this.signIn.bind(this);
     }
 
     signOut = () => {
@@ -40,6 +43,8 @@ class App extends React.Component {
           this.setState({ currentUser: null });
         });
       };
+      
+      
 
       getUser = () =>  {
         User.current()
@@ -63,8 +68,21 @@ class App extends React.Component {
 
     componentDidMount() {
         this.getUser();
+        this.signIn();
     }
-
+    
+    signIn(){
+      const jwt = localStorage.getItem('jwt');
+      if (jwt) {
+        const payload = jwtDecode(jwt);
+        this.setState({user: payload}); # Confirm how to set user here
+      }
+    }
+    
+    // isSignedIn(){
+    //   return !!this.state.user.id
+    // }
+    
     render() {
         const { loading } = this.state;
         const { currentUser } = this.props;

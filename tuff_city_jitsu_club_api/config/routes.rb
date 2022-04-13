@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   # get ‘auth/failure’, to: redirect(‘/’)
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
+      resources :tokens, only: [:create]
       resources :belt_grades
       get "/belt_grades_find", {to: "belt_grades#find"}
       resources :instructor_qualifications

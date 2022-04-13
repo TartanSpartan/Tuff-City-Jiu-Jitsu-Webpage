@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Session } from "../requests";
+import { Session, Token } from "../requests";
 import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"
 import Alert from "react-bootstrap/Alert"
@@ -7,7 +7,6 @@ import { GoogleLogin } from "react-google-login";
 // import styled from "styled-components"
 import "../App.scss";
 import { useHistory } from "react-router-dom";
-
 
 class SignInPage extends React.Component {
   constructor(props) {
@@ -17,11 +16,28 @@ class SignInPage extends React.Component {
       errors: []
     };
 
-
+    this.signInUser = this.signInUser.bind(this);
     this.handleSignIn = this.handleSignIn.bind(this);
     // this.handleGoogleSignIn = this.handleGoogleSignIn.bind(this);
     this.handleFailure = this.handleFailure.bind(this);
     this.createSession = this.createSession.bind(this);
+  }
+  
+  signInUser(params) {
+    const {onSignIn = () => {}} = this.props;
+    
+    Token
+      .create(params)
+      .then(data => {
+        if (!data.error) {
+          const {jwt} = data;
+          localStorage.setItem("jwt", jwt);
+          onSignIn();
+          // The "history" prop is only available to components rendered by
+          // the "<Route ... />" component of "react-router-dom"
+          this.props.history.push("/");
+        }
+      })
   }
 
   handleSignIn(data){
